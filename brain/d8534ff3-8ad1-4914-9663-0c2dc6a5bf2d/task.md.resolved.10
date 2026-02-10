@@ -1,0 +1,25 @@
+# Phase 26: Internal Chat System
+
+## Backend
+- [x] Add Prisma models + enums + @@map directives
+- [x] Add relations to User and Tenant models
+- [x] Run `prisma generate`
+- [x] Create [chat.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.service.ts), [chat.gateway.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.gateway.ts), [chat.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.controller.ts), [chat.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.module.ts)
+- [x] Register ChatModule in AppModule
+- [x] Fix `avatarUrl` → `avatar` build errors
+
+## Frontend
+- [x] Create [chat.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/chat.api.ts), [chat.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/chat.store.ts), [useChatSocket.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useChatSocket.ts)
+- [x] Create [ChatPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/chat/ChatPage.tsx) (all sub-components)
+- [x] Wire ChatPage into App.tsx routing at `/messages`
+
+## Verification
+- [x] Frontend build passes
+- [x] Backend build passes
+
+## Deployment
+- [x] rsync code to server
+- [x] docker compose build + restart
+- [x] Create chat tables via direct SQL
+- [x] Rename tables PascalCase → snake_case to match @@map
+- [x] Backend running with all 6 chat routes registered ✅
