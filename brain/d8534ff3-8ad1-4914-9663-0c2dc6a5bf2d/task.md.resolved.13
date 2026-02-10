@@ -1,0 +1,36 @@
+# Phase 28: Legal Document Editor
+
+## Part 1: Database & Backend
+- [ ] Add LegalDocument, LegalDocumentVersion, LegalDocTemplate models to schema
+- [ ] Add enums (LegalDocumentType, LegalDocumentStatus)
+- [ ] Add relations to Tenant, User, Case, Client
+- [ ] Create SQL migration
+- [ ] Create `legal-documents` module (service + controller + module)
+- [ ] Register module in [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+
+## Part 2: Frontend Core
+- [ ] Add `legalDocuments.ts` API file
+- [ ] Add Sidebar link "محرر الوثائق"
+- [ ] Add routes in App.tsx
+- [ ] Create `LegalDocumentsPage.tsx` (document list)
+- [ ] Create `NewDocumentPage.tsx` (type + template selection)
+- [ ] Create `LegalDocumentEditorPage.tsx` (full editor with Tiptap)
+
+## Part 3: Editor Components
+- [ ] Install Tiptap dependencies
+- [ ] Create `RichTextEditor.tsx` + `editor.css`
+- [ ] Create `DocumentToolbar.tsx`
+- [ ] Create `ExportButtons.tsx`
+- [ ] Create `VersionHistory.tsx`
+- [ ] Create `DocumentSettings.tsx`
+
+## Part 4: Export & Templates
+- [ ] Create PDF export endpoint (puppeteer or html-pdf)
+- [ ] Create Word export endpoint (docx library)
+- [ ] Seed system templates (4 templates)
+
+## Part 5: Deploy & Verify
+- [ ] Sync to server
+- [ ] Build and run containers
+- [ ] Run database migration
+- [ ] Verify pages load correctly
