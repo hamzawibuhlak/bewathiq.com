@@ -1,0 +1,29 @@
+# Phase 28: Legal Document Editor
+
+## Database & Schema
+- [x] Add `LegalDocumentType` and `LegalDocumentStatus` enums
+- [x] Add [LegalDocument](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-documents/LegalDocumentsPage.tsx#33-267), `LegalDocumentVersion`, `LegalDocTemplate` models
+- [x] Add reverse relations to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#24-25), [User](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts#5-20), [Case](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts#108-112), [Client](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/ai/ai.service.ts#20-26)
+- [x] Create SQL migration with 4 system templates
+
+## Backend
+- [x] Create [legal-documents.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-documents/legal-documents.service.ts)
+- [x] Create [legal-documents.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-documents/legal-documents.controller.ts)
+- [x] Create [legal-documents.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-documents/legal-documents.module.ts)
+- [x] Register [LegalDocumentsModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-documents/legal-documents.module.ts#6-13) in [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+
+## Frontend
+- [x] Create [legalDocuments.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalDocuments.ts) API client
+- [x] Create [LegalDocumentsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-documents/LegalDocumentsPage.tsx)
+- [x] Create [NewDocumentPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-documents/NewDocumentPage.tsx)
+- [x] Create [LegalDocumentEditorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-documents/LegalDocumentEditorPage.tsx)
+- [x] Add routes in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- [x] Add sidebar link in [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+- [x] Fix all lint warnings
+
+## Deployment
+- [x] Commit and push changes
+- [x] Sync code to production server via rsync
+- [x] Run SQL migration (fixed TEXT vs UUID mismatch)
+- [x] Rebuild Docker containers (backend + frontend)
+- [x] Verify all containers healthy ✅
