@@ -1,0 +1,44 @@
+# Phase 27: Owner Role & Tenant Control Panel
+
+## Database
+- [/] Add ACCOUNTANT to UserRole enum
+- [/] Add CompanyProfile model
+- [/] Add TenantIntegration model + IntegrationType enum
+- [ ] Add WorkflowLog model (extend existing Workflow)
+- [ ] Add relations to Tenant model
+- [ ] Create SQL migration file
+
+## Backend - Guards & Permissions
+- [ ] Create OwnerGuard + @OwnerOnly() decorator
+- [ ] Create permissions.ts permission matrix
+
+## Backend - Owner Service & Controller
+- [ ] Create owner.module.ts
+- [ ] Create owner.service.ts (company, users, integrations, workflows, billing, usage)
+- [ ] Create owner.controller.ts
+- [ ] Create EncryptionService (for integration configs)
+
+## Frontend - API & Hooks
+- [ ] Create owner.api.ts
+- [ ] Create useOwner.ts hook (optional)
+
+## Frontend - Owner Pages
+- [ ] OwnerLayout.tsx (amber theme sidebar)
+- [ ] OwnerDashboard.tsx (usage meters + quick actions)
+- [ ] CompanyProfilePage.tsx
+- [ ] UsersManagementPage.tsx + InviteUserModal
+- [ ] IntegrationsPage.tsx + IntegrationCard
+- [ ] WorkflowsPage.tsx
+- [ ] BillingPage.tsx
+
+## Frontend - Routing & Guards
+- [ ] Add OwnerGuard.tsx (frontend)
+- [ ] Add /owner routes to App.tsx
+- [ ] Update Sidebar for OWNER role separation
+- [ ] Login redirect by role (OWNER → /owner)
+
+## Deploy & Test
+- [ ] Sync to server
+- [ ] Run migration
+- [ ] Build and deploy
+- [ ] Test OWNER login and pages
