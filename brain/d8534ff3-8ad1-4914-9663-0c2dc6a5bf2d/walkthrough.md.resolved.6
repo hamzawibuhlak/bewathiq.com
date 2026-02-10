@@ -1,0 +1,49 @@
+# Phase 28: Legal Document Editor — Walkthrough
+
+## What Was Built
+
+A comprehensive legal document editor enabling lawyers to create, edit, and export legal documents (مذكرات، عقود، توكيلات) with full RTL/Arabic support.
+
+## Files Created/Modified
+
+### Database
+| File | Change |
+|------|--------|
+| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) | Added 3 models + 2 enums + reverse relations |
+| [phase28_legal_documents.sql](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/phase28_legal_documents.sql) | SQL migration + 4 system templates |
+
+### Backend
+| File | Purpose |
+|------|---------|
+| [legal-documents.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-documents/legal-documents.service.ts) | CRUD, versioning, templates, export HTML, search |
+| [legal-documents.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-documents/legal-documents.controller.ts) | REST API endpoints |
+| [legal-documents.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-documents/legal-documents.module.ts) | NestJS module |
+| [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts) | Registered LegalDocumentsModule |
+
+### Frontend
+| File | Purpose |
+|------|---------|
+| [legalDocuments.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalDocuments.ts) | API client |
+| [LegalDocumentsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-documents/LegalDocumentsPage.tsx) | Document listing with grid, filters, search |
+| [NewDocumentPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-documents/NewDocumentPage.tsx) | Type selection + template picker |
+| [LegalDocumentEditorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-documents/LegalDocumentEditorPage.tsx) | Full editor (contentEditable) |
+| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | Added 3 routes |
+| [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) | Added "محرر الوثائق" link |
+
+## Key Features
+
+- **10 document types**: مذكرة دفاع، رد، عقد، توكيل، لائحة اعتراضية، شكوى، رأي قانوني، تسوية، خطاب، أخرى
+- **5 status workflow**: مسودة → قيد المراجعة → نهائي → مُرسل → مؤرشف
+- **Rich text toolbar**: Bold, italic, underline, headings, alignments, lists, tables, horizontal rules
+- **A4 page simulation**: WYSIWYG editing on a 210mm × 297mm white page
+- **Auto-save** every 30 seconds + Ctrl/Cmd+S shortcut
+- **Version history** sidebar with restore capability
+- **Print** to A4 with Arabic Cairo font
+- **4 system templates** seeded: مذكرة دفاع، عقد، توكيل، رأي قانوني
+- **Template picker** when creating new documents
+
+## Deployment Steps
+
+1. Run `prisma generate` to update PrismaClient types
+2. Run the SQL migration on the database
+3. Build frontend and backend
