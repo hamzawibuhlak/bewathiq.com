@@ -1,0 +1,27 @@
+# Phase 24: HR Management Module
+
+## Part 1: Database Schema & Backend Core
+- [/] Add HR enums and models to [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+- [ ] Run Prisma migration
+- [ ] Create `EmployeeService`
+- [ ] Create `AttendanceService`
+- [ ] Create `LeaveService`
+- [ ] Create `PayrollService`
+- [ ] Create `HrController`
+- [ ] Create `HrModule` and register in [AppModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts#50-136)
+- [ ] Verify backend builds successfully
+
+## Part 2: Frontend Pages
+- [ ] Create `EmployeesListPage`
+- [ ] Create `EmployeeDetailsPage`
+- [ ] Create `AttendancePage`
+- [ ] Create `LeaveManagementPage`
+- [ ] Create `PayrollPage`
+- [ ] Add HR routes to [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- [ ] Add HR links to [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+
+## Part 3: Deploy & Verify
+- [ ] Sync code to production server
+- [ ] Rebuild backend container
+- [ ] Run Prisma migrations on production
+- [ ] Verify HR pages work on production
