@@ -1,0 +1,26 @@
+# Phase 26: Internal Chat System
+
+## Backend
+- [ ] Database models (Conversation, ConversationMember, Message, MessageReceipt, MessageReaction + enums)
+- [ ] Prisma generate / db push
+- [ ] ChatService (conversations CRUD, messages CRUD, reactions, search)
+- [ ] ChatGateway (WebSocket events: send, typing, read, reaction, edit, delete)
+- [ ] ChatController (REST endpoints)
+- [ ] ChatModule + register in AppModule
+
+## Frontend
+- [ ] Chat API layer (`api/chat.ts`)
+- [ ] Chat store (`stores/chatStore.ts`)
+- [ ] `useChatSocket` hook
+- [ ] ChatPage (two-panel layout)
+- [ ] ConversationList + ConversationItem
+- [ ] ChatWindow + MessageBubble
+- [ ] MessageInput (text, attachments, voice toggle)
+- [ ] TypingIndicator + ReadReceipts
+- [ ] NewConversationModal
+- [ ] Route in App.tsx + Sidebar link
+
+## Verification & Deployment
+- [ ] Backend build passes
+- [ ] Frontend build passes
+- [ ] Deploy to production server
