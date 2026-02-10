@@ -1,5 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Complete walkthrough of Phase 25 Super Admin Dashboard deployment: backend schema, services, frontend pages, database seeding, and production deployment.",
-  "updatedAt": "2026-02-10T15:57:12.888911Z"
+  "summary": "Walkthrough of Phase 25 deployment including production fix: switched from dev to production docker-compose, resolving 404 and API URL issues.",
+  "updatedAt": "2026-02-10T18:48:07.315964Z",
+  "version": "1"
 }
