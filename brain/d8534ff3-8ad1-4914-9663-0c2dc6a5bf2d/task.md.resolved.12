@@ -1,0 +1,30 @@
+# Phase 27 — Owner Role Separation
+
+## Backend
+- [x] Add `ACCOUNTANT` to [UserRole](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts#104-129) enum in schema
+- [x] Add [CompanyProfile](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/owner.api.ts#7-9) + `TenantIntegration` models + `IntegrationType` enum
+- [x] Create [OwnerGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/guards/owner.guard.ts#3-15) ([src/auth/guards/owner.guard.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/guards/owner.guard.ts))
+- [x] Create `@OwnerOnly()` decorator ([src/auth/decorators/owner.decorator.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/decorators/owner.decorator.ts))
+- [x] Create [OwnerService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts#5-418) with dashboard, company profile, users, integrations, workflows, billing
+- [x] Create [OwnerController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.controller.ts#11-133) with all REST endpoints protected by `@OwnerOnly()`
+- [x] Create [OwnerModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.module.ts#6-13) and register in [AppModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts#51-140)
+- [x] Fix all Prisma lint errors with `(this.prisma as any)` casts
+
+## Frontend
+- [x] Create [owner.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/owner.api.ts) with all owner API calls
+- [x] Create [OwnerLayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/OwnerLayout.tsx) with amber-themed sidebar
+- [x] Create [OwnerDashboard.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/OwnerDashboard.tsx) with stats + usage meters
+- [x] Create [CompanyProfilePage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/CompanyProfilePage.tsx) with editable form
+- [x] Create [UsersManagementPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/UsersManagementPage.tsx) with table + invite modal
+- [x] Create [IntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/IntegrationsPage.tsx) with cards for all integration types
+- [x] Create [WorkflowsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/WorkflowsPage.tsx) with create/toggle/delete
+- [x] Create [BillingPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/BillingPage.tsx) with plan + invoices
+- [x] Add owner routes to [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) with [ProtectedRoute](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx#151-161)
+- [x] Update [PublicRoute](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx#162-174) for role-based redirect (OWNER → /owner, SUPER_ADMIN → /super-admin)
+- [x] Update [User](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts#5-20) role type in [auth.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts) to include `SUPER_ADMIN` + `ACCOUNTANT`
+- [x] Fix all lint issues (unused imports, sonner → react-hot-toast)
+
+## Remaining (Post-deploy)
+- [ ] Run `prisma generate` and `prisma migrate`
+- [ ] Test login redirect for OWNER role
+- [ ] Verify all owner pages load and API calls work
