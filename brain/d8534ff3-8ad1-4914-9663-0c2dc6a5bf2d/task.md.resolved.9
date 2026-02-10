@@ -1,0 +1,23 @@
+# Phase 26: Internal Chat System
+
+## Backend
+- [x] Add Prisma models (ChatConversation, ChatConversationMember, ChatMessage, ChatMessageReceipt, ChatMessageReaction) + enums
+- [x] Add relations to User and Tenant models
+- [x] Run `prisma generate`
+- [x] Create [chat.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.service.ts) (conversations, messages, reactions, search)
+- [x] Create [chat.gateway.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.gateway.ts) (WebSocket events on `/chat` namespace)
+- [x] Create [chat.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.controller.ts) (REST endpoints + file upload)
+- [x] Create [chat.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.module.ts)
+- [x] Register ChatModule in AppModule
+
+## Frontend
+- [x] Create [chat.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/chat.api.ts) (API layer)
+- [x] Create [chat.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/chat.store.ts) (Zustand store for online/unread/typing)
+- [x] Create [useChatSocket.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useChatSocket.ts) (WebSocket hook)
+- [x] Create [ChatPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/chat/ChatPage.tsx) (all components: ConversationList, ChatWindow, MessageBubble, MessageInput, NewConversationModal)
+- [x] Wire ChatPage into App.tsx routing at `/messages`
+- [x] Fix lint warnings
+
+## Verification
+- [x] Frontend build passes (`vite build` ✓)
+- [x] Backend build passes (`tsc --noEmit` ✓)

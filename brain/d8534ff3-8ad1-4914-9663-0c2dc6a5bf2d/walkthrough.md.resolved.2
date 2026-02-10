@@ -1,0 +1,74 @@
+# Phase 26: Internal Chat System — Walkthrough
+
+## Overview
+Implemented a full real-time internal chat system with DM & group conversations, typing indicators, read receipts, emoji reactions, file attachments, and message search.
+
+## Backend Changes
+
+### Database Schema
+Added to [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma):
+
+| Model | Purpose |
+|---|---|
+| `ChatConversation` | DM or Group conversation container |
+| `ChatConversationMember` | User membership with role, mute, last-read |
+| `ChatMessage` | Text, file, image, voice messages with reply support |
+| `ChatMessageReceipt` | Per-user read receipts |
+| `ChatMessageReaction` | Emoji reactions on messages |
+
+3 enums: `ChatConversationType`, `ChatMemberRole`, `ChatMessageType`
+
+### Service Layer
+
+| File | Purpose |
+|---|---|
+| [chat.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.service.ts) | CRUD for conversations, messages, reactions, receipts, search |
+| [chat.gateway.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.gateway.ts) | WebSocket gateway on `/chat` namespace — real-time events |
+| [chat.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.controller.ts) | REST API for conversations, messages, file upload, search |
+| [chat.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.module.ts) | Module wiring with PrismaModule and JwtModule |
+
+Registered in [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts).
+
+### WebSocket Events
+
+| Event | Direction | Purpose |
+|---|---|---|
+| `chat:send_message` | Client → Server | Send a new message |
+| `chat:new_message` | Server → Client | Broadcast new message |
+| `chat:typing` | Client → Server | Typing indicator |
+| `chat:user_typing` | Server → Client | Broadcast typing status |
+| `chat:mark_read` | Client → Server | Mark messages as read |
+| `chat:messages_read` | Server → Client | Broadcast read receipt |
+| `chat:reaction` | Client → Server | Toggle emoji reaction |
+| `chat:edit_message` | Client → Server | Edit own message |
+| `chat:delete_message` | Client → Server | Soft-delete own message |
+| `user:online` / `user:offline` | Server → Client | Online presence |
+
+---
+
+## Frontend Changes
+
+| File | Purpose |
+|---|---|
+| [chat.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/chat.api.ts) | REST API calls using existing [apiGet](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/client.ts#81-84)/[apiPost](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/client.ts#85-87) |
+| [chat.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/chat.store.ts) | Zustand store for online users, unread counts, typing |
+| [useChatSocket.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useChatSocket.ts) | Socket.IO hook connecting to `/chat` namespace |
+| [ChatPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/chat/ChatPage.tsx) | Complete UI: ConversationList, ChatWindow, MessageBubble, MessageInput, NewConversationModal |
+
+Routed at `/messages` in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) (replaces old MessagesPage).
+
+---
+
+## Verification
+
+- ✅ **Frontend build**: `vite build` — success (5.08s, 140 precache entries)
+- ✅ **Backend build**: `tsc --noEmit` — zero errors for chat files
+
+## Deployment
+
+To deploy, run on the production server:
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+# Then inside the backend container:
+npx prisma db push
+```
