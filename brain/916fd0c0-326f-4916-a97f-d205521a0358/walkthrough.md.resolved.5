@@ -1,0 +1,105 @@
+# Phase 18: Advanced Security & Compliance - Walkthrough
+
+## Overview
+
+تم تنفيذ المرحلة 18 (أمان وامتثال متقدم) بنجاح. تتضمن هذه المرحلة 7 أجزاء رئيسية لتعزيز أمان النظام والامتثال للمعايير الدولية والسعودية.
+
+---
+
+## Implemented Features
+
+### 1. Two-Factor Authentication (المصادقة الثنائية)
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /auth/2fa/generate` | إنشاء QR code |
+| `POST /auth/2fa/enable` | تفعيل 2FA |
+| `POST /auth/2fa/disable` | إلغاء 2FA |
+| `POST /auth/2fa/regenerate-backup` | تجديد رموز النسخ |
+| `GET /auth/2fa/status` | حالة 2FA |
+
+---
+
+### 2. Password Policies (سياسات كلمات المرور)
+
+```typescript
+// password-policy.ts
+{
+  minLength: 8,
+  requireUppercase: true,
+  requireLowercase: true,
+  requireNumbers: true,
+  requireSpecialChars: true,
+  expiryDays: 90,
+  lockoutThreshold: 5
+}
+```
+
+---
+
+### 3. Data Encryption (تشفير البيانات)
+
+- **Algorithm**: AES-256-GCM
+- **Methods**: encrypt(), decrypt(), hash(), maskSensitiveData()
+
+---
+
+### 4. Audit Trail (سجل التدقيق)
+
+- logCreate(), logUpdate(), logDelete(), logView()
+- Diff calculation for updates
+- Entity history tracking
+
+---
+
+### 5. Security Monitoring (مراقبة الأمان)
+
+- SQL Injection detection
+- XSS detection
+- Rate limiting (100 req/min)
+- Brute force detection (5 failed logins)
+- Security dashboard
+
+---
+
+### 6. GDPR Compliance
+
+| Right | Endpoint |
+|-------|----------|
+| Access | `GET /compliance/gdpr/my-data` |
+| Portability | `GET /compliance/gdpr/my-data/download` |
+| Erasure | `POST /compliance/gdpr/delete-account` |
+| Consent | `POST /compliance/gdpr/consent` |
+
+---
+
+### 7. Saudi NCA Compliance
+
+| Check | Endpoint |
+|-------|----------|
+| Data Localization | `GET /compliance/saudi/data-localization` |
+| Access Controls | `GET /compliance/saudi/access-controls` |
+| Encryption | `GET /compliance/saudi/encryption` |
+| Log Retention | `GET /compliance/saudi/log-retention` |
+| Incident Report | `POST /compliance/saudi/incident-report` |
+| Dashboard | `GET /compliance/dashboard` |
+
+---
+
+## Build Verification
+
+```bash
+npm run build
+# ✅ Build successful
+```
+
+---
+
+## Files Summary
+
+| Module | Files |
+|--------|-------|
+| Auth | password-policy.ts, password.validator.ts |
+| Common | encryption.service.ts, audit.service.ts |
+| Security | security-monitoring.service.ts, security.module.ts |
+| Compliance | gdpr.service.ts, saudi-compliance.service.ts, compliance.controller.ts, compliance.module.ts |

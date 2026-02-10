@@ -1,0 +1,97 @@
+# وثيق - تقرير النشر على الخادم
+
+## ✅ ملخص النشر
+
+تم نشر تطبيق وثيق بنجاح على خادم VPS بعنوان IP: `72.62.135.166`
+
+---
+
+## 🌐 الروابط المتاحة
+
+| الخدمة | الرابط |
+|--------|--------|
+| **التطبيق (Frontend)** | http://72.62.135.166 |
+| **Backend API** | http://72.62.135.166:3000 |
+| **API Documentation** | http://72.62.135.166:3000/api/docs |
+
+---
+
+## 📦 حالة الـ Containers
+
+| Container | الحالة | المنفذ |
+|-----------|--------|--------|
+| Frontend (Nginx) | ✅ Healthy | 80, 443 |
+| Backend (NestJS) | ✅ Running | 3000 |
+| PostgreSQL | ✅ Healthy | 5432 |
+| Redis | ✅ Healthy | 6379 |
+
+---
+
+## 🗃️ Database Migrations
+
+تم تطبيق 12 migration بنجاح:
+- [20260128130411_init](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260128130411_init)
+- [20260129030404_add_case_priority](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260129030404_add_case_priority)
+- [20260129030914_add_opposing_party](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260129030914_add_opposing_party)
+- [20260129034911_add_document_types](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260129034911_add_document_types)
+- [20260129042114_add_tenant_fields](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260129042114_add_tenant_fields)
+- [20260129043738_add_invoice_payment_proof](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260129043738_add_invoice_payment_proof)
+- [20260129053705_add_invoice_items](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260129053705_add_invoice_items)
+- [20260201131232_add_client_to_hearings](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260201131232_add_client_to_hearings)
+- [20260201152452_add_hearing_createdby](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260201152452_add_hearing_createdby)
+- [20260202082827_add_client_visibility](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260202082827_add_client_visibility)
+- [20260202090717_add_notifications_system](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260202090717_add_notifications_system)
+- [20260202_add_performance_indexes](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260202_add_performance_indexes)
+
+---
+
+## 📸 لقطة شاشة التطبيق
+
+![صفحة تسجيل الدخول](/Users/hamzabuhlakq/.gemini/antigravity/brain/66fd5b77-2427-4d16-8245-ae4affd26d60/watheeq_landing_page_1770034994081.png)
+
+---
+
+## ⚙️ التغييرات المطلوبة
+
+### تم إصلاحها أثناء النشر:
+1. إزالة `tsconfig*.json` من [.dockerignore](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/.dockerignore) (frontend و backend)
+2. إزالة `nest-cli.json` من [.dockerignore](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/.dockerignore) (backend)
+3. إزالة Redis password requirement للتبسيط
+4. إزالة health check dependencies لتسريع بدء التشغيل
+
+---
+
+## 🔐 بيانات الوصول
+
+### VPS:
+- **IP:** 72.62.135.166
+- **Username:** root
+
+### Environment Variables (.env):
+```
+POSTGRES_DB=watheeq
+POSTGRES_USER=watheeq_user
+POSTGRES_PASSWORD=WatheeqSecure2026!
+JWT_SECRET=watheeq-super-secret-jwt-key-2026-production
+```
+
+---
+
+## 📝 ملاحظات هامة
+
+> [!IMPORTANT]
+> لا يوجد seed file معد - يجب إنشاء المستخدم الأول يدوياً أو من خلال التسجيل
+
+> [!TIP]
+> لإعادة تشغيل الخدمات:
+> ```bash
+> ssh root@72.62.135.166
+> cd /root/watheeq-mvp
+> docker compose -f docker-compose.prod.yml restart
+> ```
+
+---
+
+## 📅 تاريخ النشر
+
+**2026-02-02 15:20 AST**

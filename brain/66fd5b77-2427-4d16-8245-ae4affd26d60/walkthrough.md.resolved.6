@@ -1,0 +1,34 @@
+# Deployment Walkthrough
+
+## Summary
+Successfully deployed the latest updates to the production server. Resolved critical issues preventing the backend from starting and images from loading.
+
+## Key Changes
+
+### 1. Database Schema Fix
+*   **Issue**: The backend failed to start because the `permissions` table was missing, but Prisma reported no pending migrations.
+*   **Resolution**: Created a manual SQL migration file (`20260203001500_add_missing_tables`) to generate the missing tables (`permissions`, `role_permissions`, `activity_logs`, `notification_settings`).
+*   **Action**: Applied this migration on the production database.
+
+### 2. Image Serving Fix
+*   **Issue**: Uploaded images were returning `404 Not Found` even though the files existed on the server. This was due to Nginx prioritizing regex-based rules (like `*.jpg`) over the `/uploads/` directory rule.
+*   **Resolution**: Updated [frontend/nginx.conf](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/nginx.conf) to use `location ^~ /uploads/` which forces Nginx to prioritize this path over other rules.
+*   **Verification**: Verified access to uploaded images returns `200 OK`.
+
+### 3. HTTPS Enabled
+*   **Issue**: User requested secure access via HTTPS.
+*   **Resolution**:
+    *   Used Certbot to generate Let's Encrypt certificates for `bewathiq.com`.
+    *   Updated Nginx to serve traffic on port 443 using SSL.
+    *   Enforced automatic redirection from HTTP to HTTPS.
+*   **Verification**: Verified `https://bewathiq.com` loads securely and `http://` redirects to `https://`.
+
+## Current Status
+*   **Backend**: Running and healthy. Permissions seeded.
+*   **Frontend**: Running securely via HTTPS.
+*   **Database**: Migrations up to date.
+*   **Images**: Accessible and secure.
+*   **URL**: [https://bewathiq.com](https://bewathiq.com)
+
+## Next Steps
+*   None. Deployment is complete.

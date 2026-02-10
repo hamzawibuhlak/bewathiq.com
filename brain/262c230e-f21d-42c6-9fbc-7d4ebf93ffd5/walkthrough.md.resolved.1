@@ -1,0 +1,81 @@
+# ✅ نظام الصلاحيات - تم التنفيذ بنجاح!
+
+## التغييرات المنفذة
+
+### Backend - Controllers محدثة
+
+| Controller | Guard | الصلاحيات |
+|------------|-------|-----------|
+| [CasesController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.controller.ts#28-98) | ✅ RolesGuard | OWNER/ADMIN/LAWYER ينشئ ويعدل، LAWYER يشوف قضاياه فقط |
+| [ClientsController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/clients/clients.controller.ts#29-105) | ✅ RolesGuard | OWNER/ADMIN ينشئ ويعدل ويحذف |
+| [HearingsController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.controller.ts#30-119) | ✅ RolesGuard | SECRETARY ينشئ ويعدل، الحذف لـ OWNER/ADMIN |
+| [DocumentsController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.controller.ts#53-178) | ✅ RolesGuard | LAWYER يرفع، الحذف لـ OWNER/ADMIN |
+| [InvoicesController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/invoices/invoices.controller.ts#30-118) | ✅ RolesGuard | OWNER/ADMIN فقط لكل العمليات |
+| [UsersController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.controller.ts#30-119) | ✅ موجود | OWNER/ADMIN فقط |
+
+---
+
+### Backend - CasesService محدث
+
+```diff
+// LAWYER يشوف قضاياه فقط
++if (userRole === UserRole.LAWYER && userId) {
++    where.assignedToId = userId;
++}
+```
+
+---
+
+### Frontend - auth.store.ts محدث
+
+```typescript
+// Permission helpers
+canManageUsers: () => role === 'OWNER' || role === 'ADMIN'
+canManageInvoices: () => role === 'OWNER' || role === 'ADMIN'
+canManageCases: () => role !== 'SECRETARY'
+canManageHearings: () => role !== 'LAWYER'
+```
+
+---
+
+### Frontend - Can Component جديد
+
+```tsx
+<Can perform="create" on="users">
+  <Button>إضافة مستخدم</Button>
+</Can>
+```
+
+---
+
+### Frontend - Sidebar محدث
+
+- ✅ إخفاء "الفواتير" عن LAWYER/SECRETARY
+- ✅ إخفاء "المستخدمون" عن LAWYER/SECRETARY
+- ✅ عرض شارة الدور (مالك، مدير، محامي، سكرتير)
+
+---
+
+## اختبار OWNER
+
+![اختبار الصلاحيات](./permissions_test_1769943154029.webp)
+
+**النتائج:**
+- ✅ تظهر كل عناصر القائمة
+- ✅ صفحة الفواتير تعمل
+- ✅ صفحة المستخدمون تعمل
+- ✅ شارة "مالك المكتب" تظهر
+
+---
+
+## ملخص الصلاحيات النهائي
+
+| العملية | OWNER | ADMIN | LAWYER | SECRETARY |
+|---------|-------|-------|--------|-----------|
+| إدارة المستخدمين | ✅ | ✅ | ❌ | ❌ |
+| رؤية الفواتير | ✅ | ✅ | ❌ | ❌ |
+| إنشاء قضايا | ✅ | ✅ | ✅ | ❌ |
+| رؤية كل القضايا | ✅ | ✅ | 📂 قضاياه | 👁️ |
+| إنشاء جلسات | ✅ | ✅ | ❌ | ✅ |
+| رفع مستندات | ✅ | ✅ | ✅ | ❌ |
+| إدارة العملاء | ✅ | ✅ | ❌ | ❌ |

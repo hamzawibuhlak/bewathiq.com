@@ -1,0 +1,127 @@
+# دليل رفع وتحديث نظام وثيق (Watheeq Deployment Guide)
+
+اتبع هذه الخطوات لرفع آخر التحديثات إلى السيرفر.
+
+## المتطلبات المسبقة
+- ترمينال (Terminal) أو موجه أوامر.
+- صلاحية الوصول للسيرفر عبر SSH.
+- Docker و Docker Compose مثبتين على السيرفر (موجودين بالفعل).
+
+---
+
+## 1. تجهيز حزمة التحديث (على جهازك المحلي)
+
+تأكد من أنك في المجلد الرئيسي للمشروع (`watheeq-mvp`). قم بتشغيل الأمر التالي لضغط الملفات الضرورية فقط (تجاهل `node_modules` وغيرها):
+
+```bash
+# تأكد من أنك داخل مجلد المشروع
+cd /path/to/watheeq-mvp
+
+# إنشاء ملف مضغوط يحتوي على الكود الجديد
+tar --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' --exclude='dist' -czf watheeq-deploy.tar.gz backend frontend docker-compose.prod.yml docker-compose.yml scripts
+```
+
+---
+
+## 2. رفع الحزمة إلى السيرفر
+
+استخدم أمر `scp` لنسخ الملف المضغوط إلى السيرفر. (استبدل المسار إذا لزم الأمر).
+
+```bash
+scp watheeq-deploy.tar.gz root@72.62.135.166:/root/
+```
+
+سيطلب منك كلمة المرور الخاصة بالسيرفر.
+
+---
+
+## 3. الدخول إلى السيرفر وتنفيذ التحديث
+
+ادخل إلى السيرفر عبر SSH:
+
+```bash
+ssh root@72.62.135.166
+```
+
+ثم نفذ الخطوات التالية داخل السيرفر:
+
+### أ. أخذ نسخة احتياطية (اختياري لكن مفضل)
+```bash
+# الذهاب للمجلد الرئيسي
+cd /root
+
+# حذف النسخة الاحتياطية القديمة (إذا رغبت) وأخذ نسخة جديدة
+rm -rf watheeq-mvp-backup
+mv watheeq-mvp watheeq-mvp-backup
+```
+
+### ب. استخراج الملفات الجديدة
+```bash
+# إنشاء مجلد جديد واستخراج الملفات
+mkdir watheeq-mvp
+cd watheeq-mvp
+tar -xzf ../watheeq-deploy.tar.gz
+```
+
+### ج. استعادة ملف الإعدادات البيئية (.env)
+هذا الملف يحتوي على كلمات المرور والمفاتيح السرية، ولا يتم رفعه مع الكود، لذا ننسخه من النسخة السابقة:
+
+```bash
+cp ../watheeq-mvp-backup/.env .
+```
+
+### د. إعادة بناء وتشغيل الحاويات (Containers)
+```bash
+# إيقاف الحاويات الحالية
+docker compose -f docker-compose.prod.yml down
+
+# إعادة بناء الصور (Backend & Frontend) لضمان أخذ آخر التغييرات
+docker compose -f docker-compose.prod.yml build --no-cache
+
+# تشغيل النظام في الخلفية
+docker compose -f docker-compose.prod.yml up -d
+```
+
+---
+
+## 4. تحديث قاعدة البيانات (إذا كان هناك تغييرات)
+
+إذا قمت بتعديل ملف `schema.prisma`، يجب تشغيل هذا الأمر لتطبيق التغييرات على قاعدة البيانات الحقيقية:
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm backend npx prisma migrate deploy
+```
+
+---
+
+## 5. التحقق من العمل
+
+تأكد من أن كل شيء يعمل بشكل صحيح:
+
+```bash
+# عرض حالة الحاويات (يجب أن تكون جميعها Up)
+docker compose -f docker-compose.prod.yml ps
+
+# مشاهدة سجلات الباك إند للتأكد من عدم وجود أخطاء
+docker logs -f watheeq_backend_prod
+```
+
+اضغط `Ctrl + C` للخروج من السجلات.
+
+---
+
+## ملخص سريع للأوامر (للمحترفين)
+
+```bash
+# محلياً
+tar --exclude='node_modules' --exclude='.git' -czf deploy.tar.gz . && scp deploy.tar.gz root@72.62.135.166:~
+
+# على السيرفر
+ssh root@72.62.135.166
+cd ~
+mv watheeq-mvp watheeq-old
+mkdir watheeq-mvp && tar -xzf deploy.tar.gz -C watheeq-mvp
+cp watheeq-old/.env watheeq-mvp/
+cd watheeq-mvp
+docker compose -f docker-compose.prod.yml up -d --build
+```

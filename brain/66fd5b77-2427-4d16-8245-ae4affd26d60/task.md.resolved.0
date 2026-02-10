@@ -1,0 +1,41 @@
+# Watheeq MVP Phase 2: Calendar, Reports & Advanced Search
+
+## Day 4: Interactive Calendar & Email Reminders
+- [ ] **Backend: Email Service**
+  - [ ] Install nodemailer
+  - [ ] Create email module and service
+  - [ ] Add SMTP configuration to env
+  - [ ] Add send-reminder endpoint to hearings
+  
+- [ ] **Frontend: Calendar Page**
+  - [ ] Install FullCalendar dependencies
+  - [ ] Create CalendarPage component
+  - [ ] Integrate with existing hearings API
+  - [ ] Add send reminder button to hearing details
+
+## Day 5: Reports & Analytics Dashboard
+- [ ] **Backend: Reports Module**
+  - [ ] Create reports module
+  - [ ] Dashboard stats endpoint (enhanced)
+  - [ ] Financial report endpoint
+  - [ ] Cases report endpoint
+  - [ ] Performance report endpoint
+
+- [ ] **Frontend: Enhanced Dashboard**
+  - [ ] Install Recharts
+  - [ ] Create RevenueChart component
+  - [ ] Create CasesChart component (pie charts)
+  - [ ] Update StatCard component
+  - [ ] Create dedicated Reports page
+
+## Day 6: Advanced Search & Filters
+- [ ] **Backend: Search Module**
+  - [ ] Create search module
+  - [ ] Global search endpoint
+  - [ ] Search suggestions endpoint
+
+- [ ] **Frontend: Global Search**
+  - [ ] Install cmdk (command palette)
+  - [ ] Create GlobalSearch component
+  - [ ] Create useDebounce hook
+  - [ ] Add search to header

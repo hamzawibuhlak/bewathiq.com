@@ -1,0 +1,40 @@
+# Phase 22: Communication Hub - قائمة المهام
+
+## Backend Implementation
+
+### 📞 Call Center Module
+- [ ] إنشاء `calls/calls.service.ts`
+- [ ] إنشاء `calls/calls.controller.ts`
+- [ ] إنشاء `calls/calls.module.ts`
+- [ ] إنشاء `webhooks/twilio.controller.ts`
+- [ ] إضافة models للـ Prisma (Call, CallRecording)
+
+### 💬 Real-time Messaging Enhancements
+- [ ] تحديث [websocket.gateway.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/websocket/websocket.gateway.ts) مع messaging events
+- [ ] إنشاء `messaging/group-chat.service.ts`
+- [ ] إضافة models للـ Groups (GroupChat, GroupMember, GroupMessage)
+
+### 🔧 Module Registration
+- [ ] تسجيل CallsModule في app.module.ts
+- [ ] تشغيل Prisma migrations
+
+---
+
+## Frontend Implementation
+
+### 📞 Call Components
+- [ ] إنشاء `ClickToCall.tsx`
+- [ ] إنشاء `CallHistoryPage.tsx`
+- [ ] إضافة API functions للـ calls
+
+### 💬 Chat Components
+- [ ] إنشاء `ChatWindow.tsx` محسّن
+- [ ] إنشاء `useSocket.ts` hook
+- [ ] تحديث routing
+
+---
+
+## Build & Deploy
+- [ ] Backend build successful
+- [ ] Frontend build successful
+- [ ] Deploy to production

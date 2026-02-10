@@ -1,0 +1,32 @@
+# Watheeq MVP Backend Setup
+
+## Phase 1: Project Configuration
+- [x] Create [package.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/package.json) with all dependencies
+- [x] Create [tsconfig.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/tsconfig.json)
+- [x] Create [.env.example](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/.env.example)
+- [x] Create [.gitignore](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/.gitignore)
+- [x] Create [nest-cli.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/nest-cli.json)
+
+## Phase 2: Core Files
+- [x] Create [src/main.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/main.ts) with Swagger, CORS, validation
+- [x] Create [src/app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+
+## Phase 3: Prisma Schema
+- [x] Create [prisma/schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) with all models:
+  - Tenant, User, Client, Case, Hearing, Document, Invoice
+
+## Phase 4: Common Module
+- [x] Create decorators (`@TenantId`, `@CurrentUser`, `@Roles`)
+- [x] Create guards ([JwtAuthGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/guards/jwt-auth.guard.ts#5-25), [RolesGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/guards/roles.guard.ts#10-34))
+- [x] Create filters ([HttpExceptionFilter](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/filters/http-exception.filter.ts#19-71))
+
+## Phase 5: Feature Modules (Structure Only)
+- [x] Auth module
+- [x] Users module
+- [x] Tenants module
+- [x] Cases module
+- [x] Hearings module
+- [x] Clients module
+- [x] Documents module
+- [x] Invoices module
+- [x] Dashboard module

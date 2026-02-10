@@ -1,0 +1,19 @@
+# Phase C1 — Production Deployment (VPS)
+
+## Health Check Endpoint
+- [/] GET /health endpoint
+
+## Configuration Files
+- [ ] .env.production template
+- [ ] PM2 ecosystem config
+- [ ] Nginx config template
+
+## Deployment Scripts
+- [ ] Server setup script
+- [ ] Deploy script
+
+## Documentation
+- [ ] Deployment guide
+
+## Verification
+- [ ] Build test

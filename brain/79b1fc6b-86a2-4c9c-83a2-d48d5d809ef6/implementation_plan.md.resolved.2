@@ -1,0 +1,153 @@
+# Phase D2 — Data Protection & Encryption
+
+## Problem Statement
+Sensitive fields (case notes, client notes, internal comments) must be encrypted at rest. The current schema lacks these fields, so D2 will:
+1. Create a reusable encryption service
+2. Add optional encrypted fields to existing models
+3. Support key rotation via versioning
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Schema Change Required**
+> The current schema has NO notes/comments fields. Adding encrypted fields requires migration.
+> If you want to avoid migration, we can deliver the encryption service only (no schema changes).
+
+> [!WARNING]
+> **Key Management**
+> `ENCRYPTION_KEY` must be 32 bytes (256 bits). Losing this key = data loss.
+
+---
+
+## Proposed Changes
+
+### Shared / Crypto Module
+
+#### [NEW] crypto/crypto.service.ts
+AES-256-GCM encryption service with:
+- `encrypt(plaintext: string): string` → Returns `v1:iv:authTag:ciphertext` (base64)
+- `decrypt(encrypted: string): string` → Parses format, decrypts
+- Key versioning prefix (`v1:`) for future rotation
+- IV generation per encryption (unique nonce)
+
+```typescript
+// Encryption output format: "v1:base64(iv):base64(authTag):base64(ciphertext)"
+```
+
+#### [NEW] crypto/crypto.module.ts
+NestJS module exporting CryptoService
+
+---
+
+#### [NEW] crypto/hash.util.ts
+Hashing utilities:
+- [hashToken(token: string): string](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/session/session.service.ts#14-20) — SHA-256 for tokens
+- `hashSecret(secret: string): Promise<string>` — bcrypt for secrets
+- `verifySecret(secret: string, hash: string): Promise<boolean>`
+
+---
+
+### Schema Changes (Optional — requires migration)
+
+#### [MODIFY] prisma/schema.prisma
+
+Add encrypted fields to models:
+
+```diff
+model Case {
+  ...
++ notes          String?   // Encrypted at application layer
++ notesKeyVersion Int @default(1)
+}
+
+model Client {
+  ...
++ notes          String?   // Encrypted at application layer
++ notesKeyVersion Int @default(1)
+}
+
+model Task {
+  ...
++ description    String?   // Encrypted at application layer
++ descKeyVersion Int @default(1)
+}
+```
+
+> [!NOTE]
+> Encryption is **application-level**, not database-level. The DB stores ciphertext.
+
+---
+
+### Service Layer Integration
+
+#### [MODIFY] cases/cases.service.ts (example pattern)
+```typescript
+// On create/update
+const encryptedNotes = notes ? this.cryptoService.encrypt(notes) : null;
+
+// On read
+const decryptedNotes = case.notes ? this.cryptoService.decrypt(case.notes) : null;
+```
+
+---
+
+### Environment Variables
+
+#### [MODIFY] .env.production.example
+```bash
+# Encryption key (32 bytes, base64 encoded)
+# Generate with: openssl rand -base64 32
+ENCRYPTION_KEY=your-32-byte-base64-key-here
+```
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[Controller] --> B[Service Layer]
+    B --> C[CryptoService]
+    C --> D[encrypt/decrypt]
+    B --> E[Prisma DB]
+    E -->|ciphertext| F[PostgreSQL]
+```
+
+---
+
+## File Summary
+
+| File | Action | Description |
+|------|--------|-------------|
+| `crypto/crypto.service.ts` | NEW | AES-256-GCM encryption |
+| `crypto/crypto.module.ts` | NEW | Module |
+| `crypto/hash.util.ts` | NEW | SHA-256/bcrypt utils |
+| `crypto/index.ts` | NEW | Exports |
+| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/prisma/schema.prisma) | MODIFY | Add notes fields (optional) |
+| `.env.production.example` | MODIFY | Add ENCRYPTION_KEY |
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+# Unit tests for CryptoService
+npm run test -- --grep CryptoService
+```
+
+### Manual Verification
+1. Set `ENCRYPTION_KEY` in `.env`
+2. Call encrypt → store → decrypt → verify plaintext matches
+3. Test key version parsing
+4. Test invalid key rejection
+
+---
+
+## Questions for User
+
+1. **Add notes fields now?** (Requires migration)
+2. **Encrypt existing fields?** (e.g., client email/phone) — Not recommended without migration
+3. **Proceed with CryptoService only?** (No schema changes, ready for future use)

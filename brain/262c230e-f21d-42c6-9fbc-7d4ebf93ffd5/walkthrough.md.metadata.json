@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary": "Documents the timeline enhancement implementation including schema changes, backend updates for user attribution and role-based filtering, and frontend RecentActivity component updates.",
+  "updatedAt": "2026-02-01T15:32:09.341100Z",
+  "version": "3"
+}

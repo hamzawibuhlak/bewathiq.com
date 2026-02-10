@@ -1,0 +1,84 @@
+# Phase D1 — Identity & Access Security Walkthrough
+
+## ✅ What Was Implemented
+
+### 🔐 Two-Factor Authentication (TOTP)
+
+| File | Changes |
+|------|---------|
+| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/prisma/schema.prisma) | Added `twoFactorEnabled`, `twoFactorSecret`, `twoFactorVerified` to User |
+| [totp.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/totp/totp.service.ts) | TOTP generation and verification |
+| [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/auth.service.ts) | 2FA login flow, setup, verify, disable |
+
+---
+
+### 🔒 Session Security
+
+| File | Changes |
+|------|---------|
+| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/prisma/schema.prisma) | Added [Session](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/session/session.module.ts#5-11) model |
+| [session.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/session/session.service.ts) | Token rotation, revocation, cleanup |
+| [users.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/users/users.service.ts) | Revoke sessions on role/status change |
+
+---
+
+### 🔑 Password Hardening
+
+| File | Changes |
+|------|---------|
+| [create-user.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/users/dto/create-user.dto.ts) | 8-char min + complexity |
+| [change-password.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/dto/change-password.dto.ts) | Same complexity rules |
+| [auth.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/auth.controller.ts) | Rate limited (3/min) |
+
+---
+
+## 🌐 New API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/2fa/setup` | Get QR code for TOTP setup |
+| POST | `/auth/2fa/verify` | Verify and enable 2FA |
+| POST | `/auth/2fa/disable` | Disable 2FA (requires code) |
+| POST | `/auth/login/2fa` | Complete 2FA login |
+| POST | `/auth/password/change` | Change password (revokes sessions) |
+| POST | `/auth/logout/all` | Logout from all devices |
+
+---
+
+## 🔄 Login Flow Changes
+
+```mermaid
+flowchart TD
+    A[POST /auth/login] --> B{2FA Enabled?}
+    B -->|No| C[Return Tokens]
+    B -->|Yes| D[Return tempToken]
+    D --> E[POST /auth/login/2fa]
+    E --> F{Code Valid?}
+    F -->|Yes| C
+    F -->|No| G[401 Unauthorized]
+```
+
+---
+
+## ❌ What Was NOT Implemented
+
+| Excluded | Reason |
+|----------|--------|
+| SMS/Email 2FA | TOTP only per scope |
+| OAuth/Social login | Explicitly excluded |
+| WebAuthn/Hardware keys | Future phase |
+
+---
+
+## 🔍 Verification
+
+```bash
+# Run migrations
+npx prisma migrate dev --name add_2fa_sessions
+
+# Build
+npm run build
+
+# Test 2FA setup
+curl -X POST /api/auth/2fa/setup -H "Authorization: Bearer TOKEN"
+```

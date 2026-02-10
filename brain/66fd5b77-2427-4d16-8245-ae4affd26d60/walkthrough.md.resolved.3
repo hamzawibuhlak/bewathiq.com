@@ -1,0 +1,84 @@
+# Phase 3: Notifications & Communication System - Walkthrough
+
+## 🎯 Summary
+Implemented a comprehensive notifications and communication system for Watheeq MVP including:
+- **Internal Notifications** - Real-time in-app notifications
+- **SMS Integration** - Unifonic API support for SMS messaging  
+- **Email System** - Email logging and template support
+
+---
+
+## 📊 Database Changes
+Added 4 new models to [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma):
+
+| Model | Purpose |
+|-------|---------|
+| [EmailTemplate](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-notifications.ts#78-87) | Reusable email templates with Handlebars variables |
+| [EmailLog](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/notifications.ts#13-23) | Tracks all sent emails with status |
+| [SmsLog](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/notifications.ts#24-33) | Tracks all SMS messages with status |
+| [Notification](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/notifications.ts#3-12) | In-app notifications per user |
+
+Migration: `add_notifications_system`
+
+---
+
+## 🔧 Backend Modules
+
+### NotificationsModule
+| File | Purpose |
+|------|---------|
+| [notifications.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/notifications/notifications.service.ts) | CRUD + helper methods for notifications |
+| [notifications.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/notifications/notifications.controller.ts) | API endpoints for notifications |
+
+**Endpoints:**
+- `GET /notifications` - Get all notifications
+- `GET /notifications/unread-count` - Get unread count
+- `PATCH /notifications/:id/read` - Mark as read
+- `PATCH /notifications/read-all` - Mark all as read
+- `DELETE /notifications/:id` - Delete notification
+
+### SmsModule
+| File | Purpose |
+|------|---------|
+| [sms.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/sms/sms.service.ts) | Unifonic API integration |
+| [sms.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/sms/sms.controller.ts) | API endpoints for SMS |
+
+**Endpoints:**
+- `GET /sms/logs` - SMS logs (OWNER/ADMIN only)
+- `POST /sms/send` - Send single SMS
+- `POST /sms/send-bulk` - Send bulk SMS
+
+---
+
+## 🎨 Frontend Components
+
+### NotificationsDropdown
+[NotificationsDropdown.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/NotificationsDropdown.tsx)
+- Bell icon with unread count badge
+- Real-time refresh every 30 seconds
+- Click to mark as read
+- Support for INFO, SUCCESS, WARNING, ERROR types
+
+### New UI Components
+- [dropdown-menu.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/ui/dropdown-menu.tsx) - Radix dropdown menu
+- [badge.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/ui/badge.tsx) - Badge component
+
+### API & Hooks
+- [notifications.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/notifications.ts) - API client
+- [use-notifications.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-notifications.ts) - React Query hooks
+
+---
+
+## ✅ Verification
+- Backend build: ✅ Successful
+- Frontend build: ✅ Successful
+
+---
+
+## 📝 Environment Variables (add to `.env`)
+```bash
+# SMS Configuration (Unifonic)
+SMS_API_URL=https://api.unifonic.com/rest/SMS/messages
+SMS_API_KEY=your_unifonic_api_key
+SMS_SENDER_ID=Watheeq
+```

@@ -1,0 +1,15 @@
+# Fix Role Handling
+
+## Verify
+- [/] Check backend /api/auth/me returns correct role
+- [ ] Check AuthProvider reads role from API
+
+## Fix
+- [ ] AuthProvider: no default/fallback role
+- [ ] usePermissions: derive from auth.user.role
+- [ ] Sidebar: hide items based on role
+- [ ] UI: RoleBadge shows actual role
+
+## Test
+- [ ] Build passes
+- [ ] Different roles show different UI

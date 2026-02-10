@@ -1,0 +1,19 @@
+# Phase B2 — Client Experience
+
+## Status: ✅ COMPLETE
+
+---
+
+## Client Case View
+- [x] Case overview tab
+- [x] Timeline tab
+- [x] Notes tab (rich text)
+- [x] Documents tab (upload + list)
+- [x] Tasks tab
+
+## Client Tasks
+- [x] Tasks list page
+- [x] Status toggle
+- [x] Filter tabs (all/pending/done)
+
+## Build: ✅ Successful

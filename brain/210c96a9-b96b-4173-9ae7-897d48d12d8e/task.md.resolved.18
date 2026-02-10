@@ -1,0 +1,14 @@
+# Fix Role Handling ✅
+
+## Verify
+- [x] Check backend /users/me returns correct role
+- [x] Check AuthProvider reads role from API
+
+## Fix
+- [x] api.ts: use /users/me instead of /auth/me
+- [x] usePermissions: read from auth.user.role (no mock)
+- [x] Sidebar: filter items based on role
+- [x] layout.tsx: wrap with AuthProvider
+
+## Test
+- [x] Build passes (16 pages)

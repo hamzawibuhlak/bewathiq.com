@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Plan to add user attribution to timeline activities and implement role-based filtering. Includes schema changes for Hearing.createdById, dashboard service updates for user info and role filtering, and frontend timeline component updates.",
+  "updatedAt": "2026-02-01T15:23:30.496109Z",
+  "version": "2"
+}

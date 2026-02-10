@@ -1,0 +1,32 @@
+# Phase B1 — Core App UX
+
+## Status: 🔧 IN PROGRESS
+
+---
+
+## Pages
+
+### Dashboard
+- [x] Widgets (cases, tasks, notifications)
+- [x] Recent activity timeline
+
+### Cases
+- [x] Cases list table
+- [x] Case details (tabs)
+- [ ] Notes tab enhancement
+
+### Users (NEW)
+- [ ] Users list table
+- [ ] Invite user modal
+
+### Settings (NEW)
+- [ ] Office info form
+- [ ] Branding section
+
+---
+
+## UI Components
+- [x] AppLayout
+- [x] Card, Button, DataTable
+- [x] Input, Select, Textarea
+- [ ] Modal component

@@ -1,0 +1,22 @@
+# Phase F — Encryption Activation
+
+## Status: 🔧 IN PROGRESS
+
+---
+
+## CryptoService
+- [ ] Review existing service
+- [ ] Create field helper
+
+## Field Encryption
+- [ ] Case.notes
+- [ ] Client.notes
+- [ ] Task.description
+
+## Integration
+- [ ] Cases service
+- [ ] Clients service
+- [ ] Tasks service
+
+## Migration
+- [ ] Backward-compatible script

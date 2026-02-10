@@ -1,0 +1,123 @@
+# Watheeq MVP Phase 2: Calendar, Reports & Advanced Search
+
+## Overview
+Implementing Phase 2 features for Watheeq MVP including interactive calendar with email reminders, comprehensive reports dashboard, and global search functionality.
+
+---
+
+## Day 4: Interactive Calendar & Email Reminders
+
+### Backend: Email Module
+
+#### [NEW] [email.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.module.ts)
+- Create email module with nodemailer integration
+
+#### [NEW] [email.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts)
+- `sendHearingReminder()` - Send reminder emails with Arabic HTML template
+
+#### [MODIFY] [hearings.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.module.ts)
+- Import EmailModule
+
+#### [MODIFY] [hearings.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.controller.ts)
+- Add `POST :id/send-reminder` endpoint
+
+#### [MODIFY] [hearings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts)
+- Add `sendReminder()` method
+
+---
+
+### Frontend: Calendar Page
+
+#### [NEW] [CalendarPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/hearings/CalendarPage.tsx)
+- Interactive calendar using FullCalendar
+- Monthly, weekly, daily views
+- Status filter and color coding
+
+#### [MODIFY] API & Hooks
+- Add `sendReminder` API call
+- Add `useSendHearingReminder` hook
+
+---
+
+## Day 5: Reports & Analytics Dashboard
+
+### Backend: Reports Module
+
+#### [NEW] [reports.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/reports/reports.module.ts)
+
+#### [NEW] [reports.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/reports/reports.controller.ts)
+- `GET /dashboard` - Dashboard statistics
+- `GET /financial` - Financial report with date range
+- `GET /cases` - Cases report by period
+- `GET /performance` - Lawyer performance metrics
+
+#### [NEW] [reports.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/reports/reports.service.ts)
+- Aggregate queries for statistics
+- Monthly revenue calculation
+- Cases grouping by status/type
+
+---
+
+### Frontend: Dashboard Components
+
+#### [NEW] [RevenueChart.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/dashboard/RevenueChart.tsx)
+- Line chart for monthly revenue using Recharts
+
+#### [NEW] [CasesChart.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/dashboard/CasesChart.tsx)
+- Pie charts for cases by status and type
+
+---
+
+## Day 6: Advanced Search & Filters
+
+### Backend: Search Module
+
+#### [NEW] [search.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/search/search.module.ts)
+
+#### [NEW] [search.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/search/search.controller.ts)
+- `GET /search?q=` - Global search across all entities
+
+#### [NEW] [search.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/search/search.service.ts)
+- Search cases, clients, hearings, documents, invoices
+
+---
+
+### Frontend: Global Search
+
+#### [NEW] [GlobalSearch.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/GlobalSearch.tsx)
+- Command palette with Cmd+K shortcut
+- Grouped results by entity type
+
+#### [NEW] [useDebounce.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useDebounce.ts)
+
+---
+
+## Dependencies to Install
+
+### Backend
+```bash
+npm install nodemailer
+npm install --save-dev @types/nodemailer
+```
+
+### Frontend
+```bash
+npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
+npm install recharts
+npm install cmdk
+```
+
+---
+
+## Verification Plan
+
+### Backend Tests
+- Test email sending (mock SMTP)
+- Test search API responses
+- Test reports aggregations
+
+### Manual Verification
+- Calendar navigation and event display
+- Email reminder delivery
+- Search results accuracy
+- Charts rendering correctly

@@ -1,0 +1,40 @@
+# Phase 14: PWA & Offline Support
+
+## الهدف
+تحويل Watheeq إلى Progressive Web App
+
+---
+
+## المهام
+
+### Part 1: PWA Configuration ✅
+- [x] إنشاء `public/` directory
+- [x] إنشاء [manifest.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/public/manifest.json)
+- [x] إنشاء icons (72-512px)
+- [x] إنشاء [service-worker.js](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/public/service-worker.js)
+- [x] تحديث [index.html](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/index.html) بـ meta tags
+- [x] إنشاء [registerServiceWorker.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/registerServiceWorker.ts)
+- [x] تحديث [main.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/main.tsx)
+
+### Part 2: Offline Support ✅
+- [x] إنشاء [useOfflineSync.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useOfflineSync.ts) hook
+- [x] إنشاء [OfflineIndicator.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/OfflineIndicator.tsx)
+- [x] إنشاء [InstallPrompt.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/InstallPrompt.tsx)
+- [x] إنشاء [UpdatePrompt.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/UpdatePrompt.tsx)
+
+### Part 3: Integration
+- [x] إضافة PWA components في App.tsx
+- [ ] رفع التحديثات للسيرفر
+- [ ] اختبار على Production
+
+---
+
+## الملفات المُنشأة
+- [frontend/public/manifest.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/public/manifest.json)
+- [frontend/public/service-worker.js](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/public/service-worker.js)
+- `frontend/public/icons/*` (8 أحجام)
+- [frontend/src/registerServiceWorker.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/registerServiceWorker.ts)
+- [frontend/src/hooks/useOfflineSync.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useOfflineSync.ts)
+- [frontend/src/components/layout/OfflineIndicator.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/OfflineIndicator.tsx)
+- [frontend/src/components/InstallPrompt.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/InstallPrompt.tsx)
+- [frontend/src/components/UpdatePrompt.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/UpdatePrompt.tsx)

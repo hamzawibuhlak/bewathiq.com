@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "Complete Wathiq SaaS legal practice management system specification document. Includes: MVP phased strategy, pricing model with 3 tiers, external integrations (payment, AI, WhatsApp, Call Center), Saudi compliance (ZATCA, PDPL, Nafath), AI architecture with RAG, testing strategy, documentation plan, migration strategy. Covers all 20 modules: System Admin, Law Firms, Branches, Departments, Users, Clients, Cases, Tasks, Internal Communication, Client Portal, Accounting, HR, WhatsApp, Call Center, Marketing, Legal Packages, Digital Signage, Reports, Notifications, Storage & Privacy.",
+  "updatedAt": "2026-01-25T17:23:00.212679Z"
+}

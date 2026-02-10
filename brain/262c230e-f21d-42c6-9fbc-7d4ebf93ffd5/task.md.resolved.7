@@ -1,0 +1,26 @@
+# وثيق MVP - نظام الصلاحيات الكامل
+
+## مرحلة 1: Backend Schema & Guards
+- [ ] تحديث Prisma Schema (UserRole enum, assignedLawyerId)
+- [ ] إنشاء RolesGuard و RolesDecorator
+- [ ] Migration وتطبيق التغييرات
+
+## مرحلة 2: Backend Controllers & Services
+- [ ] تحديث CasesController/Service (LAWYER يشوف قضاياه فقط)
+- [ ] تحديث ClientsController/Service
+- [ ] تحديث HearingsController/Service (SECRETARY يضيف/يعدل)
+- [ ] تحديث DocumentsController/Service
+- [ ] تحديث InvoicesController/Service (OWNER/ADMIN فقط)
+- [ ] تحديث UsersController (OWNER فقط)
+
+## مرحلة 3: Frontend
+- [ ] تحديث Auth Store (permission helpers)
+- [ ] إنشاء Can component
+- [ ] تحديث Sidebar (إخفاء حسب الصلاحية)
+- [ ] تحديث الصفحات (إخفاء أزرار حسب الصلاحية)
+
+## مرحلة 4: اختبار
+- [ ] اختبار OWNER
+- [ ] اختبار ADMIN
+- [ ] اختبار LAWYER
+- [ ] اختبار SECRETARY

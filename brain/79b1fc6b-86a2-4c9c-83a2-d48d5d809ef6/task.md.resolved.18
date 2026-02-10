@@ -1,0 +1,22 @@
+# Phase C — Security & Trust Foundation
+
+## Status: 📋 PLANNING
+
+---
+
+## RBAC
+- [ ] Role definitions
+- [ ] Permission matrix
+- [ ] UI role indicators
+
+## Confidential Data
+- [ ] UI skeleton
+- [ ] Access patterns
+
+## Audit Logs
+- [ ] Read-only foundation
+- [ ] Log viewer UI
+
+## Trust UX
+- [ ] Security indicators
+- [ ] Access boundaries

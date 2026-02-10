@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Enable HTTPS for bewathiq.com using Let's Encrypt and Nginx. Steps include generating certificates on the VPS, mounting them into the Docker container, and updating Nginx configuration to force SSL.",
+  "updatedAt": "2026-02-02T21:32:39.266854Z",
+  "version": "2"
+}

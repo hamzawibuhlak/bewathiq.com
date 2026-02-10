@@ -1,0 +1,121 @@
+# نظام الصلاحيات - خطة التنفيذ
+
+## الوضع الحالي
+
+| المكون | الحالة |
+|--------|--------|
+| Schema (UserRole enum) | ✅ موجود |
+| RolesGuard & Decorator | ✅ موجود |
+| UsersController | ✅ مُطبق عليه الصلاحيات |
+| باقي Controllers | ❌ JwtAuthGuard فقط |
+| Frontend permission helpers | ❌ غير موجود |
+
+---
+
+## التغييرات المطلوبة
+
+### Backend
+
+---
+
+#### [MODIFY] [cases.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.controller.ts)
+
+- إضافة [RolesGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/guards/roles.guard.ts#10-34) مع `JwtAuthGuard`
+- `@Roles(OWNER, ADMIN)` للـ create/update/delete
+- `@Roles(OWNER, ADMIN, LAWYER, SECRETARY)` للـ findAll/findOne
+- تمرير `userId` و `userRole` للـ Service للتصفية
+
+---
+
+#### [MODIFY] [cases.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts)
+
+- [findAll](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.controller.ts#38-44): إذا `LAWYER` → فلترة حسب `assignedToId = userId`
+- [findOne](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.controller.ts#72-78): التحقق من ملكية المحامي للقضية
+- `update/remove`: OWNER/ADMIN فقط، أو LAWYER لقضاياه
+
+---
+
+#### [MODIFY] [clients.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/clients/clients.controller.ts)
+
+- إضافة [RolesGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/guards/roles.guard.ts#10-34)
+- `@Roles(OWNER, ADMIN)` للـ create/update/delete
+- الكل يقدر يقرأ
+
+---
+
+#### [MODIFY] [hearings.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.controller.ts)
+
+- إضافة [RolesGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/guards/roles.guard.ts#10-34)
+- الكل يقدر يقرأ
+- `@Roles(OWNER, ADMIN, SECRETARY)` للـ create/update
+- `@Roles(OWNER, ADMIN)` للـ delete
+
+---
+
+#### [MODIFY] [documents.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.controller.ts)
+
+- إضافة [RolesGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/guards/roles.guard.ts#10-34)
+- الكل يقدر يقرأ
+- `@Roles(OWNER, ADMIN, LAWYER)` للـ upload
+- `@Roles(OWNER, ADMIN)` للـ delete
+
+---
+
+#### [MODIFY] [invoices.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/invoices/invoices.controller.ts)
+
+- إضافة [RolesGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/guards/roles.guard.ts#10-34)
+- `@Roles(OWNER, ADMIN)` لكل العمليات
+- LAWYER/SECRETARY يشوفون فواتير قضاياهم فقط (قراءة)
+
+---
+
+### Frontend
+
+---
+
+#### [MODIFY] [auth.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts)
+
+إضافة permission helpers:
+```typescript
+// Role checks
+isOwner: () => get().user?.role === 'OWNER'
+isAdmin: () => ['OWNER', 'ADMIN'].includes(get().user?.role)
+isLawyer: () => get().user?.role === 'LAWYER'
+isSecretary: () => get().user?.role === 'SECRETARY'
+
+// Permission checks
+canManageUsers: () => get().user?.role === 'OWNER'
+canManageInvoices: () => ['OWNER', 'ADMIN'].includes(get().user?.role)
+canManageCases: () => ['OWNER', 'ADMIN', 'LAWYER'].includes(get().user?.role)
+canManageHearings: () => ['OWNER', 'ADMIN', 'SECRETARY'].includes(get().user?.role)
+```
+
+---
+
+#### [NEW] [Can.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/Can.tsx)
+
+```tsx
+<Can perform="manage" on="users">
+  <Button>إضافة مستخدم</Button>
+</Can>
+```
+
+---
+
+#### [MODIFY] [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+
+- إخفاء "الفواتير" عن SECRETARY
+- إخفاء "المستخدمون" عن غير OWNER/ADMIN
+
+---
+
+## Verification Plan
+
+### اختبار يدوي
+
+1. **تسجيل دخول كـ OWNER** → تأكد من رؤية كل شي
+2. **تسجيل دخول كـ LAWYER** → تأكد يشوف قضاياه فقط
+3. **تسجيل دخول كـ SECRETARY** → تأكد لا يشوف الفواتير
+
+> [!IMPORTANT]
+> سأستخدم Browser لاختبار كل Role بعد التنفيذ

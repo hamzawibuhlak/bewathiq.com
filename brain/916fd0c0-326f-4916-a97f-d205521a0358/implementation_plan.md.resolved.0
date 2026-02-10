@@ -1,0 +1,200 @@
+# Phase 13: Advanced Features & Enhancements - Implementation Plan
+
+## Goal
+إضافة ميزات متقدمة لتحسين تجربة المستخدم وتعزيز أمان النظام، تشمل:
+1. **Dashboard Analytics المحسن** - رسوم بيانية تفاعلية
+2. **Two-Factor Authentication (2FA)** - مصادقة ثنائية
+3. **Email Templates المحسنة** - قوالب بريد HTML
+4. **Import Data** - استيراد بيانات من Excel
+
+---
+
+## 📊 Current State Analysis
+
+### ✅ Already Exists (No Changes Needed):
+| Component | Status | Details |
+|-----------|--------|---------|
+| [DashboardService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.service.ts#44-450) | ✅ موجود | 451 سطر - إحصائيات أساسية |
+| [EmailService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#6-382) | ✅ موجود | 382 سطر - nodemailer مع templates |
+| `ExportsService` | ✅ موجود | 32KB - Excel export للقضايا والعملاء |
+| `Recharts` | ✅ مثبت | v2.15.4 في Frontend |
+| `ExcelJS` | ✅ مثبت | v4.4.0 في Backend |
+
+### ❌ Needs Implementation:
+| Component | Status | Details |
+|-----------|--------|---------|
+| 2FA | ❌ غير موجود | يحتاج speakeasy, qrcode |
+| Dashboard Charts | ⚠️ جزئي | يحتاج trends & graphs |
+| Import Service | ❌ غير موجود | يحتاج استيراد Excel |
+| Email Templates | ⚠️ جزئي | يحتاج قوالب HTML إضافية |
+
+---
+
+## 🛠️ Proposed Changes
+
+### Part 1: Dashboard Analytics Enhancement
+
+#### [MODIFY] [dashboard.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.service.ts)
+- إضافة `getCasesTrend()` - اتجاه القضايا آخر 12 شهر
+- إضافة `getRevenueTrend()` - اتجاه الإيرادات آخر 12 شهر
+- إضافة `getCasesByType()` - توزيع القضايا حسب النوع
+- إضافة `getCasesByStatus()` - توزيع القضايا حسب الحالة
+- إضافة `getTopClients()` - أكثر العملاء نشاطاً
+- إضافة `getLawyerPerformance()` - أداء المحامين
+
+#### [MODIFY] [dashboard.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.controller.ts)
+- إضافة endpoints جديدة للـ trends والرسوم البيانية
+
+#### [MODIFY] [DashboardPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/DashboardPage.tsx)
+- إضافة رسوم بيانية باستخدام Recharts
+- Line Chart للـ trends
+- Pie Chart لتوزيع القضايا
+- Bar Chart للإيرادات
+
+#### [NEW] [dashboard.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/dashboard.api.ts)
+- إضافة API functions للـ endpoints الجديدة
+
+---
+
+### Part 2: Two-Factor Authentication (2FA)
+
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+```diff
+model User {
+  // ... existing fields
++ twoFactorEnabled  Boolean   @default(false)
++ twoFactorSecret   String?
+}
+```
+
+#### [NEW] [two-factor.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/two-factor.service.ts)
+- `generateSecret()` - توليد QR code
+- `enable()` - تفعيل 2FA بعد التحقق
+- `disable()` - إلغاء التفعيل
+- `verify()` - التحقق من الرمز
+
+#### [MODIFY] [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts)
+- تعديل [login()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#99-148) لدعم 2FA
+- إرجاع `requiresTwoFactor` إذا كان مفعلاً
+
+#### [MODIFY] [auth.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts)
+- إضافة `POST /auth/2fa/generate`
+- إضافة `POST /auth/2fa/enable`
+- إضافة `POST /auth/2fa/disable`
+
+#### [NEW] [TwoFactorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/TwoFactorPage.tsx)
+- صفحة إعدادات 2FA
+- عرض QR code
+- إدخال رمز التحقق
+
+---
+
+### Part 3: Import Data Service
+
+#### [NEW] [import.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/exports/import.service.ts)
+- `importCases()` - استيراد قضايا من Excel
+- `importClients()` - استيراد عملاء من Excel
+- معالجة الأخطاء row-by-row
+
+#### [NEW] [import.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/exports/import.controller.ts)
+- `POST /import/cases` - رفع ملف Excel للقضايا
+- `POST /import/clients` - رفع ملف Excel للعملاء
+
+---
+
+### Part 4: Email Templates Enhancement
+
+#### [NEW] [templates/](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/templates/)
+- `invitation.hbs` - دعوة مستخدم جديد
+- `password-reset.hbs` - إعادة تعيين كلمة المرور
+- `case-assigned.hbs` - تعيين قضية
+- `task-reminder.hbs` - تذكير بمهمة
+
+---
+
+## 📦 Dependencies to Install
+
+### Backend:
+```bash
+npm install speakeasy qrcode
+npm install --save-dev @types/qrcode
+```
+
+### Frontend:
+> ℹ️ `recharts` مثبت بالفعل (v2.15.4)
+
+---
+
+## Verification Plan
+
+### Automated Tests
+
+#### 1. Backend Unit Tests
+```bash
+cd backend
+npm run test -- --testPathPattern="dashboard|auth|export"
+```
+
+#### 2. Build Verification
+```bash
+# Backend
+cd backend && npm run build
+
+# Frontend
+cd frontend && npm run build
+```
+
+### Manual Verification
+
+#### Dashboard Charts:
+1. تسجيل الدخول كـ OWNER
+2. التحقق من ظهور الرسوم البيانية:
+   - Cases Trend (آخر 12 شهر)
+   - Revenue Trend
+   - Cases by Type (Pie Chart)
+   - Top Clients
+
+#### 2FA:
+1. الذهاب إلى **الإعدادات > الأمان**
+2. النقر على **تفعيل المصادقة الثنائية**
+3. مسح QR code بتطبيق Google Authenticator
+4. إدخال الرمز للتفعيل
+5. تسجيل الخروج والدخول مرة أخرى
+6. التحقق من طلب رمز 2FA
+
+#### Import:
+1. تحميل نموذج Excel للعملاء
+2. ملء البيانات وحفظ الملف
+3. رفع الملف عبر **استيراد عملاء**
+4. التحقق من ظهور العملاء الجدد
+
+---
+
+## Implementation Priority
+
+| # | Feature | Priority | Estimated Time |
+|---|---------|----------|----------------|
+| 1 | Dashboard Charts | 🔴 عالية | 2-3 ساعات |
+| 2 | 2FA | 🔴 عالية | 3-4 ساعات |
+| 3 | Import Service | 🟡 متوسطة | 2 ساعات |
+| 4 | Email Templates | 🟢 منخفضة | 1-2 ساعة |
+
+---
+
+## Risk Assessment
+
+| Risk | Mitigation |
+|------|------------|
+| 2FA قد يغلق المستخدم | إضافة backup codes (مستقبلاً) |
+| Import قد يُفشل في بيانات كبيرة | معالجة batch + progress indicator |
+| Charts قد تبطئ الصفحة | lazy loading + caching |
+
+---
+
+## ✅ Ready to Proceed
+
+**الخطوة التالية:** بعد الموافقة، سأبدأ بـ:
+1. تثبيت dependencies (speakeasy, qrcode)
+2. تحديث Prisma Schema لـ 2FA
+3. إنشاء Two-Factor Service
+4. تحديث Dashboard Service & Frontend

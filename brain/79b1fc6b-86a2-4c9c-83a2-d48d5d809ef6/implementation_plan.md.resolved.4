@@ -1,0 +1,184 @@
+# Phase D2 — Schema Encryption Design
+
+## Status: 📋 DESIGN ONLY — Awaiting Approval
+
+---
+
+## Step A: Fields to Encrypt
+
+### Case Entity
+
+| Field | Exists? | Encrypt? | Justification |
+|-------|---------|----------|---------------|
+| `title` | Yes | **No** | Needed for search/listing |
+| `status` | Yes | **No** | Needed for filtering |
+| `notes` | **No** | **Yes** | Sensitive legal notes, free-text |
+| `internalComments` | **No** | **Yes** | Internal-only remarks |
+
+### Client Entity
+
+| Field | Exists? | Encrypt? | Justification |
+|-------|---------|----------|---------------|
+| `name` | Yes | **No** | Needed for display/search |
+| `email` | Yes | **No** | Needed for contact lookup |
+| `phone` | Yes | **No** | Needed for contact lookup |
+| `notes` | **No** | **Yes** | Sensitive client information |
+| `address` | **No** | Consider | May contain sensitive details |
+
+### Task Entity
+
+| Field | Exists? | Encrypt? | Justification |
+|-------|---------|----------|---------------|
+| `title` | Yes | **No** | Needed for listing |
+| `status` | Yes | **No** | Needed for filtering |
+| `description` | **No** | **Yes** | May contain case-sensitive details |
+
+### Document Entity
+
+| Field | Exists? | Encrypt? | Justification |
+|-------|---------|----------|---------------|
+| `filename` | Yes | **No** | Needed for display |
+| `content` | **No** | **Yes** | File contents (if stored in DB) |
+
+> [!NOTE]
+> Document content is typically stored in filesystem/S3, not DB. If stored in DB, encrypt.
+
+---
+
+## Step B: Schema Design Options
+
+### Option 1: Inline Encrypted Columns
+
+Add encrypted fields directly to existing models.
+
+```
+Case:
+  + notes          String?  // Encrypted ciphertext
+  + notesVersion   Int @default(1)  // Key version
+
+Client:
+  + notes          String?
+  + notesVersion   Int @default(1)
+
+Task:
+  + description    String?
+  + descVersion    Int @default(1)
+```
+
+**Pros:**
+- Simple, direct access
+- No joins required
+- Easy to understand
+
+**Cons:**
+- Schema changes per entity
+- Version column per field
+
+---
+
+### Option 2: Separate EncryptedField Table
+
+Create a generic encrypted storage table.
+
+```
+EncryptedField:
+  id          String @id
+  entityType  String   // "Case", "Client", "Task"
+  entityId    String   // FK to entity
+  fieldName   String   // "notes", "description"
+  ciphertext  String
+  keyVersion  Int @default(1)
+  createdAt   DateTime
+  updatedAt   DateTime
+
+  @@unique([entityType, entityId, fieldName])
+```
+
+**Pros:**
+- No schema changes to entities
+- Centralized encryption storage
+- Easy to audit
+
+**Cons:**
+- Extra join on every read
+- More complex queries
+- Performance overhead
+
+---
+
+### Option 3: JSON Encrypted Blob
+
+Single encrypted JSON column per entity.
+
+```
+Case:
+  + encryptedData   String?  // {"notes": "...", "comments": "..."}
+  + encryptedVersion Int @default(1)
+```
+
+**Pros:**
+- Single column for all sensitive data
+- Flexible field addition
+
+**Cons:**
+- Cannot query individual fields
+- All-or-nothing decryption
+- Schema evolution harder
+
+---
+
+### Recommendation
+
+**Option 1 (Inline Columns)** — Best balance of simplicity and performance.
+
+---
+
+## Step C: Key Strategy
+
+### System-Wide vs Per-Tenant Keys
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **System-wide** | Simple ops, single key | All data uses same key |
+| **Per-tenant** | Tenant isolation | Complex key management |
+
+**Recommendation:** System-wide key
+
+Rationale:
+- Tenant isolation already enforced at application layer
+- Per-tenant keys require key storage/retrieval per request
+- No regulatory requirement for per-tenant keys
+- Significantly simpler operations
+
+---
+
+### Key Versioning Strategy
+
+| Version | Purpose |
+|---------|---------|
+| `v1` | Initial key |
+| `v2` | After rotation |
+
+Ciphertext format: `v{n}:{iv}:{authTag}:{ciphertext}`
+
+**Rotation Process:**
+1. Add new key as `ENCRYPTION_KEY_V2`
+2. New writes use `v2`
+3. Reads support both `v1` and `v2`
+4. Background job re-encrypts `v1` → `v2`
+5. Remove old key after completion
+
+---
+
+## Summary of Recommendations
+
+| Decision | Choice |
+|----------|--------|
+| Fields to encrypt | Case.notes, Client.notes, Task.description |
+| Schema approach | Option 1 (Inline columns) |
+| Key scope | System-wide |
+| Key versioning | Yes (`v1`, `v2`, ...) |
+
+---
+
+**Awaiting explicit approval before any implementation.**

@@ -1,0 +1,26 @@
+# Phase E — Core Backend
+
+## Status: 📋 PLANNING
+
+---
+
+## Auth & Sessions
+- [ ] Review existing auth
+- [ ] Session enforcement
+- [ ] RBAC middleware
+
+## Users
+- [ ] RBAC enforcement
+- [ ] Subscription limits
+
+## Cases
+- [ ] CRUD with ownership
+- [ ] Role-based filtering
+
+## Audit Logs
+- [ ] Audit service
+- [ ] Write on actions
+
+## Subscription
+- [ ] Limit enforcement
+- [ ] Trial checks

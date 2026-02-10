@@ -1,0 +1,38 @@
+# Phase 18: Advanced Security & Compliance
+
+## Part 1: Two-Factor Authentication (2FA)
+- [ ] Database schema for 2FA fields
+- [ ] Install speakeasy + qrcode
+- [ ] TwoFactorService implementation
+- [ ] Update AuthService for 2FA flow
+- [ ] TwoFactorController endpoints
+
+## Part 2: Password Policies
+- [ ] Password policy configuration
+- [ ] PasswordValidator with strength check
+- [ ] PasswordHistory model
+- [ ] Integration with auth flows
+
+## Part 3: Data Encryption
+- [ ] EncryptionService (AES-256)
+- [ ] Encrypt sensitive fields (Client, Document)
+
+## Part 4: Audit Trail
+- [ ] AuditLog model
+- [ ] AuditService with create/update/delete logging
+- [ ] AuditInterceptor for automatic logging
+
+## Part 5: Advanced RBAC
+- [ ] Enhanced UserPermission model
+- [ ] AdvancedPermissionsService
+- [ ] AdvancedPermissionGuard
+
+## Part 6: Security Monitoring
+- [ ] SecurityEvent model
+- [ ] SecurityMonitoringService
+- [ ] SecurityMiddleware (SQL injection, XSS)
+
+## Part 7: Compliance
+- [ ] GdprService (6 rights)
+- [ ] SaudiComplianceService (NCA)
+- [ ] ComplianceController + Dashboard

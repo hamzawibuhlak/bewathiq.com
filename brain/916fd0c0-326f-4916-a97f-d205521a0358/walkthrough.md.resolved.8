@@ -1,0 +1,94 @@
+# Phase 21: Analytics & Business Intelligence Walkthrough
+
+## Implementation Summary
+
+تم تنفيذ Phase 21 بنجاح لإضافة نظام تحليلات متقدم وذكاء أعمال لمنصة Watheeq.
+
+---
+
+## Backend Implementation
+
+### Analytics Service
+[analytics.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/analytics.service.ts)
+- **Cases Analytics**: تحليل القضايا حسب الحالة، النوع، الأولوية
+- **Financial Analytics**: إجمالي الإيرادات، المدفوعات، المعلقات، المتأخرات
+- **Client Analytics**: العملاء النشطين، معدل الاحتفاظ، متوسط القضايا لكل عميل
+- **Performance Analytics**: أداء المحامين وإحصائيات الفريق
+- **Trends Analytics**: اتجاهات 12 شهر للقضايا والإيرادات والعملاء
+
+### Analytics Controller
+[analytics.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/analytics.controller.ts)
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /analytics/overview` | نظرة عامة شاملة |
+| `GET /analytics/cases` | تحليلات القضايا |
+| `GET /analytics/financial` | التحليلات المالية |
+| `GET /analytics/clients` | تحليلات العملاء |
+| `GET /analytics/performance` | أداء الفريق |
+| `GET /analytics/trends` | الاتجاهات |
+| `GET /analytics/kpi` | مؤشرات الأداء الرئيسية |
+
+### Predictive Analytics Service
+[predictive.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/predictive.service.ts)
+- تنبؤ مدة القضية
+- تنبؤ الإيرادات (شهري/ربع سنوي/سنوي)
+- اكتشاف مخاطر فقدان العملاء
+- رؤى ذكية مبنية على القواعد
+
+### Report Builder Service
+[report-builder.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/report-builder.service.ts)
+- منشئ استعلامات ديناميكي
+- قوالب تقارير جاهزة
+- دعم الفلاتر والتجميع والترتيب
+
+---
+
+## Frontend Implementation
+
+### Advanced Analytics Page
+[AdvancedAnalyticsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/analytics/AdvancedAnalyticsPage.tsx)
+
+**المميزات:**
+- بطاقات KPI (القضايا، الإيرادات، العملاء، مدة القضية)
+- رسوم بيانية للقضايا حسب الحالة والنوع
+- ملخص المدفوعات (مدفوعة، معلقة، متأخرة)
+- أفضل العملاء وأداء الفريق
+- تطور الإيرادات الشهرية
+- فلاتر التاريخ التفاعلية
+
+---
+
+## Files Created/Modified
+
+### Backend
+| File | Action |
+|------|--------|
+| [analytics.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/analytics.service.ts) | Created (~700 lines) |
+| [analytics.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/analytics.controller.ts) | Created (130 lines) |
+| [predictive.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/predictive.service.ts) | Created (290 lines) |
+| [report-builder.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/report-builder.service.ts) | Created (240 lines) |
+| [analytics.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/analytics/analytics.module.ts) | Modified |
+
+### Frontend
+| File | Action |
+|------|--------|
+| [AdvancedAnalyticsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/analytics/AdvancedAnalyticsPage.tsx) | Created (~400 lines) |
+| [analytics.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/analytics.ts) | Created |
+| [index.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/index.ts) | Created |
+
+---
+
+## Verification
+
+```bash
+# Backend Build
+cd backend && npm run build
+# ✅ Exit code: 0
+```
+
+## Next Steps
+
+1. **تشغيل Frontend**: `cd frontend && npm run dev`
+2. **إضافة Route**: أضف route للـ [/analytics](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/analytics) في الـ router
+3. **Deploy**: رفع التحديثات للسيرفر

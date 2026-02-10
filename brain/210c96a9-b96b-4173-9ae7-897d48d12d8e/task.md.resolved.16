@@ -1,0 +1,25 @@
+# Demo-Ready Frontend
+
+## Auth
+- [x] Auth Context + Provider (api.ts + AuthProvider.tsx)
+- [x] Logout functionality (Topbar dropdown)
+- [x] Route protection (AuthProvider redirect logic)
+- [x] Session expiry handling (token refresh)
+
+## User Management (/users)
+- [x] List users from API
+- [x] Create user modal (CreateUserModal)
+- [x] Disable/Enable user
+
+## Company Settings (/settings)
+- [x] View company info
+- [x] Edit company form (real API)
+
+## Core Pages
+- [x] /organizations
+- [x] /documents
+- [x] /permissions
+- [x] /access-denied
+
+## Build
+- [ ] Final build test

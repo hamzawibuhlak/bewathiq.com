@@ -1,0 +1,27 @@
+# Phase B1 — Core App UX
+
+## Status: ✅ COMPLETE
+
+---
+
+## Pages
+
+### Dashboard
+- [x] Widgets (cases, tasks, notifications)
+- [x] Recent activity timeline
+
+### Cases
+- [x] Cases list table
+- [x] Case details (tabs)
+
+### Users
+- [x] Users list table
+- [x] Invite user modal
+
+### Settings
+- [x] Office info form
+- [x] Branding section
+
+---
+
+## Build: ✅ Successful

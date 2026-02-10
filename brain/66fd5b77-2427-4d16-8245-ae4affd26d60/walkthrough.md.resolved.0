@@ -1,0 +1,174 @@
+# Watheeq MVP Phase 2 - Implementation Walkthrough
+
+## Overview
+Successfully implemented Phase 2 features covering Days 4-6 of the development plan, including:
+- **Email Reminders** for hearings
+- **Reports & Analytics** dashboard with charts
+- **Global Search** functionality with command palette
+
+---
+
+## Day 4: Email Service & Calendar Enhancements
+
+### Backend: Email Module
+Created a complete email service for sending notifications.
+
+#### New Files:
+- [email.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.module.ts) - Email module registration
+- [email.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts) - Email service with Arabic HTML templates
+
+#### Features:
+- [sendHearingReminder()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#23-210) - Beautiful Arabic email template for hearing reminders
+- [sendInvoiceEmail()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#211-276) - Invoice notification emails
+- Configurable SMTP settings via environment variables
+
+#### Modified Files:
+- [hearings.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.controller.ts) - Added `POST /hearings/:id/send-reminder`
+- [hearings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts) - Added [sendReminder()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts#424-472) method
+
+### Frontend: Calendar Enhancements
+- Added [sendReminder](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts#424-472) to [hearings.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/hearings.api.ts)
+- Added [useSendHearingReminder](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-hearings.ts#95-108) hook to [use-hearings.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-hearings.ts)
+
+---
+
+## Day 5: Reports & Analytics
+
+### Backend: Reports Module
+Created comprehensive analytics endpoints.
+
+#### New Files:
+- [reports.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/reports/reports.module.ts)
+- [reports.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/reports/reports.controller.ts)
+- [reports.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/reports/reports.service.ts)
+
+#### Endpoints:
+| Endpoint | Description |
+|----------|-------------|
+| `GET /reports/dashboard` | Comprehensive dashboard statistics |
+| `GET /reports/financial` | Financial report with date range |
+| `GET /reports/cases` | Cases report by period |
+| `GET /reports/performance` | Lawyer performance metrics |
+
+#### Dashboard Stats Include:
+- Cases: total, active, closed
+- Clients: total, active
+- Hearings: total, upcoming, thisWeek, today
+- Invoices: total, paid, pending, overdue, revenue
+- Cases by status and type (for charts)
+- Monthly revenue (last 6 months)
+- Recent cases and hearings
+
+### Frontend: Charts & Reports
+
+#### New Files:
+- [reports.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/reports.api.ts) - Reports API client
+- [use-reports.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-reports.ts) - Reports hooks
+- [RevenueChart.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/dashboard/RevenueChart.tsx) - Area chart with gradient
+- [CasesChart.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/dashboard/CasesChart.tsx) - Donut charts
+
+---
+
+## Day 6: Global Search
+
+### Backend: Search Module
+
+#### New Files:
+- [search.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/search/search.module.ts)
+- [search.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/search/search.controller.ts)
+- [search.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/search/search.service.ts)
+
+#### Endpoints:
+| Endpoint | Description |
+|----------|-------------|
+| `GET /search?q=` | Global search across all entities |
+| `GET /search/suggestions` | Autocomplete suggestions |
+
+#### Search Covers:
+- Cases (number, title, description, court, opposing party)
+- Clients (name, email, phone, national ID, company)
+- Hearings (court, notes, case title)
+- Documents (title, filename, description)
+- Invoices (number, description, client name)
+
+### Frontend: Command Palette
+
+#### New Files:
+- [search.api.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/search.api.ts) - Search API client
+- [useDebounce.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useDebounce.ts) - Debounce hook
+- [use-search.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-search.ts) - Search hooks
+- [GlobalSearch.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/GlobalSearch.tsx) - Command palette component
+
+#### Features:
+- Press `⌘K` to open search
+- Results grouped by type (cases, clients, hearings, documents, invoices)
+- Keyboard navigation with arrow keys
+- Press Enter to navigate to selected item
+- Beautiful icons and status badges
+
+#### Modified Files:
+- [Header.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Header.tsx) - Integrated GlobalSearch with keyboard shortcut
+
+---
+
+## Dependencies Installed
+
+### Backend
+```bash
+npm install nodemailer @types/nodemailer
+```
+
+### Frontend
+```bash
+npm install @fullcalendar/core @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
+npm install recharts
+npm install cmdk
+```
+
+---
+
+## Build Verification
+
+### Backend
+```
+✓ npm run build - Success
+```
+
+### Frontend
+```
+✓ npm run build - Success
+✓ built in 3.10s
+```
+
+---
+
+## Environment Variables Required
+
+Add to `.env`:
+```env
+# Email Configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM=noreply@watheeq.sa
+```
+
+---
+
+## Usage Guide
+
+### Sending Hearing Reminders
+1. Open a hearing detail page
+2. Click "إرسال تذكير" button
+3. Email sent to client if they have an email address
+
+### Using Global Search
+1. Press `⌘K` (Mac) or `Ctrl+K` (Windows)
+2. Type your search query
+3. Use arrow keys to navigate results
+4. Press Enter to go to selected item
+
+### Viewing Reports
+- Dashboard now shows revenue charts and case distribution
+- Use `/reports` endpoints for detailed analytics

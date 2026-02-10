@@ -1,0 +1,105 @@
+# Phase C2 — Production Hardening Implementation Plan
+
+Harden the existing VPS deployment with HTTPS, basic backups, and basic monitoring. No Docker, Kubernetes, or external services.
+
+---
+
+## Proposed Changes
+
+### 🔒 SSL Setup (Let's Encrypt)
+
+#### [NEW] [setup-ssl.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/setup-ssl.sh)
+- Install Certbot with Nginx plugin
+- Obtain SSL certificate for domain
+- Verify auto-renewal is configured
+- Show verification commands
+
+#### [NEW] [nginx-ssl.conf](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/nginx-ssl.conf)
+- HTTPS server block (port 443)
+- HTTP → HTTPS redirect (port 80)
+- SSL certificate paths for Let's Encrypt
+- Reuse existing proxy settings
+
+---
+
+### 💾 Backup System
+
+#### [NEW] [backup-postgres.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/backup-postgres.sh)
+- Daily pg_dump to `/var/backups/wathiq/postgres/`
+- Filename format: `wathiq_db_YYYY-MM-DD.sql.gz`
+- Auto-delete backups older than 7 days
+- Log backup results
+
+#### [NEW] [setup-backups.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/setup-backups.sh)
+- Create backup directories
+- Set permissions
+- Install cron job (daily at 2 AM)
+- Verify cron entry
+
+---
+
+### 📊 Monitoring
+
+#### [NEW] [monitor-disk.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/monitor-disk.sh)
+- Check disk usage percentage
+- Log warning if usage > 80%
+- Simple file-based alerts (no external services)
+
+#### [NEW] [setup-monitoring.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/setup-monitoring.sh)
+- Install htop
+- Configure PM2 log rotation (max 10MB, keep 10 files)
+- Set up disk monitoring cron (every 6 hours)
+- Verify PM2 status
+
+---
+
+### 📋 Documentation
+
+#### [MODIFY] [DEPLOYMENT.md](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/DEPLOYMENT.md)
+- Add Phase C2 section
+- SSL setup instructions
+- Backup verification commands
+- Monitoring commands
+
+---
+
+## Verification Plan
+
+### On VPS (Manual)
+
+After deploying scripts to VPS, run:
+
+```bash
+# 1. SSL Verification
+sudo bash setup-ssl.sh YOUR_DOMAIN
+curl -I https://YOUR_DOMAIN/api/health  # Should return 200
+sudo certbot renew --dry-run             # Should succeed
+
+# 2. Backup Verification
+sudo bash setup-backups.sh
+sudo bash backup-postgres.sh             # Run manual backup
+ls -la /var/backups/wathiq/postgres/     # Should show .sql.gz file
+
+# 3. Monitoring Verification
+sudo bash setup-monitoring.sh
+pm2 status                               # Should show healthy
+htop                                     # Should be installed
+cat /var/log/wathiq/disk-monitor.log     # Should show disk status
+```
+
+---
+
+## What Will NOT Be Implemented
+
+| Excluded | Reason |
+|----------|--------|
+| Wildcard SSL cert | Not required |
+| External backups | Phase C2 scope |
+| Prometheus/Grafana | Too complex |
+| Email alerts | Requires SMTP setup |
+| Docker/Kubernetes | Excluded by requirements |
+
+---
+
+> [!NOTE]
+> All scripts are designed to be run on Ubuntu 22.04 VPS where Phase C1 is already deployed.

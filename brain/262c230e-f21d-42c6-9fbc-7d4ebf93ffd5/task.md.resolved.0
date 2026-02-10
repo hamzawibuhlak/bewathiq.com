@@ -1,0 +1,32 @@
+# Watheeq MVP Backend Setup
+
+## Phase 1: Project Configuration
+- [ ] Create `package.json` with all dependencies
+- [ ] Create `tsconfig.json`
+- [ ] Create `.env.example`
+- [ ] Create `.gitignore`
+- [ ] Create `nest-cli.json`
+
+## Phase 2: Core Files
+- [ ] Create `src/main.ts` with Swagger, CORS, validation
+- [ ] Create `src/app.module.ts`
+
+## Phase 3: Prisma Schema
+- [ ] Create `prisma/schema.prisma` with all models:
+  - Tenant, User, Client, Case, Hearing, Document, Invoice
+
+## Phase 4: Common Module
+- [ ] Create decorators (`@TenantId`, `@CurrentUser`)
+- [ ] Create guards (`JwtAuthGuard`, `RolesGuard`)
+- [ ] Create filters (`HttpExceptionFilter`)
+
+## Phase 5: Feature Modules (Structure Only)
+- [ ] Auth module
+- [ ] Users module
+- [ ] Tenants module
+- [ ] Cases module
+- [ ] Hearings module
+- [ ] Clients module
+- [ ] Documents module
+- [ ] Invoices module
+- [ ] Dashboard module

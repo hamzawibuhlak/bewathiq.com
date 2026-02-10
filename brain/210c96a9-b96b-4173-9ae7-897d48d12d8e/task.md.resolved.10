@@ -1,0 +1,22 @@
+# Phase B1 — Payments (Gateway-Agnostic Layer)
+
+## Prisma Schema
+- [/] PaymentStatus enum
+- [ ] PaymentIntent model
+- [ ] Payment model
+
+## Payment Intents Module
+- [ ] DTOs
+- [ ] Service
+- [ ] Controller
+
+## Payments Module
+- [ ] DTOs
+- [ ] Service
+- [ ] Controller
+
+## Audit Logging
+- [ ] Add payment actions
+
+## Verification
+- [ ] Build test

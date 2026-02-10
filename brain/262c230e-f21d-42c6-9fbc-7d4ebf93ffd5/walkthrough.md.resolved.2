@@ -1,0 +1,97 @@
+# ✅ إصلاح نظام الصلاحيات - تم بنجاح!
+
+## الإصلاحات المنفذة
+
+### 1. صفحة المستخدمين - OWNER فقط ✅
+
+**قبل:** OWNER + ADMIN
+**بعد:** OWNER فقط
+
+```diff
+# UsersController
+- @Roles(UserRole.OWNER, UserRole.ADMIN)
++ @Roles(UserRole.OWNER)
+  async findAll() { ... }
+```
+
+**Sidebar:**
+```diff
+- { path: '/settings/users', roles: ['OWNER', 'ADMIN'] }
++ { path: '/settings/users', roles: ['OWNER'] }
+```
+
+---
+
+### 2. ربط القضايا بالمحامي ✅
+
+**Backend - endpoint جديد:**
+```
+GET /api/users/lawyers
+```
+يرجع قائمة المحامين لاختيارهم في القضية.
+
+**Frontend - CaseForm:**
+- أضفنا حقل "المحامي المسؤول" (dropdown)
+- LAWYER → تلقائياً يختار نفسه
+- OWNER/ADMIN → يختار أي محامي
+
+**ملفات محدثة:**
+| ملف | التغيير |
+|-----|---------|
+| [users.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.controller.ts) | OWNER only + /lawyers endpoint |
+| [users.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.service.ts) | [findByRole()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.service.ts#262-284) method |
+| [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) | Users for OWNER only |
+| [CaseForm.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/cases/CaseForm.tsx) | Lawyer dropdown |
+| [CreateCasePage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/cases/CreateCasePage.tsx) | Fetch lawyers |
+| [EditCasePage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/cases/EditCasePage.tsx) | Fetch lawyers + hide delete |
+| [use-lawyers.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-lawyers.ts) | New hook |
+
+---
+
+### 3. إخفاء زر الحذف ✅
+
+**EditCasePage:**
+- زر "حذف القضية" يظهر فقط لـ OWNER/ADMIN
+
+---
+
+## ملخص الصلاحيات النهائي
+
+| الميزة | OWNER | ADMIN | LAWYER | SECRETARY |
+|--------|-------|-------|--------|-----------|
+| صفحة المستخدمين | ✅ | ❌ | ❌ | ❌ |
+| صفحة الفواتير | ✅ | ✅ | ❌ | ❌ |
+| إنشاء قضايا | ✅ | ✅ | ✅ | ❌ |
+| حذف قضايا | ✅ | ✅ | ❌ | ❌ |
+| رؤية القضايا | كلها | كلها | قضاياه | قراءة |
+| اختيار المحامي | ✅ | ✅ | تلقائي | - |
+
+---
+
+## كيفية الاختبار
+
+1. **OWNER (test@test.com):**
+   - يشوف "المستخدمون" ✅
+   - يشوف "الفواتير" ✅
+   - يختار أي محامي للقضية ✅
+
+2. **ADMIN:**
+   - ما يشوف "المستخدمون" ❌
+   - يشوف "الفواتير" ✅
+
+3. **LAWYER:**
+   - يشوف قضاياه فقط
+   - تلقائياً يُختار كمحامي للقضايا الجديدة
+   - ما يشوف زر الحذف
+
+4. **SECRETARY:**
+   - يشوف كل القضايا (قراءة فقط)
+   - يضيف/يعدل الجلسات فقط
+
+---
+
+## الروابط
+
+- **Frontend:** http://localhost:5173
+- **Backend:** http://localhost:3000/api
+- **Swagger:** http://localhost:3000/api/docs

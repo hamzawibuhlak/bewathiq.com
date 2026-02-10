@@ -1,0 +1,25 @@
+# Demo-Ready Frontend
+
+## Auth
+- [/] Auth Context + Provider
+- [ ] Logout functionality
+- [ ] Route protection (AuthGuard)
+- [ ] Session expiry handling
+
+## User Management (/users)
+- [ ] List users from API
+- [ ] Create user modal
+- [ ] Disable user
+
+## Company Settings (/settings/company)
+- [ ] View company info
+- [ ] Edit company form
+
+## Core Pages
+- [ ] /organizations
+- [ ] /documents
+- [ ] /permissions
+- [ ] /access-denied
+
+## Build
+- [ ] Final build test

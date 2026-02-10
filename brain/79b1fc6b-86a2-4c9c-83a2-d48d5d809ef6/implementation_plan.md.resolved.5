@@ -1,0 +1,87 @@
+# Phase B1 — Core App UX Implementation Plan
+
+## Status: 📋 READY FOR EXECUTION
+
+---
+
+## Existing Components
+
+| Component | Status | Location |
+|-----------|--------|----------|
+| AppLayout | ✅ Exists | `components/layout/` |
+| Sidebar | ✅ Exists | `components/layout/` |
+| PageHeader | ✅ Exists | `components/layout/` |
+| Card | ✅ Exists | `components/ui/` |
+| Button | ✅ Exists | `components/ui/` |
+| DataTable | ✅ Exists | `components/ui/` |
+| Badge | ✅ Exists | `components/ui/` |
+| Input | ✅ Exists | `components/ui/` |
+| Select | ✅ Exists | `components/ui/` |
+| Textarea | ✅ Exists | `components/ui/` |
+
+---
+
+## Existing Pages
+
+| Page | Status | Notes |
+|------|--------|-------|
+| Dashboard | ✅ Complete | Widgets + activity |
+| Cases List | ✅ Complete | Table + filters |
+| Case Details | ✅ Partial | Has tabs structure |
+| Tasks | ✅ Exists | Basic page |
+
+---
+
+## Pages to Build
+
+### 1. Users (NEW)
+- [ ] `/app/users/page.tsx` — Users list table
+- [ ] `/app/users/components/InviteModal.tsx` — Invite user modal
+- [ ] `/mocks/users.ts` — Mock users data
+
+### 2. Settings (NEW)
+- [ ] `/app/settings/page.tsx` — Office settings page
+- [ ] `/app/settings/components/OfficeForm.tsx` — Office info form
+- [ ] `/app/settings/components/BrandingSection.tsx` — Logo placeholder
+
+### 3. Case Details Enhancement
+- [ ] Notes tab (text editor, mocked)
+- [ ] Verify all tabs work
+
+---
+
+## File Structure
+
+```
+src/app/
+├── users/
+│   ├── page.tsx
+│   ├── page.module.css
+│   └── components/
+│       └── InviteModal.tsx
+├── settings/
+│   ├── page.tsx
+│   ├── page.module.css
+│   └── components/
+│       ├── OfficeForm.tsx
+│       └── BrandingSection.tsx
+```
+
+---
+
+## Mock Data Needed
+
+| File | Contents |
+|------|----------|
+| `mocks/users.ts` | User list with roles |
+| `mocks/office.ts` | Office info |
+
+---
+
+## Execution Order
+
+1. Users page + mock
+2. Invite modal
+3. Settings page + components
+4. Case details notes tab
+5. Verify all pages

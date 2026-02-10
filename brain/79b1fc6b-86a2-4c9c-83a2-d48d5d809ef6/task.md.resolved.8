@@ -1,0 +1,24 @@
+# Phase D2 — Data Protection & Encryption
+
+## Status: 📋 PLANNING
+
+---
+
+## 1️⃣ Encryption Service
+- [ ] Create CryptoService (AES-256-GCM)
+- [ ] Environment key loading (ENCRYPTION_KEY)
+- [ ] Key versioning support for rotation
+- [ ] Encrypt/decrypt methods
+
+## 2️⃣ Hashing Utilities
+- [ ] Token hashing (SHA-256)
+- [ ] Secret hashing (bcrypt/argon2)
+
+## 3️⃣ Schema Updates (if needed)
+- [ ] Add notes fields to Case, Client, Task
+- [ ] Add encryption key version columns
+
+## 4️⃣ Service Layer Integration
+- [ ] Encrypt on write
+- [ ] Decrypt on read
+- [ ] Never expose raw encrypted data to controllers

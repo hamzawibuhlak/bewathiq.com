@@ -1,0 +1,59 @@
+# Phase 13: Walkthrough ✅
+
+## ما تم إنجازه
+
+### 1. Dashboard Analytics
+
+| Backend | Frontend |
+|---------|----------|
+| 6 endpoints في [dashboard.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.controller.ts) | [analytics-charts.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/dashboard/analytics-charts.tsx) |
+| [getCasesTrend](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/dashboard.api.ts#18-21), [getRevenueTrend](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.controller.ts#85-88), [getCasesByType](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.controller.ts#92-95) | 5 Recharts components: Area, Pie, Bar charts |
+| [getTopClients](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/dashboard.api.ts#28-30), [getLawyerPerformance](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.service.ts#585-657), [getOverdueTasks](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.controller.ts#118-124) | [DashboardAnalytics](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/dashboard/analytics-charts.tsx#263-279) section في [DashboardPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/DashboardPage.tsx) |
+
+---
+
+### 2. Two-Factor Authentication
+
+| File | Purpose |
+|------|---------|
+| [two-factor.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/two-factor.service.ts) | TOTP + QR codes + backup codes |
+| [TwoFactorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/TwoFactorPage.tsx) | Enable/disable 2FA UI |
+
+**Endpoints:** `/auth/2fa/generate`, `/auth/2fa/enable`, `/auth/2fa/disable`, `/auth/2fa/regenerate-backup`, `/auth/2fa/status`
+
+**Route:** `/settings/security`
+
+---
+
+### 3. Import Data
+
+| File | Purpose |
+|------|---------|
+| [import.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/exports/import.service.ts) | Excel parsing & validation |
+| [ImportPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/ImportPage.tsx) | Drag-drop upload UI |
+
+**Endpoints:** `POST /import/clients`, `POST /import/cases`, `GET /import/templates/*`
+
+**Route:** `/settings/import`
+
+---
+
+### 4. Email Templates
+
+5 HTML templates في `backend/src/email/templates/`:
+- `invitation.html` - دعوة مستخدم
+- `hearing-reminder.html` - تذكير بجلسة
+- `invoice.html` - إشعار فاتورة
+- `password-reset.html` - إعادة تعيين كلمة مرور
+- `task-reminder.html` - تذكير بمهمة
+
+---
+
+## قبل التشغيل
+
+```bash
+cd backend
+npx prisma migrate dev --name add_two_factor_auth
+npx prisma generate
+npm run build
+```

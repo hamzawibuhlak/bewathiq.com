@@ -1,0 +1,31 @@
+# Phase D1 — Identity & Access Security
+
+## Overview
+Add TOTP 2FA, session security, and password hardening to existing auth.
+
+---
+
+## 1️⃣ Two-Factor Authentication (TOTP)
+- [/] Add 2FA fields to User model (Prisma migration)
+- [ ] Create TotpService (generate secret, verify code)
+- [ ] Create 2FA DTOs (setup, verify, disable)
+- [ ] Add 2FA endpoints to AuthController
+- [ ] Modify login flow to require 2FA when enabled
+- [ ] Enforce 2FA for OWNER role
+
+## 2️⃣ Session Security
+- [ ] Add Session model for token tracking
+- [ ] Implement refresh token rotation on use
+- [ ] Invalidate sessions on logout
+- [ ] Invalidate sessions on password change
+- [ ] Invalidate sessions on role change
+
+## 3️⃣ Password Hardening
+- [ ] Update password validation (length + complexity)
+- [ ] Add password reset rate limiting
+- [ ] Create password change endpoint
+- [ ] Invalidate sessions on password change
+
+## 4️⃣ Testing & Documentation
+- [ ] Test all new endpoints
+- [ ] Update API documentation

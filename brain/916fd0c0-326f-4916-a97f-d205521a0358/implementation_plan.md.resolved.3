@@ -1,0 +1,85 @@
+# Phase 22: Communication Hub - مركز الاتصالات المتكامل
+
+## Overview
+تحويل Watheeq لمركز اتصالات متكامل مع Call Center و Real-time Messaging.
+
+## Proposed Changes
+
+### 📞 Backend - Call Center Module
+
+#### [NEW] [calls.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/calls/calls.service.ts)
+- Twilio Voice integration
+- `initiateCall()` - إجراء مكالمات صادرة
+- `handleIncomingCall()` - استقبال المكالمات
+- `generateIVRTwiML()` - نظام IVR بالعربية
+- `getCallHistory()` - سجل المكالمات
+- `getCallAnalytics()` - إحصائيات المكالمات
+
+#### [NEW] [calls.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/calls/calls.controller.ts)
+- POST `/calls/initiate`
+- GET `/calls/history`
+- GET `/calls/analytics`
+- GET `/calls/:id/recording`
+
+#### [NEW] [twilio.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/webhooks/twilio.controller.ts)
+- Webhooks لـ Twilio Voice
+- IVR selection handling
+- Recording callbacks
+
+---
+
+### 💬 Backend - Real-time Messaging Enhancements
+
+#### [MODIFY] [websocket.gateway.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/websocket/websocket.gateway.ts)
+- إضافة events للـ messaging: `message:send`, `message:typing`, `message:read`
+- إضافة events للـ groups: `group:join`, `group:message`
+- تحسين online/offline status
+
+#### [NEW] [group-chat.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/messaging/group-chat.service.ts)
+- `createGroup()` - إنشاء مجموعة
+- `addMembers()` - إضافة أعضاء
+- `sendGroupMessage()` - رسائل جماعية
+
+---
+
+### 🗄️ Database - Prisma Schema
+
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+- `Call` model - سجل المكالمات
+- `CallRecording` model - تسجيلات المكالمات
+- `GroupChat` model - المجموعات
+- `GroupMember` model - أعضاء المجموعة
+- `GroupMessage` model - رسائل المجموعة
+
+---
+
+### 🎨 Frontend Components
+
+#### [NEW] [ClickToCall.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/calls/ClickToCall.tsx)
+- اتصال بنقرة واحدة من المتصفح
+- Active call dialog
+- Call duration timer
+
+#### [NEW] [CallHistoryPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/calls/CallHistoryPage.tsx)
+- سجل المكالمات
+- تشغيل التسجيلات
+
+#### [NEW] [ChatWindow.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/messaging/ChatWindow.tsx)
+- Real-time chat
+- Typing indicators
+- Read receipts
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+npm run build  # Backend & Frontend
+npx prisma migrate dev  # Database migration
+```
+
+### Manual Verification
+- تجربة إجراء مكالمة من المتصفح
+- التحقق من عمل الـ WebSocket
+- اختبار إرسال الرسائل الفورية

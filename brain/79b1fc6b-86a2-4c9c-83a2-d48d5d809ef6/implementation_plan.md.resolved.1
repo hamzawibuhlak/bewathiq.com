@@ -1,0 +1,231 @@
+# Phase D1 — Identity & Access Security
+
+Implement TOTP 2FA, session security, and password hardening on existing auth module.
+
+---
+
+## Proposed Changes
+
+### 🔐 Database Schema
+
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/prisma/schema.prisma)
+
+Add 2FA fields to User model:
+```prisma
+model User {
+  // ... existing fields
+  
+  // 2FA fields
+  twoFactorEnabled  Boolean  @default(false)
+  twoFactorSecret   String?
+  twoFactorVerified Boolean  @default(false)
+  
+  sessions  Session[]
+}
+```
+
+Add Session model for token tracking:
+```prisma
+model Session {
+  id           String   @id @default(uuid())
+  tokenHash    String   @unique
+  userAgent    String?
+  ipAddress    String?
+  lastUsedAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  isRevoked    Boolean  @default(false)
+  
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("sessions")
+}
+```
+
+---
+
+### 🔑 TOTP Service
+
+#### [NEW] [totp.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/totp/totp.service.ts)
+
+- `generateSecret(email: string)` — Generate TOTP secret + QR URL
+- `verifyToken(secret: string, token: string)` — Verify TOTP code
+- `generateBackupCodes()` — Optional backup codes
+
+#### [NEW] [totp.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/totp/totp.module.ts)
+
+---
+
+### 📋 DTOs
+
+#### [NEW] [setup-2fa.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/dto/setup-2fa.dto.ts)
+```typescript
+export class Setup2FAResponseDto {
+  secret: string;
+  qrCodeUrl: string;
+}
+```
+
+#### [NEW] [verify-2fa.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/dto/verify-2fa.dto.ts)
+```typescript
+export class Verify2FADto {
+  @IsString()
+  @Length(6, 6)
+  code: string;
+}
+```
+
+#### [NEW] [login-2fa.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/dto/login-2fa.dto.ts)
+```typescript
+export class Login2FADto {
+  @IsString()
+  tempToken: string;
+  
+  @IsString()
+  @Length(6, 6)
+  code: string;
+}
+```
+
+#### [NEW] [change-password.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/dto/change-password.dto.ts)
+```typescript
+export class ChangePasswordDto {
+  @IsString()
+  currentPassword: string;
+  
+  @IsString()
+  @MinLength(8)
+  @Matches(/[A-Z]/, { message: 'Must contain uppercase' })
+  @Matches(/[a-z]/, { message: 'Must contain lowercase' })
+  @Matches(/[0-9]/, { message: 'Must contain number' })
+  newPassword: string;
+}
+```
+
+---
+
+### 🔄 Session Service
+
+#### [NEW] [session.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/session/session.service.ts)
+
+- `createSession(userId, token, metadata)` — Store session with token hash
+- `validateSession(tokenHash)` — Check token valid and not revoked
+- `rotateToken(oldTokenHash, newToken)` — Token rotation on refresh
+- `revokeSession(tokenHash)` — Revoke single session
+- `revokeAllUserSessions(userId)` — Revoke all sessions (logout all)
+- `cleanupExpiredSessions()` — Cron job for cleanup
+
+---
+
+### 🔧 Auth Service Updates
+
+#### [MODIFY] [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/auth.service.ts)
+
+**Login Flow Changes:**
+1. If user has 2FA enabled → Return temp token (short-lived)
+2. User submits temp token + TOTP code → Return full tokens
+3. If OWNER role without 2FA → Force 2FA setup on next login
+
+**Refresh Token Changes:**
+1. Validate refresh token against Session table
+2. On refresh: rotate token (invalidate old, issue new)
+3. Store new token hash in Session
+
+**Password Change:**
+1. Add `changePassword()` method
+2. Revoke all sessions on password change
+
+---
+
+### 🌐 New API Endpoints
+
+#### [MODIFY] [auth.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/auth/auth.controller.ts)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/2fa/setup` | Start 2FA setup, get QR code |
+| POST | `/auth/2fa/verify` | Verify and enable 2FA |
+| POST | `/auth/2fa/disable` | Disable 2FA (requires code) |
+| POST | `/auth/login/2fa` | Complete 2FA login |
+| POST | `/auth/password/change` | Change password |
+
+---
+
+### 🔒 Password Validation
+
+#### [MODIFY] [create-user.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/users/dto/create-user.dto.ts)
+
+```diff
+- @MinLength(6, { message: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' })
++ @MinLength(8, { message: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' })
++ @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
++   message: 'كلمة المرور يجب أن تحتوي على حرف كبير وحرف صغير ورقم'
++ })
+```
+
+---
+
+### 👤 User Service Updates
+
+#### [MODIFY] [users.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/users/users.service.ts)
+
+- On role change → Call `sessionService.revokeAllUserSessions(userId)`
+- On user deactivation → Revoke all sessions
+
+---
+
+## Dependencies
+
+```bash
+npm install otplib qrcode
+npm install -D @types/qrcode
+```
+
+---
+
+## Verification Plan
+
+### API Tests
+
+```bash
+# 1. Setup 2FA
+curl -X POST /api/auth/2fa/setup -H "Authorization: Bearer TOKEN"
+# Returns: { secret, qrCodeUrl }
+
+# 2. Verify 2FA
+curl -X POST /api/auth/2fa/verify -H "Authorization: Bearer TOKEN" \
+  -d '{"code": "123456"}'
+
+# 3. Login with 2FA
+# Step 1: Normal login returns tempToken
+curl -X POST /api/auth/login -d '{"email":"...", "password":"..."}'
+# Returns: { requiresTwoFactor: true, tempToken: "..." }
+
+# Step 2: Submit 2FA code
+curl -X POST /api/auth/login/2fa -d '{"tempToken":"...", "code":"123456"}'
+# Returns: { accessToken, refreshToken }
+
+# 4. Password change
+curl -X POST /api/auth/password/change -H "Authorization: Bearer TOKEN" \
+  -d '{"currentPassword":"old", "newPassword":"NewSecure123"}'
+```
+
+---
+
+## What Will NOT Be Implemented
+
+| Excluded | Reason |
+|----------|--------|
+| SMS 2FA | Out of scope |
+| OAuth/Social login | Explicitly excluded |
+| Email-based 2FA | TOTP only |
+| Hardware keys (WebAuthn) | Future phase |
+| Billing/Payments changes | Explicitly excluded |
+
+---
+
+> [!IMPORTANT]
+> OWNER role users will be required to set up 2FA. They cannot skip this step after implementation.

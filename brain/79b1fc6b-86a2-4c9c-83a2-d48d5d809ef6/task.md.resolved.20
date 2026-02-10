@@ -1,0 +1,18 @@
+# Phase D — Backend Readiness
+
+## Status: 🔧 IN PROGRESS
+
+---
+
+## Data Contracts
+- [ ] Core entity interfaces
+- [ ] Auth DTOs
+- [ ] Audit log schema
+
+## Access Boundaries
+- [ ] RBAC enforcement rules
+- [ ] Confidential data rules
+
+## Billing Shapes
+- [ ] Subscription contract
+- [ ] Add-on contract

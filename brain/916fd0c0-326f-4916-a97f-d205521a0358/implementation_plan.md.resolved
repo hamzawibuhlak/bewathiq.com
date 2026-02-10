@@ -1,0 +1,94 @@
+# Phase 23: Accounting & Finance Module
+
+نظام محاسبة متكامل متوافق مع المعايير السعودية (SOCPA) مع القيد المزدوج و 3 قوائم مالية.
+
+> [!IMPORTANT]
+> هذا Phase ضخم (~16,000 سطر). سأنفذه على **مراحل متتالية** - كل مرحلة تُبنى وتُختبر قبل الانتقال للتالية.
+
+## Proposed Changes
+
+### Database Schema
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+- إضافة ~15 model جديد: `Account`, `JournalEntry`, `JournalEntryLine`, `AccountsReceivable`, `ARPayment`, `AccountsPayable`, `APPayment`, `Vendor`, `Expense`, `ExpenseCategory`, `BankAccount`, `BankTransaction`, `BankReconciliation`, `CostCenter`, `Budget`, `FiscalYear`
+- إضافة ~10 enums: `AccountType`, `AccountCategory`, `JournalEntryType`, `JournalEntryStatus`, `ARStatus`, `APStatus`, `ExpenseStatus`, `PaymentMethod`, `ReconciliationStatus`, `BudgetPeriod`, `BudgetStatus`
+- تحديث [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cache/cache.service.ts#132-138), [User](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WatheeqMobile/src/api/auth.ts#13-23), [Invoice](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#238-262) relations
+
+---
+
+### Backend Services
+#### [NEW] accounting/account.service.ts
+- CRUD للحسابات + seeder لـ 50+ حساب افتراضي
+
+#### [NEW] accounting/journal-entry.service.ts
+- القيد المزدوج، validation (Debit=Credit)، ترحيل، عكس، قيود تلقائية
+
+#### [NEW] accounting/financial-statements.service.ts
+- قائمة الدخل، الميزانية العمومية، التدفقات النقدية، النسب المالية
+
+#### [NEW] accounting/ar.service.ts
+- الذمم المدينة + تقرير الأعمار (Aging)
+
+#### [NEW] accounting/ap.service.ts
+- الذمم الدائنة + إدارة الموردين
+
+#### [NEW] accounting/expense.service.ts
+- إدارة المصروفات مع workflow الموافقة
+
+#### [NEW] accounting/bank.service.ts
+- التسوية البنكية
+
+#### [NEW] accounting/budget.service.ts
+- الموازنة + مراكز التكلفة
+
+#### [NEW] accounting/accounting.controller.ts
+- ~40 API endpoint
+
+#### [NEW] accounting/accounting.module.ts
+
+---
+
+### Frontend
+#### [NEW] pages/accounting/AccountingDashboardPage.tsx
+- KPIs + charts + quick access
+
+#### [NEW] pages/accounting/ChartOfAccountsPage.tsx
+- عرض شجري للحسابات
+
+#### [NEW] pages/accounting/JournalEntriesPage.tsx
+- قائمة القيود + إنشاء قيد يدوي
+
+#### [NEW] pages/accounting/FinancialStatementsPage.tsx
+- 3 قوائم مالية + export
+
+#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- إضافة routes للمحاسبة
+
+#### [MODIFY] [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+- إضافة قسم "المحاسبة" في القائمة
+
+---
+
+## Execution Strategy
+
+سأبدأ بـ **Part A** (Database + Core Services) وأبني عليه تدريجياً:
+
+| المرحلة | المحتوى | الأولوية |
+|---------|---------|----------|
+| Part A | Schema + Migration + Account Service + Journal Entries | 🔴 أساسي |
+| Part B | AR/AP + Expenses | 🟡 مهم |
+| Part C | Financial Statements + VAT | 🟡 مهم |
+| Part D | Bank + Cost Centers + Budgets | 🟢 إضافي |
+| Part E | Controller + API | 🔴 أساسي |
+| Part F | Frontend Pages | 🔴 أساسي |
+| Part G | Deploy | 🔴 أساسي |
+
+## Verification Plan
+
+### Automated Tests
+- `npm run build` بعد كل مرحلة
+- `npx prisma migrate dev` للتحقق من Schema
+
+### Manual Verification
+- التحقق من أن القيد المزدوج متوازن (Debit = Credit)
+- التحقق من الميزانية العمومية (Assets = Liabilities + Equity)
+- فحص الموقع المحلي والإنتاجي

@@ -1,0 +1,36 @@
+# VPS Deployment — bewathiq.com
+
+## Pre-deployment
+- [/] Local build verification
+- [ ] Generate Prisma client
+
+## Server Setup
+- [ ] SSH to VPS
+- [ ] Extract archive to /var/www/wathiq
+- [ ] Verify monorepo structure
+
+## Backend (api-server)
+- [ ] Install dependencies
+- [ ] Configure .env
+- [ ] Run prisma migrate deploy
+- [ ] Build
+- [ ] Start with PM2
+
+## Frontend (web-portal)
+- [ ] Install dependencies
+- [ ] Build
+- [ ] Start with PM2
+
+## Nginx
+- [ ] Configure HTTPS
+- [ ] / → 3001 (Next.js)
+- [ ] /api → 3000 (NestJS)
+
+## Initial Data
+- [ ] Create company (شركة وسم الثقة)
+- [ ] Create 5 users with roles
+
+## Verification
+- [ ] Frontend loads
+- [ ] API reachable
+- [ ] Users can login

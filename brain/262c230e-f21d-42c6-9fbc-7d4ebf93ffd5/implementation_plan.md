@@ -1,0 +1,73 @@
+# Timeline Enhancement - User Attribution & Role-Based Access
+
+## Overview
+تحسين الـ Timeline لعرض اسم من قام بالعمل مع التاريخ والوقت، وإضافة صلاحيات حسب الدور.
+
+## Proposed Changes
+
+### Backend - Database Schema
+
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+- إضافة `createdById` للـ Hearing model
+- إضافة relation للـ User model
+
+---
+
+### Backend - Dashboard Service
+
+#### [MODIFY] [dashboard.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.controller.ts)
+- إضافة `@CurrentUser` decorator لاستخراج userId و userRole
+- تمرير المعلومات للـ service
+
+#### [MODIFY] [dashboard.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.service.ts)
+- تحديث `getRecentActivity` لقبول userId و userRole
+- إضافة select للـ `createdBy` / `uploadedBy` في جميع الـ queries
+- إضافة فلتر: إذا كان المستخدم LAWYER أو SECRETARY يرى نشاطه فقط
+- إذا كان OWNER أو ADMIN يرى كل شيء
+
+---
+
+### Backend - Hearing Service
+
+#### [MODIFY] [create-hearing.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/dto/create-hearing.dto.ts)
+- لا يحتاج تغيير (createdById يُضاف من الـ service)
+
+#### [MODIFY] [hearings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts)
+- تحديث `create` لقبول createdById وتخزينه
+
+#### [MODIFY] [hearings.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.controller.ts)
+- إضافة `@CurrentUser('id')` في create method وتمريره للـ service
+
+---
+
+### Frontend - Timeline Component
+
+#### [MODIFY] [TimeLine.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/dashboard/TimeLine.tsx)
+- عرض اسم المستخدم مع كل نشاط
+- عرض التاريخ والوقت بشكل واضح
+
+---
+
+## Permission Logic
+
+| الدور | يشاهد |
+|-------|-------|
+| OWNER | جميع الأنشطة |
+| ADMIN | جميع الأنشطة |
+| LAWYER | أنشطته فقط |
+| SECRETARY | أنشطته فقط |
+
+## Verification Plan
+
+### Automated Tests
+```bash
+npm run build # Backend build check
+npx tsc --noEmit # Frontend type check
+npx prisma migrate dev # Apply schema changes
+```
+
+### Manual Verification
+1. تسجيل دخول كـ Owner وإنشاء نشاط
+2. تسجيل دخول كـ Lawyer وإنشاء نشاط
+3. التحقق أن Owner يرى كل شيء
+4. التحقق أن Lawyer يرى نشاطه فقط

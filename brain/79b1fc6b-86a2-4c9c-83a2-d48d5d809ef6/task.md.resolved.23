@@ -1,0 +1,25 @@
+# Phase E — Core Backend
+
+## Status: ✅ COMPLETE
+
+---
+
+## Auth & Sessions
+- [x] Existing auth verified
+- [x] Session enforcement (SessionService)
+
+## RBAC
+- [x] `@Roles()` decorator
+- [x] `@RequirePermission()` decorator
+- [x] [RolesGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/common/guards/rbac.guard.ts#11-42) + [PermissionGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/common/guards/rbac.guard.ts#43-78)
+
+## Subscription Limits
+- [x] [SubscriptionGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/common/guards/subscription.guard.ts#10-51)
+- [x] [TrialLimitsGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/common/guards/subscription.guard.ts#52-80)
+- [x] [UserLimitGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/src/common/guards/subscription.guard.ts#81-111)
+
+## Cases
+- [x] Ownership-based filtering (existing)
+- [x] Role-based access (existing)
+
+## Build: ✅ Successful

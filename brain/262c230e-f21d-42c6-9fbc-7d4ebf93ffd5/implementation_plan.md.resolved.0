@@ -1,0 +1,86 @@
+# Watheeq MVP Backend Setup
+
+Setting up a complete NestJS backend with multi-tenancy for a Saudi law office management system.
+
+## Proposed Changes
+
+### Project Configuration
+
+#### [NEW] [package.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/package.json)
+NestJS project dependencies including: `@nestjs/core`, `@nestjs/common`, `@nestjs/swagger`, `@prisma/client`, `passport-jwt`, `bcrypt`, `class-validator`, `class-transformer`
+
+#### [NEW] [tsconfig.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/tsconfig.json)
+TypeScript configuration with strict mode enabled
+
+#### [NEW] [.env.example](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/.env.example)
+Environment variables template
+
+#### [NEW] [.gitignore](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/.gitignore)
+Standard Node.js + NestJS ignore patterns
+
+#### [NEW] [nest-cli.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/nest-cli.json)
+NestJS CLI configuration
+
+---
+
+### Database Schema
+
+#### [NEW] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+Complete Prisma schema with models:
+- **Tenant**: Law office organization
+- **User**: System users (Admin, Lawyer, Secretary)
+- **Client**: Law office clients
+- **Case**: Legal cases with status tracking
+- **Hearing**: Court hearings linked to cases
+- **Document**: File attachments
+- **Invoice**: Billing records
+
+All models include `tenantId` for data isolation.
+
+---
+
+### Core Application
+
+#### [NEW] [main.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/main.ts)
+Application bootstrap with Swagger, CORS, ValidationPipe, port 3000
+
+#### [NEW] [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+Root module importing all feature modules
+
+---
+
+### Common Utilities
+
+#### [NEW] Decorators
+- `@TenantId()` - Extract tenant ID from JWT
+- `@CurrentUser()` - Extract current user from request
+
+#### [NEW] Guards
+- `JwtAuthGuard` - JWT authentication
+- `RolesGuard` - Role-based access control
+
+#### [NEW] Filters
+- `HttpExceptionFilter` - Consistent error responses
+
+---
+
+### Feature Modules (Structure Only)
+Each module will have: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `dto/` folder
+
+- Auth, Users, Tenants, Cases, Hearings, Clients, Documents, Invoices, Dashboard
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+# After npm install, verify TypeScript compiles
+cd backend && npm run build
+```
+
+### Manual Verification
+1. Run `npm install` in backend directory
+2. Verify all files created correctly
+3. Run `npx prisma validate` to check schema
+4. Run `npm run build` to verify TypeScript compilation

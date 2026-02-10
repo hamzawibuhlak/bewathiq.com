@@ -1,0 +1,18 @@
+# Phase D2 — Data Encryption
+
+## Status: 🔧 IN PROGRESS
+
+---
+
+## Design Deliverables
+- [x] Threat model
+- [x] Encryption scope
+- [x] Key management design
+- [x] Read/write behavior
+- [x] Migration strategy
+
+## Implementation
+- [x] CryptoService (standalone, unused)
+- [ ] Schema changes (awaiting approval)
+- [ ] Service integration (awaiting approval)
+- [ ] Testing

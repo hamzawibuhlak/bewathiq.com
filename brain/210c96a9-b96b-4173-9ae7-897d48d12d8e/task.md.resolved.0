@@ -1,0 +1,18 @@
+# Phase 2 — Design System & Core UI Components
+
+## Design System Foundation
+- [/] إنشاء Design Tokens (Colors, Typography, Spacing)
+- [ ] ضبط RTL Direction و Spacing
+
+## Core UI Components
+- [ ] Button (variants: primary, secondary, ghost, danger | sizes: sm, md, lg)
+- [ ] Card (container فقط)
+- [ ] Badge (status only)
+- [ ] Input
+- [ ] Select
+- [ ] Textarea
+- [ ] Separator
+- [ ] DataTable (Structure فقط)
+
+## Verification
+- [ ] التحقق من عمل جميع المكونات

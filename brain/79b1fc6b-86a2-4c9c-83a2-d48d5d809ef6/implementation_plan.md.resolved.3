@@ -1,0 +1,208 @@
+# Phase D2 — Data Encryption Design Specification
+
+## Status: 📋 DESIGN ONLY — Awaiting Approval
+
+---
+
+## 1. Threat Model
+
+### 1.1 Sensitive Data Classification
+
+| Data Type | Sensitivity | Current State |
+|-----------|-------------|---------------|
+| Case notes | HIGH | Does not exist in schema |
+| Client notes | HIGH | Does not exist in schema |
+| Task descriptions | MEDIUM | Does not exist in schema |
+| Client name/email/phone | MEDIUM | Exists (plaintext) |
+| User passwords | HIGH | Already hashed (bcrypt) |
+| Refresh tokens | HIGH | Already hashed |
+
+### 1.2 Authorized Access
+
+| Role | Case Notes | Client Notes | Task Descriptions |
+|------|------------|--------------|-------------------|
+| OWNER | Full access | Full access | Full access |
+| LAWYER | Assigned cases | Assigned clients | Assigned tasks |
+| ASSISTANT | View only | View only | View only |
+| ACCOUNTANT | No access | No access | No access |
+| VIEWER | No access | No access | No access |
+
+### 1.3 Threat Scenarios
+
+| Threat | Description | Mitigation |
+|--------|-------------|------------|
+| Database breach | Attacker gains read access to PostgreSQL | Encrypt sensitive fields |
+| Backup exposure | Backups stored without encryption | Application-level encryption persists through backups |
+| Insider threat | DBA can read production data | Encryption key not stored in DB |
+| SQL injection | Query returns encrypted ciphertext | Useless without key |
+
+### 1.4 Out of Scope
+
+- Client-side encryption (mobile/web)
+- Key escrow or recovery
+- Multi-party encryption
+- Hardware security modules (HSM)
+
+---
+
+## 2. Encryption Scope
+
+### 2.1 Target Entities
+
+| Entity | Fields to Encrypt | Exists in Schema? |
+|--------|-------------------|-------------------|
+| Case | `notes` (new field) | No |
+| Client | `notes` (new field) | No |
+| Task | `description` (new field) | No |
+
+### 2.2 Fields NOT Encrypted
+
+| Field | Reason |
+|-------|--------|
+| Case title | Needed for search/listing |
+| Client name | Needed for display |
+| Client email | Needed for search (consider hashing) |
+| Client phone | Needed for search (consider hashing) |
+| Timestamps | No sensitivity |
+| IDs | No sensitivity |
+
+### 2.3 Encryption Approach
+
+**Selected columns only** — not full records.
+
+Rationale:
+- Allows indexing on non-sensitive fields
+- Reduces encryption overhead
+- Maintains query performance
+- Simpler migration
+
+---
+
+## 3. Key Management Design
+
+### 3.1 Key Source
+
+| Aspect | Decision |
+|--------|----------|
+| Source | Environment variable (`ENCRYPTION_KEY`) |
+| Format | Base64-encoded 32-byte key |
+| Storage | Server memory only (never persisted) |
+| Access | Application process only |
+
+### 3.2 Key Rotation Strategy
+
+| Phase | Action |
+|-------|--------|
+| 1 | Generate new key, store as `ENCRYPTION_KEY_V2` |
+| 2 | New writes use V2, reads support V1+V2 |
+| 3 | Background job re-encrypts V1 → V2 |
+| 4 | Remove V1 key after full migration |
+
+### 3.3 Key Scope
+
+**Single global key** — not per-tenant.
+
+Rationale:
+- Simpler key management
+- Tenant isolation already enforced at application layer
+- Per-tenant keys add ops complexity without significant security gain
+
+### 3.4 Key Versioning
+
+Ciphertext format includes version prefix:
+```
+v{version}:{iv}:{authTag}:{ciphertext}
+```
+
+Benefits:
+- Supports key rotation
+- Graceful degradation
+- Clear audit trail
+
+---
+
+## 4. Read/Write Behavior
+
+### 4.1 Encryption Timing
+
+| Operation | When | Where |
+|-----------|------|-------|
+| Encrypt | Before Prisma write | Service layer |
+| Decrypt | After Prisma read | Service layer |
+
+### 4.2 Layer Boundaries
+
+| Layer | Sees Plaintext? | Sees Ciphertext? |
+|-------|-----------------|------------------|
+| Controller | Yes (input/output) | Never |
+| Service | Yes (business logic) | Internally only |
+| Prisma/DB | Never | Yes (storage only) |
+| API Response | Yes (decrypted) | Never |
+
+### 4.3 Leak Prevention
+
+| Risk | Mitigation |
+|------|------------|
+| Logging sensitive data | Never log decrypted notes |
+| Error messages | Generic errors, no ciphertext in messages |
+| Audit logs | Log action, never content |
+| API responses | Always decrypt before sending |
+
+---
+
+## 5. Migration Strategy
+
+### 5.1 Scope
+
+**New data only** — do not backfill.
+
+Rationale:
+- Notes fields do not exist yet
+- No existing data to migrate
+- Clean start
+
+### 5.2 Schema Migration (When Approved)
+
+| Step | Action |
+|------|--------|
+| 1 | Add nullable `notes` field to Case |
+| 2 | Add nullable `notes` field to Client |
+| 3 | Add nullable `description` field to Task |
+| 4 | Add `encryptionVersion` column (optional) |
+
+### 5.3 Rollback Strategy
+
+| Scenario | Action |
+|----------|--------|
+| Encryption disabled | Data remains as ciphertext (unreadable) |
+| Key lost | Data is permanently unrecoverable |
+| Key rotation failed | Fall back to previous key version |
+
+> [!CAUTION]
+> **Key loss = data loss.** Backup the encryption key securely and separately from the database.
+
+---
+
+## 6. Decisions Required
+
+| Item | Options | Recommendation |
+|------|---------|----------------|
+| Add notes fields now? | Yes / No | Yes (requires migration) |
+| Encrypt existing client data? | Yes / No | No (adds complexity) |
+| Per-tenant keys? | Yes / No | No (global key) |
+| Backfill existing data? | Yes / No | No (new fields only) |
+
+---
+
+## 7. Next Steps (After Approval)
+
+1. Add encrypted fields to schema (migration required)
+2. Create CryptoService
+3. Integrate into Case/Client/Task services
+4. Update DTOs for new fields
+5. Test encryption/decryption
+6. Document key management procedures
+
+---
+
+**Awaiting explicit approval before any implementation.**

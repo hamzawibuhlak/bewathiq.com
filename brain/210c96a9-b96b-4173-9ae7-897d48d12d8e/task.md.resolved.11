@@ -1,0 +1,22 @@
+# Phase B2 — Stripe Integration
+
+## Setup
+- [/] Install Stripe SDK
+- [ ] Add Stripe env vars
+
+## Payment Provider Architecture
+- [ ] PaymentProvider interface
+- [ ] StripePaymentProvider adapter
+
+## Stripe Controller
+- [ ] DTOs
+- [ ] Create intent endpoint
+- [ ] Confirm payment endpoint
+
+## Audit Logging
+- [ ] STRIPE_INTENT_CREATED
+- [ ] STRIPE_PAYMENT_CONFIRMED
+- [ ] STRIPE_PAYMENT_FAILED
+
+## Verification
+- [ ] Build test

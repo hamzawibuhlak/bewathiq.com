@@ -1,0 +1,38 @@
+# Phase 23: Accounting & Finance Module - المهام
+
+## Part A: Database & Backend Core (الأساس)
+- [/] 1. إضافة Accounting models إلى [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+- [ ] 2. تشغيل Prisma migration
+- [ ] 3. إنشاء `accounting.module.ts` + services
+- [ ] 4. Chart of Accounts service + seeder
+- [ ] 5. Journal Entry service (القيد المزدوج)
+- [ ] 6. General Ledger + Trial Balance
+
+## Part B: AR/AP & Expenses
+- [ ] 7. Accounts Receivable service
+- [ ] 8. Accounts Payable + Vendors service
+- [ ] 9. Expense Management service
+
+## Part C: Financial Statements & Reports
+- [ ] 10. Income Statement + Balance Sheet + Cash Flow
+- [ ] 11. VAT Reports (15%)
+- [ ] 12. Financial Ratios
+
+## Part D: Bank, Cost Centers, Budgets
+- [ ] 13. Bank Reconciliation
+- [ ] 14. Cost Centers
+- [ ] 15. Budgeting
+
+## Part E: Controllers & API
+- [ ] 16. Accounting controller (all endpoints)
+
+## Part F: Frontend
+- [ ] 17. Accounting Dashboard page
+- [ ] 18. Chart of Accounts UI
+- [ ] 19. Journal Entries UI
+- [ ] 20. Financial Statements UI
+- [ ] 21. AR/AP/Expenses UI
+- [ ] 22. Sidebar + Routing
+
+## Part G: Deploy
+- [ ] 23. Deploy to production

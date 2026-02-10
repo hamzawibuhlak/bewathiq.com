@@ -1,0 +1,48 @@
+# Phase 13: Advanced Features & Enhancements
+
+## الهدف
+إضافة ميزات متقدمة لتحسين تجربة المستخدم
+
+---
+
+## قائمة المهام
+
+### Part 1: Dashboard Analytics ✅
+- [x] تحديث [DashboardService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/dashboard/dashboard.service.ts#44-685) بـ 6 methods جديدة
+- [x] إضافة 6 endpoints للرسوم البيانية في Controller
+- [x] إضافة API و Hooks في Frontend
+- [ ] إضافة Charts UI في DashboardPage (Recharts)
+
+### Part 2: Two-Factor Authentication ✅
+- [x] تثبيت speakeasy و qrcode و @types/speakeasy
+- [x] تحديث Prisma Schema (2FA fields)
+- [x] إنشاء [TwoFactorService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/two-factor.service.ts#6-222)
+- [x] تحديث `AuthService.login()` لدعم 2FA
+- [x] إضافة 5 endpoints للـ 2FA
+- [x] تحديث [LoginDto](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/dto/login.dto.ts#4-31) بـ twoFactorToken
+- [ ] إنشاء صفحة 2FA في Frontend
+
+### Part 3: Import Data ✅
+- [x] إنشاء [ImportService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/exports/import.service.ts#13-323) (clients + cases)
+- [x] إنشاء [ImportController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/exports/import.controller.ts#28-149) (4 endpoints)
+- [x] تحديث [ExportsModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/exports/exports.module.ts#8-15)
+- [ ] إضافة واجهة Import في Frontend
+
+### Part 4: Email Templates ✅
+- [x] إنشاء 5 قوالب HTML للبريد
+  - invitation.html
+  - hearing-reminder.html
+  - invoice.html
+  - password-reset.html
+  - task-reminder.html
+
+---
+
+## ⚠️ متطلبات قبل النشر
+1. تشغيل `npx prisma migrate dev` لإضافة 2FA fields
+2. تشغيل `npx prisma generate` لتحديث types
+3. إكمال Frontend UI للـ charts و import و 2FA
+
+---
+
+## 🚀 Backend Complete - Frontend UI Pending

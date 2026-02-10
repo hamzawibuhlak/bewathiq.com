@@ -1,0 +1,24 @@
+# Wathiq v1 Production
+
+## Planning
+- [/] Explore existing codebase
+- [ ] Create implementation plan
+
+## Backend
+- [ ] Prisma schema (Case, CaseNote, CaseTask, CaseActivity)
+- [ ] Cases module (CRUD + permissions)
+- [ ] CaseNotes service (Lawyer Memos, Manager Notes, Shared Notes)
+- [ ] CaseTasks service (assign, status transitions)
+- [ ] CaseActivity timeline (auto-logging)
+
+## Frontend
+- [ ] Case list page (role-filtered)
+- [ ] Case workspace page
+- [ ] Notes tabs (Memos, Manager, Shared)
+- [ ] Tasks list + status + comments
+- [ ] Activity timeline
+
+## Verification
+- [ ] Test OWNER access
+- [ ] Test LAWYER (own cases only)
+- [ ] Test ACCOUNTANT (no access)

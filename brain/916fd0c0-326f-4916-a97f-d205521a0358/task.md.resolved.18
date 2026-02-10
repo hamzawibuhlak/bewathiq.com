@@ -1,0 +1,36 @@
+# Phase 21: Analytics & Business Intelligence
+
+## Overview
+تحليلات متقدمة وذكاء أعمال لاتخاذ قرارات مبنية على البيانات
+
+---
+
+## Part 1: Analytics Engine (2 days)
+- [x] Analytics Service with comprehensive metrics
+- [x] Analytics Controller with endpoints
+- [x] Cases analytics (by status, type, priority)
+- [x] Financial analytics (revenue, payments)
+- [x] Client analytics (retention, top clients)
+- [x] Performance analytics (team metrics)
+- [x] Trends analytics (12-month)
+
+## Part 2: Report Builder (2 days)
+- [x] ReportBuilder Service
+- [x] Dynamic query builder
+- [x] Report templates
+
+## Part 3: Predictive Analytics (1 day)
+- [x] Case duration prediction
+- [x] Revenue prediction
+- [x] Churn risk detection
+- [x] Rule-based insights
+
+## Part 4: Frontend Dashboard (2 days)
+- [/] Analytics dashboard page
+- [ ] Charts and visualizations
+- [ ] Interactive filters
+
+## Part 5: Deploy & Test (1 day)
+- [ ] Build and deploy
+- [ ] Test all endpoints
+- [ ] Verify dashboard

@@ -1,0 +1,97 @@
+# Phase C2 — Production Hardening Walkthrough
+
+## ✅ What Was Implemented
+
+### 🔒 SSL (Let's Encrypt)
+
+| File | Purpose |
+|------|---------|
+| [setup-ssl.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/setup-ssl.sh) | Certbot installation + auto-renewal |
+| [nginx-ssl.conf](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/nginx-ssl.conf) | Reference HTTPS config |
+
+---
+
+### 💾 PostgreSQL Backups
+
+| File | Purpose |
+|------|---------|
+| [backup-postgres.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/backup-postgres.sh) | Daily pg_dump + 7-day retention |
+| [setup-backups.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/setup-backups.sh) | Cron job at 2 AM |
+
+---
+
+### 📊 Basic Monitoring
+
+| File | Purpose |
+|------|---------|
+| [monitor-disk.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/monitor-disk.sh) | Disk alerts (>80%) |
+| [setup-monitoring.sh](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq-app-project/apps/api-server/deploy/setup-monitoring.sh) | htop, PM2 log rotation |
+
+---
+
+## ❌ Intentionally NOT Implemented
+
+| Excluded | Reason |
+|----------|--------|
+| Wildcard SSL | Not required |
+| Docker/Kubernetes | Excluded by scope |
+| Prometheus/Grafana | Too complex |
+| External backups (S3) | Phase C2 scope |
+| Email alerts | Requires SMTP |
+
+---
+
+## 🔍 Verification Commands (On VPS)
+
+```bash
+# 1. SSL
+sudo bash deploy/setup-ssl.sh YOUR_DOMAIN
+curl -I https://YOUR_DOMAIN/api/health
+sudo certbot renew --dry-run
+
+# 2. Backups
+sudo bash deploy/setup-backups.sh
+sudo bash /usr/local/bin/wathiq-backup.sh
+ls -la /var/backups/wathiq/postgres/
+
+# 3. Monitoring
+sudo bash deploy/setup-monitoring.sh
+pm2 status
+htop
+```
+
+---
+
+## 📁 Deploy Files Structure
+
+```
+apps/api-server/deploy/
+├── DEPLOYMENT.md        # Updated with Phase C2
+├── deploy.sh            # (Phase C1)
+├── ecosystem.config.js  # (Phase C1)
+├── nginx.conf           # (Phase C1)
+├── nginx-ssl.conf       # Reference HTTPS config
+├── setup-server.sh      # (Phase C1)
+├── setup-ssl.sh         # SSL setup
+├── backup-postgres.sh   # Backup script
+├── setup-backups.sh     # Backup cron setup
+├── monitor-disk.sh      # Disk monitoring
+└── setup-monitoring.sh  # Monitoring setup
+```
+
+---
+
+## 🧾 Self-Review
+
+| Requirement | Status |
+|-------------|--------|
+| SSL with Certbot | ✅ |
+| Auto-renewal | ✅ |
+| Daily PostgreSQL backup | ✅ |
+| 7-day retention | ✅ |
+| PM2 log rotation | ✅ |
+| Disk monitoring | ✅ |
+| htop installed | ✅ |
+| No Docker | ✅ |
+| No Kubernetes | ✅ |
+| No external services | ✅ |

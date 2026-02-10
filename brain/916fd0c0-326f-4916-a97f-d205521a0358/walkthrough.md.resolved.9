@@ -1,0 +1,78 @@
+# Phase 22: Communication Hub - Walkthrough
+
+## ✅ ما تم إنجازه
+
+### 📞 Call Center Module
+تم إنشاء نظام مكالمات متكامل مع Twilio:
+
+| ملف | الوظيفة |
+|-----|---------|
+| [calls.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/calls/calls.service.ts) | Twilio integration, IVR, Analytics |
+| [calls.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/calls/calls.controller.ts) | API endpoints |
+| [twilio.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/webhooks/twilio.controller.ts) | Webhooks |
+
+**الميزات:**
+- ✅ إجراء مكالمات صادرة
+- ✅ استقبال مكالمات واردة
+- ✅ IVR بالعربية (Polly.Zeina)
+- ✅ تسجيل المكالمات
+- ✅ سجل المكالمات
+- ✅ إحصائيات المكالمات
+
+---
+
+### 💬 Group Chats Module
+تم إنشاء نظام دردشات جماعية:
+
+| ملف | الوظيفة |
+|-----|---------|
+| [group-chat.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/messaging/group-chat.service.ts) | CRUD للمجموعات |
+| [group-chat.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/messaging/group-chat.controller.ts) | API endpoints |
+
+**الميزات:**
+- ✅ إنشاء مجموعات
+- ✅ إضافة/إزالة أعضاء
+- ✅ رسائل جماعية
+- ✅ صلاحيات Admin/Member
+
+---
+
+### 🗄️ Database Models
+تم إضافة models جديدة في [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma):
+
+- [Call](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/calls/calls.module.ts#7-14) - سجل المكالمات
+- [CallRecording](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/calls/calls.service.ts#216-240) - تسجيلات المكالمات
+- [GroupChat](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/messaging/group-chat.service.ts#4-324) - المجموعات
+- `GroupMember` - أعضاء المجموعة
+- [GroupMessage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/messaging/group-chat.service.ts#231-275) - رسائل المجموعة
+
+---
+
+## 📦 API Endpoints
+
+### Calls
+```
+POST /api/calls/initiate     - إجراء مكالمة
+GET  /api/calls/history      - سجل المكالمات
+GET  /api/calls/analytics    - إحصائيات
+GET  /api/calls/:id/recording - تسجيل المكالمة
+```
+
+### Groups
+```
+POST   /api/groups           - إنشاء مجموعة
+GET    /api/groups           - قائمة المجموعات
+GET    /api/groups/:id       - تفاصيل المجموعة
+PATCH  /api/groups/:id       - تعديل المجموعة
+POST   /api/groups/:id/members - إضافة أعضاء
+GET    /api/groups/:id/messages - رسائل المجموعة
+POST   /api/groups/:id/messages - إرسال رسالة
+```
+
+---
+
+## ⏭️ الخطوات التالية
+1. رفع الكود للسيرفر
+2. تشغيل migration: `npx prisma migrate deploy`
+3. إعادة بناء Backend
+4. إنشاء Frontend components (اختياري)

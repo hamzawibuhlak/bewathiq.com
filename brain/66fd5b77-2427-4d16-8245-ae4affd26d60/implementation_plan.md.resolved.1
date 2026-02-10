@@ -1,0 +1,25 @@
+# Migration Generation Plan
+
+## Goal
+Generate missing Prisma migration files for the `Permission` and `RolePermission` models that were added to [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) but not migrated.
+
+## Proposed Changes
+1.  **Local Environment**:
+    -   Start a local PostgreSQL container using [docker-compose.yml](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/docker-compose.yml).
+    -   Configure `.env` to point to this local database.
+    -   Run `npx prisma migrate dev --name add_permissions_and_logs` to generate the migration file.
+2.  **Deployment**:
+    -   Package the application (including the new `prisma/migrations` folder).
+    -   Upload to VPS.
+    -   Run migrations on VPS.
+    -   Restart backend service.
+
+## Verification Plan
+### Local
+1.  Verify `prisma/migrations` folder contains the new migration.
+2.  Verify `npx prisma studio` or database client shows the new tables locally (optional, generation success is enough).
+
+### Production
+1.  After deployment, run `docker compose run --rm backend npx prisma migrate deploy`.
+2.  Check container logs `docker logs watheeq_backend_prod` to ensure no "table not found" errors.
+3.  Verify application functionality (accessing endpoints that use permissions).
