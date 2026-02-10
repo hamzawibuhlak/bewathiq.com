@@ -1,0 +1,37 @@
+# Phase 25: Super Admin Dashboard
+
+## Part 1: Database Schema
+- [/] Add SUPER_ADMIN to UserRole enum
+- [/] Add new enums (SubscriptionStatus, BillingCycle, SubInvoiceStatus, AnnouncementType)
+- [/] Add new models (SubscriptionPlan, Subscription, SubscriptionInvoice, SystemSetting, FeatureFlag, AuditLog, Announcement)
+- [/] Add subscription relation to Tenant, make User.tenantId optional
+- [ ] Run prisma generate
+
+## Part 2: Backend Auth
+- [ ] Create SuperAdminGuard
+- [ ] Create @SuperAdmin() decorator
+
+## Part 3: Backend Service & Controller
+- [ ] Create SuperAdminService with all methods
+- [ ] Create SuperAdminController with all endpoints
+- [ ] Create SuperAdminModule and register in AppModule
+
+## Part 4: Frontend Pages
+- [ ] Create SuperAdminDashboard page
+- [ ] Create TenantsPage
+- [ ] Create TenantDetailsPage
+- [ ] Create SubscriptionPlansPage
+- [ ] Create FeatureFlagsPage
+- [ ] Create AnnouncementsPage
+- [ ] Create SystemHealthPage
+- [ ] Create AuditLogsPage
+- [ ] Add routes to App.tsx
+- [ ] Add super-admin sidebar link
+
+## Part 5: Build & Deploy
+- [ ] Verify backend build
+- [ ] Verify frontend build
+- [ ] Sync to production server
+- [ ] Rebuild Docker containers
+- [ ] Apply database changes
+- [ ] Create SUPER_ADMIN user
