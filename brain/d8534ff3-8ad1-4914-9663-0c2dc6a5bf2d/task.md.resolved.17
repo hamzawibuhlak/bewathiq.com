@@ -1,0 +1,48 @@
+# Phase 29: Marketing Module
+
+## 1. Database Schema
+- [ ] Add all enums (12 enums)
+- [ ] Add Lead + LeadActivity models
+- [ ] Add CallScript + CallLog models
+- [ ] Add Affiliate + AffiliateCommission models
+- [ ] Add Campaign + CampaignContent + CampaignMetric models
+- [ ] Add AdsConnection + AdsMetric models
+- [ ] Add MessageCampaign + MessageRecipient models
+- [ ] Add ContentCalendarItem model
+- [ ] Add reverse relations to Tenant, User
+- [ ] Create SQL migration
+
+## 2. Backend Services
+- [ ] LeadsService (CRUD, Kanban, scoring, conversion)
+- [ ] AffiliateService (CRUD, commissions, referral codes)
+- [ ] CampaignsService (CRUD, stats)
+- [ ] AdsAnalyticsService (connections, metrics, dashboard)
+- [ ] TelemarketingService (calls, scripts, queue)
+- [ ] MessageCampaignService (email/whatsapp campaigns)
+- [ ] ContentCalendarService (calendar CRUD)
+- [ ] MarketingController + Module
+- [ ] Register in AppModule
+
+## 3. Frontend API + Pages
+- [ ] Marketing API client
+- [ ] MarketingLayout (emerald sidebar)
+- [ ] MarketingDashboard (KPIs, charts, funnel)
+- [ ] LeadsPage (Kanban + List views)
+- [ ] LeadDetailsPage
+- [ ] TelemarketingPage
+- [ ] AffiliatesPage + CommissionsPage
+- [ ] CampaignsPage
+- [ ] AdsAnalyticsPage
+- [ ] MessageCampaignsPage
+- [ ] ContentCalendarPage
+
+## 4. Routing & Navigation
+- [ ] Add routes in App.tsx
+- [ ] Add Marketing link in Sidebar
+
+## 5. Deployment
+- [ ] Commit changes
+- [ ] Sync to server
+- [ ] Run SQL migration
+- [ ] Rebuild Docker containers
+- [ ] Verify
