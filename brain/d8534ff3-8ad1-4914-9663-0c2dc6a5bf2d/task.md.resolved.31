@@ -1,0 +1,42 @@
+# Phase 32: Call Center WebRTC + WhatsApp QR Integration
+
+## 1. Database Schema
+- [x] Add [SipExtension](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts#6-17) model
+- [x] Add [CallRecord](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts#18-36) model
+- [x] Add `WhatsappSession` model  
+- [x] Add `WhatsappBaileysMessage` model
+- [x] Add enums: `WhatsappSessionStatus`, `WaBaileysMessageDirection`, `WaBaileysMessageStatus`
+- [x] Add relations to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#41-52), [User](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts#5-20), [Client](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#83-102), [Case](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#123-155)
+
+## 2. Backend — Call Center Module
+- [x] [sip-extension.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/sip-extension.service.ts) — AES encrypted SIP passwords
+- [x] [call-record.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-record.service.ts) — auto-client matching, stats
+- [x] [call-center.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center.controller.ts) — REST API endpoints
+- [x] [call-center.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center.module.ts)
+
+## 3. Backend — WhatsApp Baileys
+- [x] [whatsapp-baileys.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/whatsapp/whatsapp-baileys.service.ts) — QR session, message handling, auto-reconnect
+- [x] Update [whatsapp.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/whatsapp/whatsapp.controller.ts) with QR endpoints
+- [x] Update [whatsapp.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/whatsapp/whatsapp.module.ts)
+- [x] Update [websocket.gateway.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/websocket/websocket.gateway.ts) with [broadcastWhatsAppQR](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/websocket/websocket.gateway.ts#174-181) and [broadcastWhatsAppStatus](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/websocket/websocket.gateway.ts#182-189)
+
+## 4. Backend — App Module + Dependencies
+- [x] Run `npx prisma generate`
+- [x] Install `@whiskeysockets/baileys`, `qrcode`, `crypto-js`
+- [x] Register [CallCenterModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center.module.ts#7-14) in [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+
+## 5. Frontend — Softphone
+- [x] [api/callCenter.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts) — SIP extension + call record API
+- [x] [hooks/useSoftphone.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useSoftphone.ts) — JsSIP WebRTC hook
+- [x] [components/call-center/Softphone.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/call-center/Softphone.tsx) — floating dialer UI
+
+## 6. Frontend — WhatsApp QR
+- [x] [api/whatsappQr.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/whatsappQr.ts) — connect, disconnect, status, send, messages API
+- [x] [components/whatsapp/WhatsappConnect.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/whatsapp/WhatsappConnect.tsx) — QR display + status
+- [x] Update [hooks/use-websocket.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-websocket.ts) with [useWhatsAppQR](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-websocket.ts#127-135) and [useWhatsAppStatus](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-websocket.ts#136-144)
+- [x] Update [lib/websocket.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/lib/websocket.ts) with new event types
+- [x] Install `jssip`, `qrcode.react`
+
+## 7. Verification
+- [x] Backend `tsc --noEmit` — ✅ zero errors
+- [x] Frontend `tsc --noEmit` — ✅ zero errors

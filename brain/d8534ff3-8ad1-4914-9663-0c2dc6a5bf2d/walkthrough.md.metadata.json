@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough for Phase 31 implementation covering slug-based routing and multi-step registration wizard. Documents all backend and frontend file changes, new URL structure, registration flow, and remaining deployment steps.",
-  "updatedAt": "2026-02-11T12:05:43.663994Z",
-  "version": "8"
+  "summary": "Walkthrough documenting Phase 32 implementation — Call Center WebRTC via JsSIP/UCM6301 and WhatsApp QR via Baileys. Covers all database schema changes, backend services, frontend components, and verification results.",
+  "updatedAt": "2026-02-11T16:44:25.104388Z",
+  "version": "11"
 }

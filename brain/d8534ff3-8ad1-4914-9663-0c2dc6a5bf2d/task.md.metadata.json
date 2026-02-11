@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Deployment checklist for Phase 31 Slug Routing + Multi-Step Registration to production server.",
-  "updatedAt": "2026-02-11T16:10:01.834646Z",
-  "version": "28"
+  "summary": "Phase 32 task checklist with all items marked complete. Covers database schema, backend call-center module, WhatsApp Baileys service, app module registration, frontend API services, softphone hook/component, WhatsApp QR component, websocket hooks, and dependency installation.",
+  "updatedAt": "2026-02-11T16:44:25.100387Z",
+  "version": "31"
 }

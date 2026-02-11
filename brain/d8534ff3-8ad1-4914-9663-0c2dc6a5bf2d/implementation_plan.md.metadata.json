@@ -1,5 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Implementation plan for Phase 24 HR Management Module. Covers schema changes (15 enums, 12 models), 4 backend services, controller, 5 frontend pages, and production deployment.",
-  "updatedAt": "2026-02-10T13:53:07.159602Z"
+  "summary": "Phase 32 implementation plan covering: Database schema additions (SipExtension, WhatsappSession, WhatsappMessage models), Backend call-center module (SIP extension + call record services), Backend WhatsApp Baileys service for QR-based connection, Frontend softphone component with JsSIP/WebRTC, Frontend WhatsApp QR connection UI. Existing calls/whatsapp/websocket modules are extended rather than replaced.",
+  "updatedAt": "2026-02-11T16:24:24.834937Z",
+  "version": "2"
 }
