@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Tracks Phase 31 implementation: slug routing and multi-step registration. Backend (schema, DTO, service, controller, JWT) and frontend (routing, components, registration wizard) are complete. Remaining: Prisma generate/migrate and testing.",
-  "updatedAt": "2026-02-11T12:05:43.662620Z",
-  "version": "23"
+  "summary": "Tracks Phase 31 implementation. Backend and Frontend changes are complete. Deployment is in progress: files synced, but server lacks Node.js/NPM. Next steps: install Node.js, run deployment commands.",
+  "updatedAt": "2026-02-11T12:34:54.416365Z",
+  "version": "24"
 }

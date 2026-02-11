@@ -19,7 +19,11 @@
 - [x] `RegisterPage.tsx`: 3-step wizard (office info + slug check, owner details, plan selection)
 
 ## Deployment
-- [ ] Run `npx prisma generate` to regenerate Prisma client (resolves backend lint errors)
+- [x] Sync code to server (User manual sync complete)
+- [/] **Install Node.js & NPM on server (Current Blocker)**
+- [ ] Run `npm install`
+- [ ] Run `npx prisma generate` to regenerate Prisma client
 - [ ] Run `npx prisma migrate dev` to apply schema changes
+- [ ] Build & Start (`npm run build`, `pm2 restart all`)
 - [ ] Test registration flow end-to-end
 - [ ] Test slug-based routing
