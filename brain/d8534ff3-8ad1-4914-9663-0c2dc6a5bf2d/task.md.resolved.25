@@ -1,0 +1,42 @@
+# Phase 33: Super Admin Dashboard
+
+## 1. Database Schema
+- [ ] Add enums: `SuperAdminRole`, `NoteType`, `ChatRoomStatus`, `ChatSenderType`
+- [ ] Add models: `SuperAdminUser`, `TenantNote`, `SuperAdminChatRoom`, `SuperAdminChatMessage`, `SuperAdminAuditLog`
+- [ ] Update [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#41-52) model: add `isFrozen`, `frozenReason`, `frozenAt`, relations to notes/chatRoom
+- [ ] Push schema to DB
+
+## 2. Backend Services
+- [ ] `super-admin-auth.service.ts` — login, createFirstOwner, separate JWT
+- [ ] `tenants-management.service.ts` — CRUD, freeze/unfreeze, soft/hard delete, notes, overview stats
+- [ ] `staff.service.ts` — getStaff, addStaff, updateRole, deactivate, resetPassword
+- [ ] [chat.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.service.ts) — rooms, messages, markAsRead, resolve
+- [ ] `super-admin.guard.ts` — JWT verify with SUPER_ADMIN type + role check
+- [ ] Update [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) with all new endpoints
+- [ ] Update [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts) with new providers
+- [ ] Add `SUPER_ADMIN_JWT_SECRET` to env
+
+## 3. Frontend Pages
+- [ ] `SuperAdminLoginPage.tsx` — separate login page
+- [ ] `SuperAdminLayout.tsx` — dark theme sidebar layout
+- [ ] `OverviewPage.tsx` — stats, plan distribution, recent registrations
+- [ ] `TenantsPage.tsx` — table with search/filter/pagination
+- [ ] `TenantDetailsPage.tsx` — full details + actions + notes + mini chat
+- [ ] [ChatPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/chat/ChatPage.tsx) — chat rooms list + chat window
+- [ ] `StaffPage.tsx` — staff management
+- [ ] `AuditLogPage.tsx` — audit logs table
+
+## 4. Frontend Components
+- [ ] `StatCard.tsx`, `TenantRow.tsx`, `TenantActionsMenu.tsx`
+- [ ] `DeleteConfirmModal.tsx` — double-confirm with name typing
+- [ ] `ChatRoomList.tsx`, `ChatWindow.tsx`
+- [ ] `AddStaffModal.tsx`
+
+## 5. Frontend API & Store
+- [ ] `superAdmin.ts` API module
+- [ ] `superAdminStore.ts` for auth state
+- [ ] Update [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) routes
+
+## 6. Deployment & Testing
+- [ ] Deploy to production
+- [ ] Test full flow end-to-end

@@ -1,0 +1,127 @@
+# Phase 33: Super Admin Dashboard — Implementation Plan
+
+Build a complete, independent admin dashboard for **Wathiq platform owners** to manage all tenants, staff, and support chat — accessible at `bewathiq.com/super-admin`.
+
+## Existing Code
+
+There is already a basic `super-admin` module:
+- **Backend**: [super-admin.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts) (251 lines) — basic stats, tenant CRUD, audit logs
+- **Backend**: [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) (88 lines) — REST endpoints
+- **Frontend**: [SuperAdminPages.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SuperAdminPages.tsx) (34KB) — single-file pages
+- **Schema**: [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#41-52) model already has `deletedAt`, `planType`, [isActive](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/OwnerLayout.tsx#148-152). No `SuperAdminUser` model exists yet.
+
+Phase 33 **extends** the existing module significantly with: separate SuperAdmin auth, staff, chat, notes, audit log, and a fully redesigned dark-theme frontend.
+
+---
+
+## Proposed Changes
+
+### Database Schema
+
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+
+Add 5 new enums + 5 new models + update Tenant:
+
+| Addition | Details |
+|----------|---------|
+| `SuperAdminRole` enum | OWNER, MANAGER, SUPPORT, SALES, MODERATOR |
+| `NoteType` enum | GENERAL, BILLING, TECHNICAL, COMPLAINT, FOLLOWUP |
+| `ChatRoomStatus` enum | OPEN, IN_PROGRESS, RESOLVED, CLOSED |
+| `ChatSenderType` enum | ADMIN, TENANT |
+| `SuperAdminUser` model | Separate user table for Wathiq staff |
+| `TenantNote` model | Internal notes per tenant |
+| `SuperAdminChatRoom` model | One room per tenant (1:1) |
+| `SuperAdminChatMessage` model | Messages in chat rooms |
+| `SuperAdminAuditLog` model | Audit trail of all admin actions |
+| [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#41-52) additions | `isFrozen`, `frozenReason`, `frozenAt` + relations |
+
+---
+
+### Backend Services
+
+#### [NEW] [super-admin-auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin-auth.service.ts)
+- [login()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#99-182) — separate JWT with `SUPER_ADMIN_JWT_SECRET`
+- `createFirstOwner()` — one-time initialization
+
+#### [MODIFY] [super-admin.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts)
+- Enhance [getAllTenants()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts#73-101) — add freeze filter, chat room data
+- Enhance [getTenantDetails()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts#102-119) — include notes, chat, full user list
+- Add `freezeTenant()` / `unfreezeTenant()` (replacing suspend/activate)
+- Add `softDeleteTenant()` / `hardDeleteTenant()` (transaction-based)
+- Add `addNote()` — internal notes per tenant
+- Enhance `getOverviewStats()` — plan distribution, revenue, open chats
+
+#### [NEW] [staff.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/staff.service.ts)
+- `getStaff()`, `addStaff()`, `updateStaffRole()`, `deactivateStaff()`, `resetPassword()`
+- Role-based permissions map
+
+#### [NEW] [chat.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/chat.service.ts)
+- `getOrCreateRoom()`, `getAllRooms()`, `sendFromAdmin()`, `sendFromTenant()`
+- [markAsRead()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/chat/chat.service.ts#283-314), `resolveRoom()`
+
+#### [NEW] [super-admin.guard.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/guards/super-admin.guard.ts)
+- Verifies `SUPER_ADMIN_JWT_SECRET` + checks `type: SUPER_ADMIN`
+- Role-based restriction via `@SetMetadata`
+
+#### [MODIFY] [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts)
+- Add auth endpoints (login, init)
+- Add staff endpoints (CRUD)
+- Add chat endpoints (rooms, messages, read, resolve)
+- Add freeze/unfreeze, soft/hard delete, notes
+
+#### [MODIFY] [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts)
+- Register new services and guard
+
+---
+
+### Frontend
+
+#### [NEW] `frontend/src/pages/super-admin/SuperAdminLoginPage.tsx`
+- Separate dark-themed login page at `/super-admin/login`
+
+#### [NEW] `frontend/src/pages/super-admin/SuperAdminLayout.tsx`
+- Dark theme (slate-900/950), indigo accents
+- Sidebar: Overview, Tenants, Chat, Staff, Audit Log
+
+#### [NEW] `frontend/src/pages/super-admin/OverviewPage.tsx`
+- 4 stat cards, plan distribution, recent registrations
+
+#### [NEW] `frontend/src/pages/super-admin/TenantsPage.tsx`
+- Table with search/filter/pagination, frozen badges
+
+#### [NEW] `frontend/src/pages/super-admin/TenantDetailsPage.tsx`
+- Full details + actions (freeze/unfreeze/changePlan/delete) + notes + mini chat
+
+#### [NEW] `frontend/src/pages/super-admin/ChatPage.tsx`
+- Chat room list + chat window
+
+#### [NEW] `frontend/src/pages/super-admin/StaffPage.tsx`
+- Staff list + add/edit/deactivate
+
+#### [NEW] `frontend/src/pages/super-admin/AuditLogPage.tsx`
+- Filterable audit log table
+
+#### [NEW] `frontend/src/api/superAdmin.ts`
+- API client for all super admin endpoints
+
+#### [NEW] `frontend/src/stores/superAdminStore.ts`
+- Zustand store for super admin auth state
+
+#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- Update routes to use new layout and pages
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- `docker exec watheeq_backend_prod npx prisma@5.8.0 db push` to apply schema
+- `docker compose build --no-cache` and `up -d --force-recreate`
+- Test via browser: login, overview, tenant management, chat, staff, audit log
+
+### Manual Verification
+- Create first owner via `/super-admin/auth/init`
+- Login at `bewathiq.com/super-admin/login`
+- Register a new tenant → verify it appears in overview
+- Freeze/unfreeze a tenant
+- Hard delete with name confirmation
