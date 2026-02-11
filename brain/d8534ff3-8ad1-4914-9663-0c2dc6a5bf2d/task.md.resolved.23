@@ -1,0 +1,25 @@
+# Phase 31: Slug Routing & Multi-Step Registration
+
+## Backend
+- [x] Database schema: `slug`, `PlanType`, `planStartDate`, `planEndDate` on Tenant
+- [x] [register.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/dto/register.dto.ts): new fields (slug, city, licenseNumber, planType)
+- [x] [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts): checkSlugAvailability, updated register/login/getMe
+- [x] [auth.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts): GET /auth/check-slug/:slug endpoint
+- [x] [jwt.strategy.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/strategies/jwt.strategy.ts): tenantSlug in JWT payload
+
+## Frontend
+- [x] [types/index.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts): Tenant.slug, Tenant.planType, RegisterRequest.slug/city/licenseNumber/planType
+- [x] [auth.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts): getTenantSlug() helper, tenant interface with slug+planType
+- [x] [use-auth.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-auth.ts): slug-based redirect on login/register success
+- [x] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx): all routes under `/:slug/*`, SlugRedirect for backward compat
+- [x] [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx): slug-aware paths via useParams
+- [x] [Header.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Header.tsx): slug-aware quick actions, settings nav, messages link
+- [x] [Breadcrumbs.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/Breadcrumbs.tsx): slug-aware home link, skip slug in auto-generated crumbs
+- [x] [OwnerLayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/OwnerLayout.tsx): slug-aware back-to-dashboard link
+- [x] [RegisterPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/auth/RegisterPage.tsx): 3-step wizard (office info + slug check, owner details, plan selection)
+
+## Deployment
+- [ ] Run `npx prisma generate` to regenerate Prisma client (resolves backend lint errors)
+- [ ] Run `npx prisma migrate dev` to apply schema changes
+- [ ] Test registration flow end-to-end
+- [ ] Test slug-based routing

@@ -1,0 +1,30 @@
+# Phase 31: Slug Routing + Multi-Step Registration
+
+## Database
+- [ ] Add `slug @unique`, `planType`, `planStartDate`, `planEndDate` to Tenant model
+- [ ] Add `PlanType` enum
+
+## Backend
+- [ ] Update [register.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/dto/register.dto.ts) with new fields (slug, city, licenseNumber, ownerName, planType)
+- [ ] Add `checkSlugAvailability()` to [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts)
+- [ ] Update [register()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts#36-39) in [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts) (transaction with slug, plan fields)
+- [ ] Update [login()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts#71-78) in [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts) (include tenantSlug in response)
+- [ ] Update [getMe()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#184-220) to include slug in tenant select
+- [ ] Add `GET /auth/check-slug/:slug` endpoint to controller
+- [ ] Update [generateToken()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#268-281) and JWT payload to include `tenantSlug`
+- [ ] Update [jwt.strategy.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/strategies/jwt.strategy.ts) to include `tenantSlug`
+
+## Frontend Routing
+- [ ] Update [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) — all app routes under `/:slug/*`
+- [ ] Update [auth.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts) — add tenant info (slug, planType)
+- [ ] Update [use-auth.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-auth.ts) hooks — navigate to `/:slug/dashboard`
+- [ ] Update [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) — all paths include `/:slug/`
+- [ ] Update [AppLayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/AppLayout.tsx) — pass slug to Sidebar
+
+## Frontend Pages
+- [ ] Rewrite [RegisterPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/auth/RegisterPage.tsx) — 3-step wizard with slug check
+- [ ] Update [LoginPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/auth/LoginPage.tsx) — redirect to `/:slug/dashboard`
+- [ ] Update [NotFoundPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx#164-176) and [PublicRoute](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx#188-200) redirects
+
+## Deploy
+- [ ] Commit, rsync, Docker rebuild, Prisma db push, seed

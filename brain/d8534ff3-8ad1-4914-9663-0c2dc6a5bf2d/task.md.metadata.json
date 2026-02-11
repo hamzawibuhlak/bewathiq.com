@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Completed task checklist for fixing Marketing and Analytics page server errors on production.",
-  "updatedAt": "2026-02-11T08:02:47.749895Z",
-  "version": "20"
+  "summary": "Tracks Phase 31 implementation: slug routing and multi-step registration. Backend (schema, DTO, service, controller, JWT) and frontend (routing, components, registration wizard) are complete. Remaining: Prisma generate/migrate and testing.",
+  "updatedAt": "2026-02-11T12:05:43.662620Z",
+  "version": "23"
 }

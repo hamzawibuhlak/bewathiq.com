@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough of Phase 25 deployment including production fix: switched from dev to production docker-compose, resolving 404 and API URL issues.",
-  "updatedAt": "2026-02-10T18:48:07.315964Z",
-  "version": "1"
+  "summary": "Walkthrough for Phase 31 implementation covering slug-based routing and multi-step registration wizard. Documents all backend and frontend file changes, new URL structure, registration flow, and remaining deployment steps.",
+  "updatedAt": "2026-02-11T12:05:43.663994Z",
+  "version": "8"
 }

@@ -1,47 +1,41 @@
-# Phase 25: Super Admin Dashboard — Walkthrough
+# Phase 31: Slug Routing & Multi-Step Registration — Walkthrough
 
-## Summary
-Deployed the Super Admin Dashboard and fixed a critical production routing issue.
+## What Changed
 
-## Issue & Fix
-The site was running [docker-compose.yml](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/docker-compose.yml) (dev mode) with Vite dev server on port 5173 and `VITE_API_URL=http://localhost:3000/api`. This caused:
-1. **Service Worker cache** serving old files → 404 on `/super-admin`
-2. **Wrong API URL** → `localhost:3000` doesn't work from external browsers
+### Backend
+| File | Change |
+|------|--------|
+| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) | Added `PlanType` enum, `slug` (unique), `planType`, `planStartDate`, `planEndDate` to Tenant |
+| [register.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/dto/register.dto.ts) | Added `slug`, `city`, `licenseNumber`, `planType` fields with validation |
+| [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts) | New [checkSlugAvailability()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#41-64), updated [register](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#31-98)/[login](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#154-259)/[getMe](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts#55-58)/[generateToken](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#357-377) with slug support |
+| [auth.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts) | New `GET /auth/check-slug/:slug` endpoint |
+| [jwt.strategy.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/strategies/jwt.strategy.ts) | `tenantSlug` added to JWT payload |
 
-**Fix:** Switched to [docker-compose.prod.yml](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/docker-compose.prod.yml) which uses:
-- **Nginx** serving built static files with `try_files $uri $uri/ /index.html` (SPA fallback)
-- **`VITE_API_URL=/api`** (relative, proxied by Nginx to backend)
-- **SSL** via Let's Encrypt on ports 80/443
+### Frontend
+| File | Change |
+|------|--------|
+| [types/index.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts) | `Tenant.slug`, `Tenant.planType`, [RegisterRequest](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#58-69) with slug/city/licenseNumber/planType |
+| [auth.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts) | [getTenantSlug()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts#94-96) helper, tenant interface with slug+planType |
+| [use-auth.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-auth.ts) | Login/register redirect uses `response.redirectTo` → `/:slug/dashboard` |
+| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | All app routes under `/:slug/*`, [SlugRedirect](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx#203-211) for backward compat (`/dashboard` → `/:slug/dashboard`) |
+| [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) | All nav paths are relative, prepended with `/${slug}/` via `useParams` |
+| [Header.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Header.tsx) | Quick actions, settings nav, messages link use slug prefix |
+| [Breadcrumbs.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/Breadcrumbs.tsx) | Home link → `/:slug/dashboard`, slug segment skipped in auto-generated breadcrumbs |
+| [OwnerLayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/OwnerLayout.tsx) | Back-to-dashboard link → `/:slug/dashboard` |
+| [RegisterPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/auth/RegisterPage.tsx) | Complete rewrite: 3-step wizard with real-time slug availability check |
 
-## Deployment Steps Executed
-1. ✅ Git committed Phase 24+25
-2. ✅ Code synced via rsync to `76.13.254.7`
-3. ✅ Stopped dev containers: `docker compose down`
-4. ✅ Started production: `docker compose -f docker-compose.prod.yml up -d --build`
-5. ✅ DB schema pushed: `npx prisma db push`
-6. ✅ Seed script ran: Super Admin user + 3 plans + 5 feature flags
+## URL Structure
 
-## Verification
-All 4 containers running and healthy:
+```
+Before: /dashboard, /cases, /settings/profile
+After:  /watheeq-law/dashboard, /watheeq-law/cases, /watheeq-law/settings/profile
+```
 
-| Container | Status |
-|-----------|--------|
-| `watheeq_frontend_prod` | ✅ Healthy (Nginx) |
-| `watheeq_backend_prod` | ✅ Healthy (Production) |
-| `watheeq_postgres_prod` | ✅ Healthy |
-| `watheeq_redis_prod` | ✅ Healthy |
+## Registration Flow
+1. **Step 1** — Office name, slug (with instant availability check), city, license number
+2. **Step 2** — Owner name, email, phone, password
+3. **Step 3** — Plan selection (Basic/Professional/Enterprise)
 
-Browser test confirmed `/super-admin` loads the dashboard correctly after clearing Service Worker cache.
-
-![Super Admin dashboard loaded successfully](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/d8534ff3-8ad1-4914-9663-0c2dc6a5bf2d/super_admin_verify_1770749210462.webp)
-
-## Access
-| Item | Value |
-|------|-------|
-| URL | `bewathiq.com/super-admin` |
-| Email | `admin@watheeq.sa` |
-| Password | `SuperAdmin@2026!` |
-
-> [!IMPORTANT]
-> Users need to clear browser cache/Service Worker to see the update:
-> `F12 → Application → Storage → Clear site data`
+## Remaining Steps
+- Run `npx prisma generate` + `npx prisma migrate dev` on the server
+- Test end-to-end registration and slug routing
