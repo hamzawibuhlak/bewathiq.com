@@ -1,0 +1,35 @@
+# Phase 29: Marketing Module
+
+## Part 1: Database Schema
+- [x] Add 12 enums and 14 models to [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+- [x] Add reverse relations to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#24-25) and [User](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/auth.store.ts#5-20) models
+- [x] Create SQL migration file [phase29_marketing.sql](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/phase29_marketing.sql)
+
+## Part 2: Backend Services
+- [x] Create [MarketingService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.service.ts#4-495) with 7 sub-modules
+- [x] Create [MarketingController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.controller.ts#8-215) with REST endpoints
+- [x] Create [MarketingModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.module.ts#6-13) and register in [AppModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts#51-140)
+
+## Part 3: Frontend API & Layout
+- [x] Create [frontend/src/api/marketing.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/marketing.ts) API client
+- [x] Create [MarketingLayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/MarketingLayout.tsx) with emerald sidebar
+
+## Part 4: Frontend Pages
+- [x] Create [MarketingDashboard.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/MarketingDashboard.tsx) — KPIs, funnel, quick actions
+- [x] Create [LeadsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/leads/LeadsPage.tsx) — Kanban + List views
+- [x] Create [LeadDetailsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/leads/LeadDetailsPage.tsx) — Status, activity timeline
+- [x] Create [TelemarketingPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/telemarketing/TelemarketingPage.tsx) — Call queue, scripts, stats
+- [x] Create [AffiliatesPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/affiliate/AffiliatesPage.tsx) — Affiliate management, commissions
+- [x] Create [CampaignsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/campaigns/CampaignsPage.tsx) — Campaign grid with metrics
+- [x] Create [AdsAnalyticsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/ads-analytics/AdsAnalyticsPage.tsx) — Platform KPIs, trends
+- [x] Create [MessageCampaignsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/message-campaigns/MessageCampaignsPage.tsx) — WhatsApp/Email campaigns
+- [x] Create [ContentCalendarPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/content-calendar/ContentCalendarPage.tsx) — Monthly calendar grid
+
+## Part 5: Routing & Integration
+- [x] Add lazy imports and nested routes in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- [x] Add marketing link to [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+- [x] Fix lint errors
+
+## Part 6: Deploy & Verify
+- [ ] Run Prisma migration on production
+- [ ] Verify all pages load correctly

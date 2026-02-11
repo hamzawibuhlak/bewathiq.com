@@ -1,0 +1,51 @@
+# Phase 29: Marketing Module — Walkthrough
+
+## Overview
+Built a complete Marketing Module for the Wathiq application covering Leads & CRM, Telemarketing, Affiliate Marketing, Campaigns, Ads Analytics, Email/WhatsApp Campaigns, and Content Calendar.
+
+---
+
+## Backend
+
+### Database Schema
+Added 14 models and 12 enums to [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma):
+- **Models**: [Lead](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.service.ts#12-44), [LeadActivity](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.service.ts#116-135), [CallScript](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.service.ts#411-417), `CallLog`, [Affiliate](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.service.ts#198-207), [AffiliateCommission](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.controller.ts#78-81), [Campaign](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/marketing.ts#25-27), `CampaignContent`, `CampaignMetric`, [AdsConnection](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.controller.ts#127-130), [AdsMetric](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/marketing.ts#38-39), [MessageCampaign](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/marketing.ts#47-49), `MessageRecipient`, `ContentCalendarItem`
+- SQL migration: [phase29_marketing.sql](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/phase29_marketing.sql)
+
+### Services & Controller
+- [marketing.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.service.ts) — 7 sub-modules with CRUD, lead scoring, affiliate commissions
+- [marketing.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/marketing/marketing.controller.ts) — REST endpoints with JWT auth
+- Registered in [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+
+---
+
+## Frontend
+
+### API Client
+- [marketing.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/marketing.ts) — Complete API client for all endpoints
+
+### Pages Created (10 total)
+
+| Page | Key Features |
+|------|-------------|
+| [MarketingLayout](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/MarketingLayout.tsx) | Emerald sidebar, RTL navigation |
+| [Dashboard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/MarketingDashboard.tsx) | KPIs, conversion funnel, quick actions |
+| [Leads](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/leads/LeadsPage.tsx) | Kanban + List views, search, create modal |
+| [Lead Details](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/leads/LeadDetailsPage.tsx) | Status management, activity timeline |
+| [Telemarketing](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/telemarketing/TelemarketingPage.tsx) | Call queue, scripts, call logging modal |
+| [Affiliates](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/affiliate/AffiliatesPage.tsx) | Commission tracking, referral codes |
+| [Campaigns](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/campaigns/CampaignsPage.tsx) | Type filtering, budget progress, metrics |
+| [Ads Analytics](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/ads-analytics/AdsAnalyticsPage.tsx) | Platform connections, KPIs, daily trends |
+| [Message Campaigns](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/message-campaigns/MessageCampaignsPage.tsx) | WhatsApp/Email filter, delivery stats |
+| [Content Calendar](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/marketing/content-calendar/ContentCalendarPage.tsx) | Monthly grid, day-click create, color-coded status |
+
+### Routing & Navigation
+- Nested routes added to [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- Marketing link added to [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+
+---
+
+## Remaining
+- Run [phase29_marketing.sql](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/phase29_marketing.sql) migration on production
+- Build & deploy frontend/backend
+- End-to-end testing
