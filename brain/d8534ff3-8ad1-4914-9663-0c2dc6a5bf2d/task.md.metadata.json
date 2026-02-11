@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Tracks Phase 31 implementation. Backend and Frontend changes are complete. Deployment is in progress: files synced, but server lacks Node.js/NPM. Next steps: install Node.js, run deployment commands.",
-  "updatedAt": "2026-02-11T12:34:54.416365Z",
-  "version": "24"
+  "summary": "Deployment checklist for Phase 31 Slug Routing + Multi-Step Registration to production server.",
+  "updatedAt": "2026-02-11T16:10:01.834646Z",
+  "version": "28"
 }
