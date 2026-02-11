@@ -1,0 +1,51 @@
+# Phase 30: Legal Library — المكتبة القانونية السعودية
+
+## Database & Schema
+- [ ] Add 6 enums to Prisma schema (RegulationCategory, RegulationStatus, CourtType, PrecedentOutcome, BookmarkType)
+- [ ] Add 8 models (LegalRegulation, RegulationArticle, LegalPrecedent, LegalTerm, LegalBookmark, BookmarkFolder, CaseLegalReference, LegalSearchLog)
+- [ ] Add reverse relations to Tenant, User, Case models
+- [ ] Run migration on production DB
+
+## Backend Module
+- [ ] Create `legal-library.service.ts` (regulations, precedents, glossary, search, AI search, bookmarks, case references, stats)
+- [ ] Create `legal-library.controller.ts` (all endpoints)
+- [ ] Create `legal-library.module.ts` (wire up PrismaModule + AiModule)
+- [ ] Register `LegalLibraryModule` in [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+
+## Seed Data
+- [ ] Create seed script with 10 Saudi regulations + sample articles
+- [ ] Add 12 legal terms
+- [ ] Add 3 sample precedents
+- [ ] Run seed on production
+
+## Frontend API & Hooks
+- [ ] Create `api/legalLibrary.ts`
+- [ ] Create `hooks/useLegalLibrary.ts`
+
+## Frontend Pages
+- [ ] `LegalLibraryHome.tsx` — main page with search + stats + categories
+- [ ] `RegulationsPage.tsx` — list with filters
+- [ ] `RegulationDetailsPage.tsx` — article accordion viewer
+- [ ] `PrecedentsPage.tsx` — list with filters
+- [ ] `PrecedentDetailsPage.tsx` — detail view
+- [ ] `GlossaryPage.tsx` — alphabetical term browser
+- [ ] `BookmarksPage.tsx` — saved items + folders
+
+## Frontend Components
+- [ ] `AiSearchBox.tsx`
+- [ ] `RegulationCard.tsx`
+- [ ] `PrecedentCard.tsx`
+- [ ] `TermCard.tsx`
+- [ ] `BookmarkButton.tsx`
+- [ ] `LinkToCaseModal.tsx`
+- [ ] `CategoryBadge.tsx`
+- [ ] `CourtTypeBadge.tsx`
+- [ ] `LibraryStats.tsx`
+
+## Routing & Navigation
+- [ ] Add routes in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- [ ] Add المكتبة القانونية to main Sidebar
+
+## Deployment
+- [ ] Deploy backend + frontend to production
+- [ ] Verify endpoints working
