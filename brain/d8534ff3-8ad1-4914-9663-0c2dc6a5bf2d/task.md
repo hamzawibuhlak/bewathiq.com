@@ -1,27 +1,18 @@
-# Phase 24: HR Management Module
+# Fix Marketing & Analytics Page Errors
 
-## Part 1: Database Schema & Backend Core
-- [/] Add HR enums and models to `schema.prisma`
-- [ ] Run Prisma migration
-- [ ] Create `EmployeeService`
-- [ ] Create `AttendanceService`
-- [ ] Create `LeaveService`
-- [ ] Create `PayrollService`
-- [ ] Create `HrController`
-- [ ] Create `HrModule` and register in `AppModule`
-- [ ] Verify backend builds successfully
+## Diagnosis
+- [/] Check backend logs for marketing endpoint errors
+- [/] Check backend logs for analytics endpoint errors
+- [ ] Identify root cause
 
-## Part 2: Frontend Pages
-- [ ] Create `EmployeesListPage`
-- [ ] Create `EmployeeDetailsPage`
-- [ ] Create `AttendancePage`
-- [ ] Create `LeaveManagementPage`
-- [ ] Create `PayrollPage`
-- [ ] Add HR routes to `App.tsx`
-- [ ] Add HR links to `Sidebar.tsx`
+## Fix Marketing Pages
+- [ ] Fix Marketing Dashboard API errors
+- [ ] Fix all marketing sub-pages
 
-## Part 3: Deploy & Verify
-- [ ] Sync code to production server
-- [ ] Rebuild backend container
-- [ ] Run Prisma migrations on production
-- [ ] Verify HR pages work on production
+## Fix Analytics Pages
+- [ ] Fix Analytics Dashboard API (`/api/analytics/dashboard`)
+- [ ] Fix Lawyers Performance API (`/api/analytics/lawyers/performance`)
+
+## Deploy & Verify
+- [ ] Rebuild backend
+- [ ] Verify pages load without errors

@@ -1,5 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Task checklist for Phase 24 HR Management Module covering database schema, backend services, frontend pages, and production deployment.",
-  "updatedAt": "2026-02-10T13:53:07.152652Z"
+  "summary": "Task checklist for fixing Marketing and Analytics page server errors on production.",
+  "updatedAt": "2026-02-11T07:46:53.251251Z",
+  "version": "19"
 }
