@@ -1,39 +1,32 @@
-# Phase 32 — Verification & Deployment Walkthrough
+# Phase 36: Call Center Settings Integration — Walkthrough
 
-## ما تم اكتشافه أثناء المراجعة
+## What Was Built
 
-أثناء التحقق من جاهزية Phase 32، اكتشفنا **مشكلتين حرجتين**:
+### Backend (3 new files + schema changes)
 
-| المشكلة | التأثير |
-|---------|---------|
-| `Softphone` غير مضاف لأي Layout | المستخدم لا يرى زر الاتصال ولا يستطيع إجراء مكالمات |
-| `WhatsappConnect` QR غير مستخدم | المستخدم لا يستطيع ربط واتساب عبر مسح QR |
+| File | Purpose |
+|------|---------|
+| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) | Added `CallCenterSettings` model (50+ fields), extended `SipExtension` + `CallRecord` with GDMS fields |
+| [gdms-api.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/gdms-api.service.ts) | GDMS Cloud API integration: encryption, connection testing, extension CRUD, call log sync, recording management |
+| [call-center-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center-settings.service.ts) | Settings CRUD with secret masking, auto-assign extensions, GDMS orchestration |
+| [call-center-settings.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center-settings.controller.ts) | REST endpoints: `GET/PUT /settings`, `POST /test-connection`, `POST /auto-assign-extension`, `POST /sync-call-logs` |
 
-## ما تم إصلاحه
+### Frontend (1 new page + API additions)
 
-### 1. [AppLayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/AppLayout.tsx)
-- أضفنا `Softphone` كـ lazy-loaded floating component
-- يظهر في جميع الصفحات كزر عائم
+| File | Purpose |
+|------|---------|
+| [CallCenterSettingsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/CallCenterSettingsPage.tsx) | Settings page with 5 sections (UCM, GDMS, Extensions, Recording, Advanced), edit mode, test connection, sync buttons |
+| [callCenter.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts) | Added `CallCenterSettingsData` interface + 5 settings API functions |
+| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | Added lazy import + route `/settings/call-center` |
 
-render_diffs(file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/AppLayout.tsx)
+## Deployment
 
-### 2. [WhatsAppSettingsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/WhatsAppSettingsPage.tsx)
-- أضفنا قسم "ربط واتساب عبر QR Code" أسفل إعدادات Cloud API
-- أضفنا import لـ `WhatsappConnect`
+- ✅ Backend image rebuilt (no-cache)
+- ✅ Frontend image rebuilt (no-cache)
+- ✅ Schema pushed to PostgreSQL via `prisma db push` (v5.22.0)
+- ✅ All 4 containers running healthy (backend, frontend, postgres, redis)
+- ⚠️ Used `npx prisma@5` inside container because global `npx prisma` installs v7 which has breaking API changes
 
-### 3. [WhatsappConnect.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/whatsapp/WhatsappConnect.tsx)
-- أضفنا `useWhatsAppQR` و `useWhatsAppStatus` hooks كـ fallback
-- الآن يعمل بدون `wsRef` prop باستخدام الـ hooks المدمجة
+## Access
 
-## النشر
-
-```
-✅ TypeScript build — 0 errors
-✅ SCP upload — 635KB
-✅ Docker build — backend + frontend
-✅ All containers healthy:
-   - watheeq_frontend_prod: Up (healthy)
-   - watheeq_backend_prod:  Up (healthy)
-   - watheeq_postgres_prod: Up 44h (healthy)
-   - watheeq_redis_prod:    Up 44h (healthy)
-```
+Settings page available at: `https://watheeq.co/settings/call-center`

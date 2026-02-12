@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough documenting the Phase 32 verification and deployment process — fixing missing component wiring and successful production deployment.",
-  "updatedAt": "2026-02-12T14:15:06.186346Z",
-  "version": "2"
+  "summary": "Summary of Phase 36 Call Center Settings Integration. Documents all backend and frontend changes, deployment steps, and verification results. All containers healthy.",
+  "updatedAt": "2026-02-12T16:34:57.905963Z",
+  "version": "3"
 }
