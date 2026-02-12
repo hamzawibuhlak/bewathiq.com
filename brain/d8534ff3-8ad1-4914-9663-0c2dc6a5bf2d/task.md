@@ -7,6 +7,10 @@
 - [ ] Run pod install for iOS
 
 ## Verification
+- [ ] Fix navigation: Install `@react-navigation/native-stack`
+- [ ] Fix permissions & config: Update `Info.plist` with `UIAppFonts`, usage descriptions, and frame duration
+- [ ] Fix assets: Ensure font files are linked/copied to iOS project
+- [ ] Fix imports: Scan for deprecated `react-native-netinfo` imports and update to community package
 - [ ] Metro bundler starts successfully
 - [ ] iOS build & run on simulator
 - [ ] Fix any source code compatibility issues
