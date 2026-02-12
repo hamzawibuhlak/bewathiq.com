@@ -1,10 +1,7 @@
-# Deploy Watheeq Updates to Production
+# Phase 31 — Call Center Setup Page
 
-- [x] Sync backend files to server
-- [x] Sync frontend files to server
-- [x] Sync Prisma schema to server
-- [x] Build Docker images on server
-- [x] Restart containers
-- [x] Run Prisma migrations (if needed)
-- [x] Verify deployment
-- [x] Fix AuthModule missing EmailModule import (bug found during deployment)
+- [x] Deploy latest code to production
+- [x] Build CallCenterSetupPage.tsx
+- [x] Update App.tsx routing
+- [x] Update IntegrationsPage.tsx settingsPath
+- [/] Deploy and verify

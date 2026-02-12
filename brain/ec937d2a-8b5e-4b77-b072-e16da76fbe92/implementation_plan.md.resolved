@@ -1,0 +1,57 @@
+# فيز 31 — صفحة ربط الكول سنتر (Call Center Setup)
+
+## وصف المشكلة
+
+التحقيق أظهر أن:
+
+- ✅ **صفحة إدارة المكالمات** ([CallCenterPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/calls/CallCenterPage.tsx)) موجودة في `/:slug/calls` — تعرض سجل المكالمات والإحصائيات
+- ✅ **Backend Call Center Module** موجود مع APIs كاملة لإدارة SIP Extensions وسجل المكالمات
+- ✅ **Frontend API Client** ([callCenter.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts)) موجود بكل الطرق (assign/update/delete extensions)
+- ❌ **لا توجد صفحة إعداد الكول سنتر** — لا يوجد أي صفحة فرونت إند تستخدم `callCenterApi` لإعداد SIP Extensions
+
+المشكلة: المستخدم يبحث عن صفحة **ربط وإعداد الكول سنتر** (تعيين Extensions, إدخال بيانات السنترال) لكن هذه الصفحة غير مبنية.
+
+## التغييرات المقترحة
+
+### Frontend — صفحة إعداد الكول سنتر
+
+#### [NEW] [CallCenterSetupPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/calls/CallCenterSetupPage.tsx)
+
+صفحة إعداد الكول سنتر تتضمن:
+
+1. **إعدادات السنترال (UCM)**
+   - حقل IP/Host للسنترال
+   - حقل Port (افتراضي 8089)
+
+2. **إدارة Extensions الموظفين**
+   - جدول يعرض جميع Extensions المعينة
+   - زر "تعيين Extension جديد" → نافذة Dialog:
+     - اختيار الموظف (من قائمة المستخدمين)
+     - رقم Extension (1001, 1002, ...)
+     - اسم العرض
+     - كلمة مرور SIP
+   - أزرار تعديل/حذف/تفعيل-تعطيل لكل Extension
+
+3. **حالة الاتصال** — عرض حالة الربط
+
+#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+
+- إضافة route جديد: `calls/setup` → `CallCenterSetupPage`
+
+#### [MODIFY] [IntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/IntegrationsPage.tsx)
+
+- تعديل `CALL_CENTER` settingsPath من `'calls'` إلى `'calls/setup'`
+
+---
+
+## خطة التحقق
+
+### اختبار يدوي
+1. ادخل على صفحة الشركة → الربط والتكاملات
+2. ابحث عن كرت "مركز الاتصال"
+3. اضغط "إعداد وتفعيل" أو أيقونة الإعدادات
+4. تأكد أن صفحة إعداد الكول سنتر تظهر بالحقول المطلوبة
+5. جرّب تعيين Extension لموظف
+
+### اختبار على الخادم
+- نشر التغييرات وتأكد أن الصفحة تعمل على `http://76.13.254.7`

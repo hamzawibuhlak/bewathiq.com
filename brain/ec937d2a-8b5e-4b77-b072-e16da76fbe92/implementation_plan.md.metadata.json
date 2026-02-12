@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Implementation plan for building the missing Call Center setup page. Investigation found that while the backend APIs and frontend API client exist, no frontend page uses them. The plan creates a new CallCenterSetupPage for managing SIP Extensions and updates routing to point integrations to it.",
+  "updatedAt": "2026-02-12T13:41:28.973904Z"
+}
