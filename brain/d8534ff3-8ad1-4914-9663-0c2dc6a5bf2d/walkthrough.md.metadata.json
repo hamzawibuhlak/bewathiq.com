@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough documenting Phase 32 implementation — Call Center WebRTC via JsSIP/UCM6301 and WhatsApp QR via Baileys. Covers all database schema changes, backend services, frontend components, and verification results.",
-  "updatedAt": "2026-02-11T16:44:25.104388Z",
-  "version": "11"
+  "summary": "Walkthrough documenting Phase 34 Advanced RBAC deployment: schema changes, backend services, frontend pages, deployment steps, and production verification with screenshots.",
+  "updatedAt": "2026-02-12T08:40:12.327435Z",
+  "version": "12"
 }
