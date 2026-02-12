@@ -1,0 +1,13 @@
+# Tasks
+
+- [ ] Login Page Enhancements <!-- id: 0 -->
+    - [ ] Add "Company Name" field as the first input <!-- id: 1 -->
+    - [ ] Add "Forgot Password" link <!-- id: 2 -->
+    - [ ] Implement/Verify "Forgot Password" email logic (using owner's API email) <!-- id: 3 -->
+- [ ] Call Center Page Fixes <!-- id: 4 -->
+    - [ ] Fix broken link/redirection <!-- id: 5 -->
+    - [ ] Create/Restore missing page component <!-- id: 6 -->
+- [ ] Customer Page Fixes <!-- id: 7 -->
+    - [ ] Fix 404 error <!-- id: 8 -->
+- [ ] WhatsApp Integration Page Enhancements <!-- id: 9 -->
+    - [ ] Add "Scan QR Code" option <!-- id: 10 -->

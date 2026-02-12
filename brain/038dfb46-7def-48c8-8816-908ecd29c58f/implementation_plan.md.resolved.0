@@ -1,0 +1,43 @@
+# Implementation Plan - Watheeq UI/UX Updates
+
+## Goal Description
+Address multiple user requests including updating the login page with company name and forgot password features, fixing 404/redirection errors on Call Center and Customer pages, and adding a QR code option to the WhatsApp integration page.
+
+## User Review Required
+- [ ] Confirmation on where the "Company Name" should be validated against (e.g., is it for multi-tenancy login?).
+- [ ] Clarification on "API email tied to the application owner" - assuming this means using the system's configured SMTP settings dynamically based on the tenant/owner.
+
+## Proposed Changes
+
+### Frontend
+#### Login Page
+- Modify the login form to include a "Company Name" input field at the top.
+- Add a "Forgot Password" link below the password field.
+- Ensure the login payload includes the company name if required by backend.
+
+#### Call Center Page
+- Investigate routing configuration.
+- Ensure the component exists and is correctly exported.
+
+#### Customer Page
+- Investigate routing and component existence to resolve 404.
+
+#### WhatsApp Integration Page
+- Add a visible option/tab for "Scan QR Code".
+- Implement the UI for displaying the QR code (mock or real if API available).
+
+### Backend
+#### Auth Module
+- Update login DTO to accept `companyName`.
+- Implement `forgotPassword` endpoint if missing.
+- Ensure email service uses the correct sender identity.
+
+## Verification Plan
+### Automated Tests
+- None planned for this UI-heavy task, will rely on manual verification.
+
+### Manual Verification
+- **Login**: Try logging in with Company Name. Click "Forgot Password" and check if email is sent.
+- **Call Center**: Click the link in navigation, verify page loads.
+- **Customers**: Navigate to customers page, verify page loads.
+- **WhatsApp**: Check for "Scan QR Code" option.

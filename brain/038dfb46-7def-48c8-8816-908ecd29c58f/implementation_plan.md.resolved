@@ -1,0 +1,54 @@
+# Implementation Plan - Watheeq UI/UX Updates
+
+## Goal Description
+Address multiple user requests including updating the login page with company name and forgot password features, fixing 404/redirection errors on Call Center and Customer pages, and adding a QR code option to the WhatsApp integration page.
+
+## User Review Required
+- [ ] Confirmation on where the "Company Name" should be validated against (e.g., is it for multi-tenancy login?).
+- [ ] Clarification on "API email tied to the application owner" - assuming this means using the system's configured SMTP settings dynamically based on the tenant/owner.
+
+## Proposed Changes
+
+### Frontend
+#### Login Page
+- Modify [frontend/src/pages/auth/LoginPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/auth/LoginPage.tsx) to:
+    - Add "Company Name" (`companyName` or similar) input field as the first field.
+    - Add "Forgot Password" link pointing to `/forgot-password`.
+- Create `frontend/src/pages/auth/ForgotPasswordPage.tsx` with email input.
+- Register new route in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx).
+- Update [frontend/src/hooks/use-auth.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-auth.ts) to support `companyName` in login and new `forgotPassword` mutation.
+
+#### Call Center & Customers
+- Verify [frontend/src/pages/calls/CallCenterPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/calls/CallCenterPage.tsx) and [frontend/src/pages/clients/ClientsListPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/clients/ClientsListPage.tsx) are correctly exported.
+- Add explicit aliases in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) if needed (e.g., redirect `/customers` to `/clients`).
+- Ensure no role-based restriction blocks access for authorized users.
+
+#### WhatsApp Integration Page
+- Modify [frontend/src/pages/whatsapp/WhatsAppMessagesPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/whatsapp/WhatsAppMessagesPage.tsx).
+- Introduce a Tab authentication (shadcn/ui `Tabs`):
+    - Tab 1: "Messages" (existing content).
+    - Tab 2: "Connection" (new content).
+- "Connection" tab will show:
+    - Status of connection.
+    - "Scan QR Code" button or directly the QR code image (fetched from API).
+    - Disconnect button.
+
+### Backend
+#### Auth Module
+- Update [backend/src/auth/dto/login.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/dto/login.dto.ts) to optionally accept `companyName`.
+- Create `backend/src/auth/dto/forgot-password.dto.ts`.
+- Update [backend/src/auth/auth.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts):
+    - Add `@Post('forgot-password')` endpoint.
+- Update [backend/src/auth/auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts):
+    - Implement `forgotPassword` logic: find user, generate token, send email via [EmailService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#6-382).
+
+
+## Verification Plan
+### Automated Tests
+- None planned for this UI-heavy task, will rely on manual verification.
+
+### Manual Verification
+- **Login**: Try logging in with Company Name. Click "Forgot Password" and check if email is sent.
+- **Call Center**: Click the link in navigation, verify page loads.
+- **Customers**: Navigate to customers page, verify page loads.
+- **WhatsApp**: Check for "Scan QR Code" option.
