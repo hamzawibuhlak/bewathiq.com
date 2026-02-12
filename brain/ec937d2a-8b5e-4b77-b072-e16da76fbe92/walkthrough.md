@@ -11,22 +11,23 @@
 | [call-center-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center-settings.service.ts) | Settings CRUD with secret masking, auto-assign extensions, GDMS orchestration |
 | [call-center-settings.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center-settings.controller.ts) | REST endpoints: `GET/PUT /settings`, `POST /test-connection`, `POST /auto-assign-extension`, `POST /sync-call-logs` |
 
-### Frontend (1 new page + API additions)
+### Frontend (1 new page + navigation updates)
 
 | File | Purpose |
 |------|---------|
 | [CallCenterSettingsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/CallCenterSettingsPage.tsx) | Settings page with 5 sections (UCM, GDMS, Extensions, Recording, Advanced), edit mode, test connection, sync buttons |
 | [callCenter.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts) | Added `CallCenterSettingsData` interface + 5 settings API functions |
-| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | Added lazy import + route `/settings/call-center` |
+| [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) | Added "السنترال" link under الإعدادات (OWNER/ADMIN only) |
+| [IntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/IntegrationsPage.tsx) | Updated CALL_CENTER route to `settings/call-center` |
+
+## Verified Result
+
+![Call Center Settings page in production](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/ec937d2a-8b5e-4b77-b072-e16da76fbe92/call_center_settings_page_verified_1770915301514.png)
 
 ## Deployment
 
-- ✅ Backend image rebuilt (no-cache)
-- ✅ Frontend image rebuilt (no-cache)
-- ✅ Schema pushed to PostgreSQL via `prisma db push` (v5.22.0)
-- ✅ All 4 containers running healthy (backend, frontend, postgres, redis)
-- ⚠️ Used `npx prisma@5` inside container because global `npx prisma` installs v7 which has breaking API changes
-
-## Access
-
-Settings page available at: `https://watheeq.co/settings/call-center`
+- ✅ Backend image rebuilt (no-cache) — fixed 7 TypeScript null-check errors
+- ✅ Frontend image rebuilt twice (settings page + sidebar navigation)
+- ✅ Schema pushed to PostgreSQL via `prisma@5 db push`
+- ✅ All 4 containers running healthy
+- ✅ Settings page verified in browser at `/settings/call-center`
