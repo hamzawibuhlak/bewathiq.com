@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_TASK",
+  "summary": "Deployment task checklist for syncing code, building Docker images, restarting containers, and verifying on the production server.",
+  "updatedAt": "2026-02-12T11:21:55.790370Z"
+}

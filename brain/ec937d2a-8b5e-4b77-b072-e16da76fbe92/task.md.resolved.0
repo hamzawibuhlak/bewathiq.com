@@ -1,0 +1,9 @@
+# Deploy Watheeq Updates to Production
+
+- [ ] Sync backend files to server
+- [ ] Sync frontend files to server
+- [ ] Sync Prisma schema to server
+- [ ] Build Docker images on server
+- [ ] Restart containers
+- [ ] Run Prisma migrations (if needed)
+- [ ] Verify deployment
