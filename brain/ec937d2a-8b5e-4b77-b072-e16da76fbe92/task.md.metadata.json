@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Task checklist for Phase 32 verification and deployment — all items completed.",
-  "updatedAt": "2026-02-12T14:15:06.183990Z",
-  "version": "8"
+  "summary": "Task checklist for Phase 36: Complete Call Center Integration. Covers database schema changes (CallCenterSettings model, SipExtension/CallRecord field additions), backend services (GDMS API, settings service/controller), frontend (settings page, API functions, routing), and deployment.",
+  "updatedAt": "2026-02-12T16:18:48.611047Z",
+  "version": "9"
 }

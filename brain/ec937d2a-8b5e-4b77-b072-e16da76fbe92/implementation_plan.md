@@ -1,57 +1,82 @@
-# فيز 31 — صفحة ربط الكول سنتر (Call Center Setup)
+# Phase 36: Complete Call Center Integration
 
-## وصف المشكلة
+UCM6301 + GDMS integration with settings page, auto-extension creation, recording management and connection testing.
 
-التحقيق أظهر أن:
+## Proposed Changes
 
-- ✅ **صفحة إدارة المكالمات** (`CallCenterPage.tsx`) موجودة في `/:slug/calls` — تعرض سجل المكالمات والإحصائيات
-- ✅ **Backend Call Center Module** موجود مع APIs كاملة لإدارة SIP Extensions وسجل المكالمات
-- ✅ **Frontend API Client** (`callCenter.ts`) موجود بكل الطرق (assign/update/delete extensions)
-- ❌ **لا توجد صفحة إعداد الكول سنتر** — لا يوجد أي صفحة فرونت إند تستخدم `callCenterApi` لإعداد SIP Extensions
+### Database Schema
 
-المشكلة: المستخدم يبحث عن صفحة **ربط وإعداد الكول سنتر** (تعيين Extensions, إدخال بيانات السنترال) لكن هذه الصفحة غير مبنية.
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
 
-## التغييرات المقترحة
+**Add `CallCenterSettings` model** (after `CallRecord` at line ~3653):
+- UCM connection fields: `ucmHost`, `ucmPort` (default 8089), `ucmWebsocketPath` ("/ws")
+- GDMS API fields: `gdmsApiKey`, `gdmsApiSecret` (both encrypted), `gdmsDeviceId`, `gdmsAccountId`
+- Extension range: `extensionPrefix`, `extensionStart`/`extensionEnd`, `defaultPassword`
+- Recording: `enableRecording`, `recordingFormat`, `autoDeleteDays`
+- Advanced: `stunServer`, `enableNat`, `rtpPortStart`/`rtpPortEnd`
+- Status: `isConnected`, `lastSync`, `lastError`, `syncAttempts`
+- Unique on `tenantId`, relation to `Tenant`
 
-### Frontend — صفحة إعداد الكول سنتر
+**Extend `SipExtension`**: add `gdmsExtensionId`, `createdViaGdms`, `lastRegistered`, `registrationStatus`
 
-#### [NEW] [CallCenterSetupPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/calls/CallCenterSetupPage.tsx)
+**Extend `CallRecord`**: add `gdmsCallId`, `recordingSize`, `recordingDownloaded`
 
-صفحة إعداد الكول سنتر تتضمن:
-
-1. **إعدادات السنترال (UCM)**
-   - حقل IP/Host للسنترال
-   - حقل Port (افتراضي 8089)
-
-2. **إدارة Extensions الموظفين**
-   - جدول يعرض جميع Extensions المعينة
-   - زر "تعيين Extension جديد" → نافذة Dialog:
-     - اختيار الموظف (من قائمة المستخدمين)
-     - رقم Extension (1001, 1002, ...)
-     - اسم العرض
-     - كلمة مرور SIP
-   - أزرار تعديل/حذف/تفعيل-تعطيل لكل Extension
-
-3. **حالة الاتصال** — عرض حالة الربط
-
-#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
-
-- إضافة route جديد: `calls/setup` → `CallCenterSetupPage`
-
-#### [MODIFY] [IntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/IntegrationsPage.tsx)
-
-- تعديل `CALL_CENTER` settingsPath من `'calls'` إلى `'calls/setup'`
+**Add to `Tenant`**: `callCenterSettings CallCenterSettings?`
 
 ---
 
-## خطة التحقق
+### Backend
 
-### اختبار يدوي
-1. ادخل على صفحة الشركة → الربط والتكاملات
-2. ابحث عن كرت "مركز الاتصال"
-3. اضغط "إعداد وتفعيل" أو أيقونة الإعدادات
-4. تأكد أن صفحة إعداد الكول سنتر تظهر بالحقول المطلوبة
-5. جرّب تعيين Extension لموظف
+#### [NEW] [gdms-api.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/gdms-api.service.ts)
+- AES-256-CBC encrypt/decrypt for credentials
+- `getApiClient()` — axios client with GDMS auth headers
+- `testConnection()` — validate GDMS device access, update status
+- `createExtensionOnGdms()` / `deleteExtensionFromGdms()` — remote extension management
+- `syncExtensionStatus()` — registration state sync
+- `syncCallLogs()` — CDR import from GDMS
+- `getRecordingDownloadUrl()` / `downloadAndStoreRecording()` — recording management
 
-### اختبار على الخادم
-- نشر التغييرات وتأكد أن الصفحة تعمل على `http://76.13.254.7`
+#### [NEW] [call-center-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center-settings.service.ts)
+- `getSettings()` — returns settings with masked secrets
+- `updateSettings()` — encrypts secrets before saving
+- `testConnection()` — wrapper
+- `autoAssignExtension()` — finds next available number + creates on GDMS + saves DB
+
+#### [NEW] [call-center-settings.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center-settings.controller.ts)
+- `GET /call-center/settings`
+- `PUT /call-center/settings`
+- `POST /call-center/settings/test-connection`
+- `POST /call-center/settings/auto-assign-extension`
+
+#### [MODIFY] [call-center.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center.module.ts)
+- Register `GdmsApiService`, `CallCenterSettingsService`, `CallCenterSettingsController`
+
+---
+
+### Frontend
+
+#### [NEW] [CallCenterSettingsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/CallCenterSettingsPage.tsx)
+- 4 card sections: UCM Connection, GDMS API, Extension Settings, Recording Settings
+- Connection status badge (green/red)
+- Edit mode toggle + save/cancel
+- Test connection button
+- Last sync timestamp
+
+#### [MODIFY] [callCenter.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts)
+- Add `getSettings()`, `updateSettings()`, `testConnection()`
+
+#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- Add lazy import for `CallCenterSettingsPage`
+- Add route `<Route path="call-center" element={<CallCenterSettingsPage />} />`
+
+## Verification Plan
+
+### Automated Tests
+- Build both frontend and backend successfully
+- Run `npx prisma migrate dev` without errors
+
+### Manual Verification
+- Deploy to production
+- Navigate to `/:slug/settings/call-center`
+- Verify settings form loads, saves, and masks secrets
+- Verify "Test Connection" button sends request
