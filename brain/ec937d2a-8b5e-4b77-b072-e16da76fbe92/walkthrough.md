@@ -1,41 +1,39 @@
-# Phase 31 — صفحة إعداد الكول سنتر ✅
+# Phase 32 — Verification & Deployment Walkthrough
 
-## ملخص المشكلة
+## ما تم اكتشافه أثناء المراجعة
 
-صفحة **ربط وإعداد الكول سنتر** كانت غير موجودة رغم أن الـ Backend APIs جاهزة.
+أثناء التحقق من جاهزية Phase 32، اكتشفنا **مشكلتين حرجتين**:
 
-## ما تم إنجازه
+| المشكلة | التأثير |
+|---------|---------|
+| `Softphone` غير مضاف لأي Layout | المستخدم لا يرى زر الاتصال ولا يستطيع إجراء مكالمات |
+| `WhatsappConnect` QR غير مستخدم | المستخدم لا يستطيع ربط واتساب عبر مسح QR |
 
-### ملف جديد
-- [CallCenterSetupPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/calls/CallCenterSetupPage.tsx) — صفحة إعداد الكول سنتر تتضمن:
-  - حالة ربط السنترال (متصل/غير متصل)
-  - جدول Extensions الموظفين مع CRUD كامل
-  - نافذة تعيين Extension جديد
-  - دليل الربط
+## ما تم إصلاحه
 
-### ملفات معدلة
-- [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) — إضافة route `calls/setup`
-- [IntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/IntegrationsPage.tsx) — تحويل `CALL_CENTER` → `calls/setup`
-- [deploy.md](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/.agent/workflows/deploy.md) — تحديث لـ SSH بدون كلمة مرور
+### 1. [AppLayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/AppLayout.tsx)
+- أضفنا `Softphone` كـ lazy-loaded floating component
+- يظهر في جميع الصفحات كزر عائم
 
-## التحقق
+render_diffs(file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/AppLayout.tsx)
 
-| الفحص | النتيجة |
-|-------|---------|
-| TypeScript Build | ✅ `tsc --noEmit` — لا أخطاء |
-| Docker Build | ✅ Backend + Frontend built |
-| Deployment | ✅ All 4 containers healthy |
+### 2. [WhatsAppSettingsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/WhatsAppSettingsPage.tsx)
+- أضفنا قسم "ربط واتساب عبر QR Code" أسفل إعدادات Cloud API
+- أضفنا import لـ `WhatsappConnect`
+
+### 3. [WhatsappConnect.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/whatsapp/WhatsappConnect.tsx)
+- أضفنا `useWhatsAppQR` و `useWhatsAppStatus` hooks كـ fallback
+- الآن يعمل بدون `wsRef` prop باستخدام الـ hooks المدمجة
+
+## النشر
 
 ```
-NAMES                   STATUS
-watheeq_frontend_prod   Up 27 seconds (healthy)
-watheeq_backend_prod    Up 27 seconds (healthy)
-watheeq_postgres_prod   Up 43 hours (healthy)
-watheeq_redis_prod      Up 43 hours (healthy)
+✅ TypeScript build — 0 errors
+✅ SCP upload — 635KB
+✅ Docker build — backend + frontend
+✅ All containers healthy:
+   - watheeq_frontend_prod: Up (healthy)
+   - watheeq_backend_prod:  Up (healthy)
+   - watheeq_postgres_prod: Up 44h (healthy)
+   - watheeq_redis_prod:    Up 44h (healthy)
 ```
-
-## كيفية الوصول
-
-1. **من الشريط الجانبي** → "مركز الاتصالات" (لمشاهدة سجل المكالمات)
-2. **من صفحة الشركة** → الربط والتكاملات → كرت "مركز الاتصال" → إعداد (لإعداد Extensions)
-3. **رابط مباشر**: `/{slug}/calls/setup`

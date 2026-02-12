@@ -1,7 +1,8 @@
-# Phase 31 — Call Center Setup Page
+# Phase 32 — Verify & Deploy
 
-- [x] Deploy latest code to production
-- [x] Build CallCenterSetupPage.tsx
-- [x] Update App.tsx routing
-- [x] Update IntegrationsPage.tsx settingsPath
-- [/] Deploy and verify
+- [x] Verify Softphone is rendered in the app layout
+- [x] Verify WhatsApp QR route is accessible
+- [x] Verify Call Center Setup route works
+- [x] Verify TypeScript build passes
+- [x] Deploy to production
+- [x] Confirm containers healthy
