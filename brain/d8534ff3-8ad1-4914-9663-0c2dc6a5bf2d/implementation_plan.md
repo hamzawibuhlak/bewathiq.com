@@ -1,127 +1,120 @@
-# Phase 32: Call Center WebRTC + WhatsApp QR Integration
+# Phase 34: Advanced RBAC — نظام صلاحيات متقدم
 
-Integrate UCM6301 PBX via WebRTC (JsSIP) for browser-based calling and Baileys for WhatsApp QR-based messaging — both accessible directly from the Watheeq dashboard.
+## Goal
 
-> [!IMPORTANT]
-> **UCM6301 Setup Required First** — WebRTC, TLS, and extensions must be configured on the PBX before the softphone will connect. Port 8089 (WSS) must be open externally.
+Replace the existing hardcoded `SuperAdminRole` enum system with a flexible, database-driven RBAC (Role-Based Access Control) system. Custom roles with granular per-resource/per-action permissions, a visual Permissions Matrix UI, and backend `PermissionGuard` on every endpoint.
+
+## Current State
+
+- `SuperAdminUser.role` field uses `SuperAdminRole` enum (OWNER/MANAGER/SUPPORT/SALES/MODERATOR)
+- [staff.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/staff.service.ts) has hardcoded `ROLE_PERMISSIONS` map
+- [super-admin-dashboard.guard.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/guards/super-admin-dashboard.guard.ts) checks `@SetMetadata('superAdminRole')` for single-role gates
+- JWT payload includes `role` string from enum
+- Frontend SALayout sidebar shows 5 nav items with no permission filtering
+
+---
 
 ## Proposed Changes
 
-### Database Schema
+### Database Layer
 
 #### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
 
-Add new models and enums after the existing `CallRecording` model (~line 1325):
+Add two new models and update `SuperAdminUser`:
 
-- **`SipExtension`** — Maps each user to a UCM SIP extension (1:1 `userId @unique`)
-- **`WhatsappSession`** — Baileys session per tenant (`tenantId @unique`)
-- **`WhatsappMessage`** — All WA messages in/out with auto-client linking
-- **Enums**: `WhatsappStatus`, `MessageDirection`, `MessageStatus`
-- **Relations** added to `Tenant`, `User`, `Client` models
+1. **`CustomRole`** model — name, description, color, icon, `isSystem` flag, `isActive`
+2. **`RolePermission`** model — `roleId`, `resource`, `action`, `accessLevel` (NONE/VIEW/EDIT/FULL)
+3. **`AccessLevel` enum** — NONE, VIEW, EDIT, FULL
+4. **`SuperAdminUser`** — add `customRoleId` + relation to `CustomRole`, keep `role` field for backward compat during migration
 
-> [!NOTE]
-> Existing `Call`, `CallRecording`, `CallDirection`, `CallStatus` models are kept as-is. The new `SipExtension` model adds WebRTC config alongside them.
-
----
-
-### Backend — Call Center (SIP Extensions + Call Records)
-
-#### [NEW] [sip-extension.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/sip-extension.service.ts)
-- `getExtensions(tenantId)` — List all SIP extensions
-- `assignExtension(tenantId, data)` — Assign extension to user (AES encrypted password)
-- `getExtensionForUser(userId, tenantId)` — Return WSS URL + connection config
-- `deleteExtension(id, tenantId)`
-
-#### [NEW] [call-record.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-record.service.ts)
-- `logCall()` — Auto-match client by phone number
-- `updateCallStatus()` — Update status/duration/timestamps
-- `addNotes()` — Link notes + case to call
-- `getCallHistory()` — Filtered/paginated history
-- `getStats()` — Today's call analytics
-
-#### [NEW] [call-center.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center.controller.ts)
-- `GET /call-center/extension` — My extension config
-- `POST /call-center/extension` — Assign extension (OWNER/ADMIN)
-- `GET /call-center/extensions` — All tenant extensions
-- `DELETE /call-center/extension/:id` — Remove extension
-- `POST /call-center/calls` — Log a call
-- `PATCH /call-center/calls/:callId` — Update call status
-- `GET /call-center/calls` — Call history
-- `GET /call-center/stats` — Call stats
-
-#### [NEW] [call-center.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/call-center/call-center.module.ts)
+> [!IMPORTANT]
+> The old `SuperAdminRole` enum and `role` field will be kept temporarily. Once migration seeds the system roles and maps existing users, the enum stays as a fallback but `customRoleId` takes precedence.
 
 ---
 
-### Backend — WhatsApp Baileys Service
+### Backend Services
 
-#### [NEW] [whatsapp-baileys.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/whatsapp/whatsapp-baileys.service.ts)
-- `initSession(tenantId)` — Create Baileys socket, emit QR via WebSocket
-- `sendMessage(tenantId, phone, message)` — Send WA message
-- `disconnect(tenantId)` — Logout + delete session files
-- `getSessionStatus(tenantId)` — Current status (CONNECTED/DISCONNECTED/QR_PENDING)
-- `getMessages(tenantId, filters)` — Message history
-- `restoreActiveSessions()` — On server startup, reconnect saved sessions
+#### [NEW] [roles.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/roles.service.ts)
 
-#### [MODIFY] [whatsapp.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/whatsapp/whatsapp.controller.ts)
-- Add new endpoints for Baileys: `POST /whatsapp/qr/connect`, `POST /whatsapp/qr/disconnect`, `GET /whatsapp/qr/status`, `POST /whatsapp/qr/send`, `GET /whatsapp/qr/messages`
+CRUD for custom roles: `getAllRoles`, `getRoleDetails`, `createRole`, `updateRole`, `deleteRole`, `cloneRole`, `assignRoleToUser`, `getPermissionTemplates`
 
-#### [MODIFY] [whatsapp.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/whatsapp/whatsapp.module.ts)
-- Add `WhatsappBaileysService` as provider
+#### [NEW] [permission.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/permission.service.ts)
 
-#### [MODIFY] [websocket.gateway.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/websocket/websocket.gateway.ts)
-- Add `broadcastWhatsAppQR()` and `broadcastWhatsAppStatus()` methods
+Permission checking: `checkPermission`, `getUserPermissions`, `checkMultiplePermissions`. OWNER bypass logic.
 
----
+#### [NEW] [permission.guard.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/guards/permission.guard.ts)
 
-### Frontend — Softphone
+NestJS CanActivate guard that reads `@RequirePermission()` decorator metadata and delegates to `PermissionService`.
 
-#### [NEW] [useSoftphone.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useSoftphone.ts)
-- JsSIP UA integration with states: idle → registering → registered → ringing/calling → in-call
-- `register()`, `makeCall()`, `answerCall()`, `hangUp()`, `toggleMute()`, `toggleHold()`
+#### [NEW] [require-permission.decorator.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/decorators/require-permission.decorator.ts)
 
-#### [NEW] [Softphone.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/call-center/Softphone.tsx)
-- Floating button with status bar, dialpad popup, incoming call card, active call controls
+`@RequirePermission(resource, action, level)` decorator using `SetMetadata`.
 
-#### [NEW] [callCenter.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/callCenter.ts)
+#### [MODIFY] [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts)
 
----
+- Add `@RequirePermission()` decorators to all existing endpoints
+- Add new roles CRUD endpoints: `GET/POST/PATCH/DELETE /roles`, `POST /roles/:id/clone`
 
-### Frontend — WhatsApp QR
+#### [MODIFY] [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts)
 
-#### [NEW] [WhatsappConnect.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/whatsapp/WhatsappConnect.tsx)
-- 3-state UI: Disconnected → QR Pending → Connected
-- Real-time QR display via WebSocket
+Register new services, guard, and controllers.
 
-#### [NEW] [whatsappQr.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/whatsappQr.ts)
+#### [MODIFY] [super-admin-auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin-auth.service.ts)
 
-#### [MODIFY] [use-websocket.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-websocket.ts)
-- Add `useWhatsAppQR()` hook for QR and status events
+Include `customRoleId` in JWT payload and `getMe` response. Return user permissions map.
+
+#### [MODIFY] [super-admin-dashboard.guard.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/guards/super-admin-dashboard.guard.ts)
+
+Keep backward compat with `@SetMetadata('superAdminRole')` but also support new `PermissionGuard`.
+
+#### [MODIFY] [staff.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/staff.service.ts)
+
+Update `addStaff` to accept `customRoleId`, update `getStaff` to include role relation. Remove hardcoded `ROLE_PERMISSIONS`.
 
 ---
 
-### App Module Registration
+### Frontend
 
-#### [MODIFY] [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
-- Import and register `CallCenterModule`
+#### [NEW] [RolesListPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/roles/RolesListPage.tsx)
+
+Grid of role cards — name, color, user count, system badge. Create/edit/delete/clone actions.
+
+#### [NEW] [RoleEditorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/roles/RoleEditorPage.tsx)
+
+Sidebar for role metadata (name, desc, color) + main area with PermissionsMatrix. Create and edit modes.
+
+#### [NEW] [PermissionsMatrix.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/super-admin/PermissionsMatrix.tsx)
+
+Interactive table: rows = resources & actions, columns = NONE/VIEW/EDIT/FULL. Color-coded toggle buttons.
+
+#### [MODIFY] [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts)
+
+Add API methods: `getRoles`, `getRoleDetails`, `createRole`, `updateRole`, `deleteRole`, `cloneRole`, `getMyPermissions`.
+
+#### [MODIFY] [SALayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SALayout.tsx)
+
+Add "الصلاحيات" nav item. Filter nav items by user permissions.
+
+#### [MODIFY] [superAdmin.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/superAdmin.store.ts)
+
+Add `permissions` map and `hasPermission(resource, action, level)` helper.
+
+#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+
+Add routes: `/super-admin/roles`, `/super-admin/roles/:id`
 
 ---
-
-### Dependencies
-
-**Backend** — `@whiskeysockets/baileys`, `@hapi/boom` (new installs)
-**Frontend** — `jssip`, `@types/jssip` (new installs)
-
-> [!NOTE]
-> `socket.io`, `@nestjs/websockets`, `@nestjs/platform-socket.io`, `qrcode` are already installed.
 
 ## Verification Plan
 
 ### Automated Tests
-- `curl` API tests for call-center and whatsapp-qr endpoints after deploy
-- Database sync verification via `prisma db push`
+1. Run `npx prisma migrate deploy` — verify migration succeeds
+2. Run `npx prisma db seed` — verify system roles (Owner, Manager, Support) are created
+3. Start backend and test CRUD: `POST /super-admin/roles`, `GET /super-admin/roles`, etc.
+4. Test permission guard: support user tries `hard_delete` → 403 Forbidden
 
 ### Manual Verification
-- WebRTC softphone registration against UCM6301 (requires UCM setup)
-- WhatsApp QR scan from mobile phone
-- Real-time message delivery via WebSocket
+1. Login as Owner → see all nav items, all features accessible
+2. Create custom "Data Analyst" role → assign to staff → verify limited access
+3. Permissions Matrix UI: toggle permissions, save, verify they persist
+4. Delete role with users assigned → error message appears

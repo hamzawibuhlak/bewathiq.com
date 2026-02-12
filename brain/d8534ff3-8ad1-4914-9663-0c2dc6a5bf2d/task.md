@@ -1,42 +1,31 @@
-# Phase 32: Call Center WebRTC + WhatsApp QR Integration
+# Phase 34: Advanced RBAC System
 
-## 1. Database Schema
-- [x] Add `SipExtension` model
-- [x] Add `CallRecord` model
-- [x] Add `WhatsappSession` model  
-- [x] Add `WhatsappBaileysMessage` model
-- [x] Add enums: `WhatsappSessionStatus`, `WaBaileysMessageDirection`, `WaBaileysMessageStatus`
-- [x] Add relations to `Tenant`, `User`, `Client`, `Case`
+## Database
+- [x] Add `CustomRole`, `SAPermission` models and `AccessLevel` enum to `schema.prisma`
+- [x] Add `customRoleId` field & relation to `SuperAdminUser`
+- [ ] Run migration & seed system roles (Owner, Manager, Support)
 
-## 2. Backend — Call Center Module
-- [x] `sip-extension.service.ts` — AES encrypted SIP passwords
-- [x] `call-record.service.ts` — auto-client matching, stats
-- [x] `call-center.controller.ts` — REST API endpoints
-- [x] `call-center.module.ts`
+## Backend Services
+- [x] Create `roles.service.ts` — CRUD for custom roles
+- [x] Create `permission.service.ts` — Permission checking logic
+- [x] Create `permission.guard.ts` — NestJS guard
+- [x] Create `require-permission.decorator.ts`
+- [x] Update `super-admin.controller.ts` — Add role endpoints + permission decorators
+- [x] Update `super-admin.module.ts` — Register new providers
+- [x] Update `super-admin-auth.service.ts` — Include permissions in JWT/getMe
+- [x] Update `staff.service.ts` — Use customRoleId, remove hardcoded map
 
-## 3. Backend — WhatsApp Baileys
-- [x] `whatsapp-baileys.service.ts` — QR session, message handling, auto-reconnect
-- [x] Update `whatsapp.controller.ts` with QR endpoints
-- [x] Update `whatsapp.module.ts`
-- [x] Update `websocket.gateway.ts` with `broadcastWhatsAppQR` and `broadcastWhatsAppStatus`
+## Frontend
+- [x] Add roles API methods to `superAdmin.ts`
+- [x] Update `superAdmin.store.ts` — Add permissions state + `hasPermission` helper
+- [x] Create `PermissionsMatrix.tsx` component
+- [x] Create `RolesListPage.tsx`
+- [x] Create `RoleEditorPage.tsx`
+- [x] Update `SALayout.tsx` — Add roles nav item
+- [x] Update `App.tsx` — Add roles routes
 
-## 4. Backend — App Module + Dependencies
-- [x] Run `npx prisma generate`
-- [x] Install `@whiskeysockets/baileys`, `qrcode`, `crypto-js`
-- [x] Register `CallCenterModule` in `app.module.ts`
-
-## 5. Frontend — Softphone
-- [x] `api/callCenter.ts` — SIP extension + call record API
-- [x] `hooks/useSoftphone.ts` — JsSIP WebRTC hook
-- [x] `components/call-center/Softphone.tsx` — floating dialer UI
-
-## 6. Frontend — WhatsApp QR
-- [x] `api/whatsappQr.ts` — connect, disconnect, status, send, messages API
-- [x] `components/whatsapp/WhatsappConnect.tsx` — QR display + status
-- [x] Update `hooks/use-websocket.ts` with `useWhatsAppQR` and `useWhatsAppStatus`
-- [x] Update `lib/websocket.ts` with new event types
-- [x] Install `jssip`, `qrcode.react`
-
-## 7. Verification
-- [x] Backend `tsc --noEmit` — ✅ zero errors
-- [x] Frontend `tsc --noEmit` — ✅ zero errors
+## Verification
+- [/] Deploy to production
+- [ ] Test migration & seed
+- [ ] Test permission guard blocks unauthorized actions
+- [ ] Test UI: create role, assign, verify access control

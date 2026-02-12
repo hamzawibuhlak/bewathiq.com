@@ -1,0 +1,31 @@
+# Phase 34: Advanced RBAC System
+
+## Database
+- [x] Add [CustomRole](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts#90-92), `SAPermission` models and `AccessLevel` enum to [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+- [x] Add `customRoleId` field & relation to `SuperAdminUser`
+- [ ] Run migration & seed system roles (Owner, Manager, Support)
+
+## Backend Services
+- [x] Create [roles.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/roles.service.ts) — CRUD for custom roles
+- [x] Create [permission.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/permission.service.ts) — Permission checking logic
+- [x] Create [permission.guard.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/guards/permission.guard.ts) — NestJS guard
+- [x] Create [require-permission.decorator.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/decorators/require-permission.decorator.ts)
+- [x] Update [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) — Add role endpoints + permission decorators
+- [x] Update [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts) — Register new providers
+- [x] Update [super-admin-auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin-auth.service.ts) — Include permissions in JWT/getMe
+- [x] Update [staff.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/staff.service.ts) — Use customRoleId, remove hardcoded map
+
+## Frontend
+- [x] Add roles API methods to [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts)
+- [x] Update [superAdmin.store.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/superAdmin.store.ts) — Add permissions state + [hasPermission](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/stores/superAdmin.store.ts#58-72) helper
+- [x] Create [PermissionsMatrix.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/super-admin/PermissionsMatrix.tsx) component
+- [x] Create [RolesListPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/roles/RolesListPage.tsx)
+- [x] Create [RoleEditorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/roles/RoleEditorPage.tsx)
+- [x] Update [SALayout.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SALayout.tsx) — Add roles nav item
+- [x] Update [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) — Add roles routes
+
+## Verification
+- [/] Deploy to production
+- [ ] Test migration & seed
+- [ ] Test permission guard blocks unauthorized actions
+- [ ] Test UI: create role, assign, verify access control
