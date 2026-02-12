@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Task checklist for Phase 34 Advanced RBAC implementation tracking progress through database, backend, frontend, and verification.",
-  "updatedAt": "2026-02-12T08:16:15.805235Z",
-  "version": "34"
+  "summary": "Task checklist for creating a clean React Native 0.76.6 project to replace the broken WatheeqMobile (RN 0.83). Steps include init, copy source, install deps, pod install, and build.",
+  "updatedAt": "2026-02-12T08:56:48.782962Z",
+  "version": "35"
 }
