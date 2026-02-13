@@ -1,0 +1,32 @@
+# Phase 35: Tenant RBAC System
+
+## Database
+- [x] Add `AccessScope` enum to Prisma schema
+- [x] Add [TenantRole](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/tenantRoles.ts#16-31), `TenantRolePermission`, `PermissionCache` models
+- [x] Add `tenantRoleId` to [User](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-permission.service.ts#296-303) model
+- [x] Add `tenantRoles` relation to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/tenantRoles.ts#16-31) model
+- [x] Run `prisma format` and `prisma generate`
+
+## Backend Module
+- [x] Permission map constants (11 modules, 97 actions)
+- [x] Role templates (5 defaults: Senior Lawyer, Junior, Secretary, Accountant, Intern)
+- [x] [TenantPermissionService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-permission.service.ts#30-356) — cached checks, scope evaluation, legacy fallback
+- [x] [TenantRolesService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-roles.service.ts#15-359) — CRUD, clone, assign, seed, templates
+- [x] `@RequireTenantPermission` decorator
+- [x] [TenantPermissionGuard](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/guards/tenant-permission.guard.ts#20-61)
+- [x] DTOs with validation
+- [x] [TenantRolesController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-roles.controller.ts#24-145) — 12 REST endpoints
+- [x] [TenantRolesModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-roles.module.ts#8-19) wired into [AppModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts#59-172)
+- [x] Fix all TypeScript compilation errors (0 errors)
+
+## Frontend
+- [x] [tenantRoles.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/tenantRoles.ts) API layer with full types
+- [x] [usePermissions.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/usePermissions.ts) hook with [can()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/guards/tenant-permission.guard.ts#27-60) helper
+- [x] [PermissionGate.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/PermissionGate.tsx) component
+- [x] [TenantRolesListPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/TenantRolesListPage.tsx) — card grid with seed/clone/delete
+- [x] [TenantRoleEditorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/TenantRoleEditorPage.tsx) — tabbed editor with permissions matrix
+- [x] Routes wired in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) under `settings/roles`
+
+## Pending (deploy-time)
+- [ ] Run `prisma migrate dev` on database
+- [ ] Deploy to production
