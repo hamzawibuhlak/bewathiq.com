@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_TASK",
+  "summary": "Task breakdown for Phase 35 Tenant RBAC. 7 parts: Database schema, backend services, service integration, frontend API/hooks, frontend pages/UI, frontend integration, and testing. Covers 120+ permissions across 11 modules with scope-based access control.",
+  "updatedAt": "2026-02-13T07:43:45.882999Z"
+}
