@@ -1,0 +1,26 @@
+# Phase 37: Entity Code System
+
+## Part 1: Database & Backend Core
+- [/] Research existing schema and services
+- [ ] Create implementation plan
+- [ ] Add code/codeNumber fields to Prisma schema (Tenant, User, Client, Case, Hearing, Document, Task, Expense, Invoice, CallRecord, WhatsAppMessage)
+- [ ] Run migration
+- [ ] Create EntityCodeService
+- [ ] Create backfill script for existing data
+- [ ] Run backfill on production
+
+## Part 2: Integrate into Services
+- [ ] AuthService.register() — tenant + owner code
+- [ ] Owner invite user — user code
+- [ ] ClientsService.create()
+- [ ] CasesService.create()
+- [ ] HearingsService.create()
+- [ ] DocumentsService.create()
+- [ ] TasksService.create()
+- [ ] InvoicesService.create()
+- [ ] ExpensesService.create()
+
+## Part 3: Frontend Display
+- [ ] EntityCode component
+- [ ] Display codes in detail pages & lists
+- [ ] Deploy and verify

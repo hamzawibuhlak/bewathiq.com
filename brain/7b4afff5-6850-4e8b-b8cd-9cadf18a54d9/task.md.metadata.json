@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Checklist for permission-based page access fix. All items completed.",
-  "updatedAt": "2026-02-13T09:25:27.170535Z",
-  "version": "4"
+  "summary": "Task checklist for Phase 37 Entity Code System. Part 1 (schema, migration, prisma generate, core service) and Part 2 (all 9 service integrations) are complete. Part 3 (frontend, backfill, deployment) is pending.",
+  "updatedAt": "2026-02-13T10:56:12.372519Z",
+  "version": "7"
 }

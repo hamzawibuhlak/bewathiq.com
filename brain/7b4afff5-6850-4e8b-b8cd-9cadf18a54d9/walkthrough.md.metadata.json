@@ -1,5 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough documenting the complete Phase 35 Tenant RBAC implementation: 8 backend files, 5 frontend files, 3 modified files. Backend compiles with 0 TypeScript errors. Migration and deployment remain.",
-  "updatedAt": "2026-02-13T07:58:08.315304Z"
+  "summary": "Walkthrough documenting all Phase 37 Entity Code System backend changes: 9 service integrations, EntityCodeService creation, Prisma schema updates, migration, backfill script, and next steps for frontend and deployment.",
+  "updatedAt": "2026-02-13T10:56:44.016454Z",
+  "version": "1"
 }

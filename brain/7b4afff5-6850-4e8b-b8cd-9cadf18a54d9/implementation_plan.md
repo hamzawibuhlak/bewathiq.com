@@ -1,56 +1,110 @@
-# Fix Permission-Based Page Access
+# Phase 37: Entity Code System
 
-A user with a tenant role having **no permissions** can still see and access all pages (clients, cases, hearings, communication, analytics). The sidebar and routes need to respect tenant role permissions.
-
-## Root Cause
-
-1. **Sidebar** only filters by system role (`OWNER`/`ADMIN`/`LAWYER`) via the `roles` array — it never checks tenant role permissions
-2. **`usePermissions.can()`** returns `true` while loading (`!permissions`) — permissive by default
-3. **No route guards** use `usePermissions` — users can navigate directly to any URL
-4. **`PermissionGate`** component exists but is unused in sidebar/routes
+Auto-generated hierarchical codes for all entities to aid debugging and identification.
 
 ## Proposed Changes
 
-### Sidebar Permission Integration
+### Database Schema
 
-#### [MODIFY] [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
 
-Add `permission` field to `NavItem` interface mapping each item to its permission check:
+Add `code` (String, @unique) and `codeNumber` (Int) to these existing models:
 
-| Sidebar Item | Permission Check |
-|---|---|
-| العملاء (clients) | `clients.view_list` |
-| القضايا (cases) | `cases.view_list` |
-| الجلسات (hearings) | `hearings.view_list` |
-| المستندات (documents) | `documents.view_list` |
-| المهام (tasks) | `tasks.view_list` |
-| محرر الوثائق (legal-documents) | `documents.manage_templates` |
-| التايم لاين (activity-logs) | `settings.view_activity_log` |
-| المكتبة القانونية (legal-library) | `cases.view_list` |
-| الرسائل الداخلية (messages) | — (always visible) |
-| الدردشة (chat) | — (always visible) |
-| التقارير (analytics) | `reports.view_dashboard` |
-| الفواتير (invoices) | `invoices.view_list` |
-| المحاسبة (accounting) | `accounting.view_accounts` |
-| المصروفات (expenses) | `accounting.manage_expenses` |
+| Model | Code Pattern | Example | Parent |
+|-------|-------------|---------|--------|
+| Tenant (L153) | `{slug}_law` + `codePrefix` | `test_law` | — |
+| User (L314) | `{prefix}_US{0001}` | `test_US0001` | Tenant |
+| Client (L429) | `{prefix}_CL{0001}` | `test_CL0001` | Tenant |
+| Case (L480) | `{clientCode}_CA{00001}` | `test_CL0001_CA00001` | Client |
+| Hearing (L539) | `{caseCode}_CS{00001}` | `test_CL0001_CA00001_CS00001` | Case |
+| Document (L587) | `{prefix}_DOC{00001}` | `test_DOC00001` | Tenant |
+| Invoice (L661) | `{prefix}_INV{00001}` | `test_INV00001` | Tenant |
+| Task (L975) | `{prefix}_TK{00001}` | `test_TK00001` | Tenant |
+| Expense (L1741) | `{prefix}_EX{00001}` | `test_EX00001` | Tenant |
 
-- Import `usePermissions` hook
-- Add optional `permission?: { resource: string; action: string }` to `NavItem`
-- Update `filterItems()` to call `can()` for each item with a `permission` field
-- Update `isGroupVisible()` similarly for groups with permissions
+> [!IMPORTANT]
+> All `code` fields are nullable initially, then populated via backfill, then made required. The unique constraint is added after backfill.
+
+> [!NOTE]
+> Documents and Invoices use flat tenant-level codes (`test_DOC00001`, `test_INV00001`) instead of deeply nested hierarchical codes. This keeps codes shorter and simpler while still being globally unique. The hierarchical relationship is still queryable via the existing `caseId`/`clientId` fields.
 
 ---
 
-### Fix Default Permission Behavior
+### Backend Core Service
 
-#### [MODIFY] [usePermissions.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/usePermissions.ts)
+#### [NEW] [entity-code.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts)
 
-Change line 75 from `if (!permissions) return true` to `if (!permissions) return false` so that while loading, access is denied (restrictive by default). This prevents unauthorized flash of content.
+Injectable NestJS service with methods:
+- `generateTenantCode(slug)` → `{slug}_law`
+- `generateUserCode(tenantId, isOwner?)` → `{prefix}_US{NNNN}`
+- `generateClientCode(tenantId)` → `{prefix}_CL{NNNN}`
+- `generateCaseCode(clientId)` → `{clientCode}_CA{NNNNN}`
+- `generateHearingCode(caseId)` → `{caseCode}_CS{NNNNN}`
+- `generateFlatCode(tenantId, type)` → `{prefix}_{TYPE}{NNNNN}` for DOC/INV/TK/EX
+
+Each method queries the max `codeNumber` for the scope and increments.
+
+#### [NEW] [entity-code.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.module.ts)
+
+Exports `EntityCodeService` for injection into other modules.
+
+---
+
+### Service Integration
+
+#### [MODIFY] [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts)
+- `register()`: Add `code`/`codePrefix` to tenant creation, add `code`/`codeNumber` to owner user creation
+
+#### [MODIFY] [owner.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts)
+- `inviteUser()`: Generate user code before creating
+
+#### [MODIFY] [clients.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/clients/clients.service.ts)
+- `create()`: Generate client code
+
+#### [MODIFY] [cases.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts)
+- `create()`: Generate case code (hierarchical from clientId)
+
+#### [MODIFY] [hearings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts)
+- `create()`: Generate hearing code (hierarchical from caseId)
+
+#### [MODIFY] [documents.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.service.ts)
+- `upload()`: Generate document code
+
+#### [MODIFY] [invoices.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/invoices/invoices.service.ts)
+- `create()`: Generate invoice code
+
+#### [MODIFY] [tasks.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tasks/tasks.service.ts)
+- `create()`: Generate task code
+
+---
+
+### Backfill & Migration
+
+#### [NEW] [backfill-entity-codes.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/backfill-entity-codes.ts)
+
+Script to populate codes for all existing records, ordered by `createdAt`. Run after migration.
+
+---
+
+### Frontend
+
+#### [NEW] [EntityCode.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/EntityCode.tsx)
+
+Reusable component displaying entity code with copy-to-clipboard button.
+
+#### Modify detail pages to show `EntityCode` component:
+- `ClientDetailsPage.tsx`, `CaseDetailsPage.tsx`, `UsersManagementPage.tsx`
+
+---
 
 ## Verification Plan
 
+### Automated Tests
+1. Run `npx prisma migrate deploy` on production
+2. Run backfill script
+3. Verify codes generated correctly via DB query
+
 ### Manual Verification
-1. Create a user with a role that has **zero permissions**
-2. Log in as that user → sidebar should only show Dashboard, Settings/Profile, Messages/Chat
-3. Navigate directly to `/test/clients` → should redirect or show empty
-4. Assign `clients.view_list` permission → Clients tab should appear
+1. Create new client → verify code `{slug}_CL{NNNN}` generated
+2. Create new case under client → verify hierarchical code
+3. Check codes display in frontend detail pages

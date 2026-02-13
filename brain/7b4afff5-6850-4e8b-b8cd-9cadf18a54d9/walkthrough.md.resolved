@@ -1,49 +1,41 @@
-# Phase 35: Tenant RBAC System — Walkthrough
+# Phase 37: Entity Code System — Backend Integration Complete
 
-## What Was Built
+## Summary
+Implemented a hierarchical entity code system across 9 backend services. Every entity now gets an auto-generated, non-editable code on creation.
 
-A comprehensive Role-Based Access Control system for tenants, enabling office owners to create custom roles with granular permissions across **11 modules** and **97 actions**.
+## Changes Made
 
----
-
-## Backend Files Created
-
-| File | Purpose |
-|------|---------|
-| [permission-map.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/constants/permission-map.constants.ts) | 11 modules × 97 actions with Arabic/English labels |
-| [role-templates.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/constants/role-templates.constants.ts) | 5 pre-built roles: Senior Lawyer, Junior, Secretary, Accountant, Intern |
-| [tenant-permission.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-permission.service.ts) | Core permission engine — cached checks, scope evaluation, Prisma filters |
-| [tenant-roles.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-roles.service.ts) | Full CRUD, clone, assign/unassign, seed defaults, template management |
-| [tenant-roles.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-roles.controller.ts) | 12 REST endpoints under `/:slug/tenant-roles` |
-| [tenant-permission.guard.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/guards/tenant-permission.guard.ts) | NestJS guard for `@RequireTenantPermission()` |
-| [require-tenant-permission.decorator.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/decorators/require-tenant-permission.decorator.ts) | Metadata decorator |
-| [tenant-roles.dto.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/dto/tenant-roles.dto.ts) | Request DTOs with class-validator |
-
-## Frontend Files Created
-
-| File | Purpose |
-|------|---------|
-| [tenantRoles.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/tenantRoles.ts) | API layer — 12 functions with TypeScript types |
-| [usePermissions.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/usePermissions.ts) | React hook — [can(resource, action, level)](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/guards/permission.guard.ts#18-47) |
-| [PermissionGate.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/PermissionGate.tsx) | Conditional rendering component |
-| [TenantRolesListPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/TenantRolesListPage.tsx) | Role cards grid — seed, clone, delete |
-| [TenantRoleEditorPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/settings/TenantRoleEditorPage.tsx) | Tabbed editor with full permissions matrix |
-
-## Files Modified
-
+### Core Infrastructure
 | File | Change |
 |------|--------|
-| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) | Added `AccessScope` enum, [TenantRole](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/tenantRoles.ts#16-31), `TenantRolePermission`, `PermissionCache` models |
-| [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts) | Imported and registered [TenantRolesModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tenant-roles/tenant-roles.module.ts#8-19) |
-| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | Added lazy imports and routes for `settings/roles` |
+| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) | Added `code`, `codeNumber`, `codePrefix` fields to 9 models |
+| [entity-code.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts) | Central service with methods: [generateTenantCode](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts#12-15), [generateUserCode](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts#20-42), [generateClientCode](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts#47-65), [generateCaseCode](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts#70-90), [generateHearingCode](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts#95-114), [generateFlatCode](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts#119-199) |
+| [entity-code.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.module.ts) | Global NestJS module |
+| [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts) | Registered [EntityCodeModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.module.ts#4-10) |
+| [migration.sql](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260213105110_phase37_entity_codes/migration.sql) | Migration adding columns + unique indexes |
+
+### Service Integrations (9 services)
+
+| Service | Method | Code Format |
+|---------|--------|-------------|
+| [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts) | [register()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts#44-47) | Tenant: `{slug}_law`, Owner: `{prefix}_US0001` |
+| [owner.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts) | [inviteUser()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.controller.ts#42-49) | `{prefix}_US{NNNN}` |
+| [clients.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/clients/clients.service.ts) | [create()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts#176-233) | `{prefix}_CL{NNNN}` |
+| [cases.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts) | [create()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts#176-233) | Hierarchical: `{clientCode}_CA{NNNNN}` |
+| [hearings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts) | [create()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts#176-233) | Hierarchical: `{caseCode}_CS{NNNNN}` |
+| [documents.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.service.ts) | [upload()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.service.ts#197-298) | `{prefix}_DOC{NNNNN}` |
+| [invoices.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/invoices/invoices.service.ts) | [create()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts#176-233) | `{prefix}_INV{NNNNN}` |
+| [tasks.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tasks/tasks.service.ts) | [create()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts#176-233) | `{prefix}_TK{NNNNN}` |
+| [expense.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/accounting/expense.service.ts) | [submit()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/accounting/expense.service.ts#21-45) | `{prefix}_EX{NNNNN}` |
+
+### Backfill Script
+- [backfill-entity-codes.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/scripts/backfill-entity-codes.ts) — Populates codes for all existing records
 
 ## Verification
-
-- ✅ `prisma format` — schema valid
-- ✅ `prisma generate` — client regenerated
-- ✅ `tsc --noEmit` — **0 errors**
+- ✅ Prisma client regenerated successfully (v5.22.0)
+- ✅ All type errors resolved after `prisma generate`
 
 ## Remaining Steps
-
-1. Run `npx prisma migrate dev --name phase35_tenant_rbac` to create the migration
-2. Deploy to production using `/deploy`
+1. **Frontend**: Create [EntityCode](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.module.ts#4-10) component and integrate into detail pages
+2. **Deploy**: Run migration on production, execute backfill script
+3. **Verify**: Confirm codes appear for new and existing entities
