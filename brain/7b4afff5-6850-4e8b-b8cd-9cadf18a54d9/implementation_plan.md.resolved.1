@@ -1,0 +1,56 @@
+# Fix Permission-Based Page Access
+
+A user with a tenant role having **no permissions** can still see and access all pages (clients, cases, hearings, communication, analytics). The sidebar and routes need to respect tenant role permissions.
+
+## Root Cause
+
+1. **Sidebar** only filters by system role (`OWNER`/`ADMIN`/`LAWYER`) via the `roles` array — it never checks tenant role permissions
+2. **`usePermissions.can()`** returns `true` while loading (`!permissions`) — permissive by default
+3. **No route guards** use [usePermissions](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/usePermissions.ts#31-100) — users can navigate directly to any URL
+4. **[PermissionGate](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/PermissionGate.tsx#21-36)** component exists but is unused in sidebar/routes
+
+## Proposed Changes
+
+### Sidebar Permission Integration
+
+#### [MODIFY] [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+
+Add `permission` field to [NavItem](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/OwnerLayout.tsx#10-16) interface mapping each item to its permission check:
+
+| Sidebar Item | Permission Check |
+|---|---|
+| العملاء (clients) | `clients.view_list` |
+| القضايا (cases) | `cases.view_list` |
+| الجلسات (hearings) | `hearings.view_list` |
+| المستندات (documents) | `documents.view_list` |
+| المهام (tasks) | `tasks.view_list` |
+| محرر الوثائق (legal-documents) | `documents.manage_templates` |
+| التايم لاين (activity-logs) | `settings.view_activity_log` |
+| المكتبة القانونية (legal-library) | `cases.view_list` |
+| الرسائل الداخلية (messages) | — (always visible) |
+| الدردشة (chat) | — (always visible) |
+| التقارير (analytics) | `reports.view_dashboard` |
+| الفواتير (invoices) | `invoices.view_list` |
+| المحاسبة (accounting) | `accounting.view_accounts` |
+| المصروفات (expenses) | `accounting.manage_expenses` |
+
+- Import [usePermissions](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/usePermissions.ts#31-100) hook
+- Add optional `permission?: { resource: string; action: string }` to [NavItem](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/owner/OwnerLayout.tsx#10-16)
+- Update [filterItems()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx#211-218) to call [can()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/settings.api.ts#143-145) for each item with a `permission` field
+- Update [isGroupVisible()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx#219-224) similarly for groups with permissions
+
+---
+
+### Fix Default Permission Behavior
+
+#### [MODIFY] [usePermissions.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/usePermissions.ts)
+
+Change line 75 from `if (!permissions) return true` to `if (!permissions) return false` so that while loading, access is denied (restrictive by default). This prevents unauthorized flash of content.
+
+## Verification Plan
+
+### Manual Verification
+1. Create a user with a role that has **zero permissions**
+2. Log in as that user → sidebar should only show Dashboard, Settings/Profile, Messages/Chat
+3. Navigate directly to `/test/clients` → should redirect or show empty
+4. Assign `clients.view_list` permission → Clients tab should appear
