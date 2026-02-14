@@ -25,3 +25,10 @@
 - [ ] EntityCode component
 - [ ] Display codes in detail pages & lists
 - [ ] Deploy and verify
+- [ ] Deploy and verify
+
+## Phase 38: Enhanced Client Profile
+- [x] Modify Client Schema (Brand, Unified Number, Rep Info, Docs)
+- [x] Update ClientForm UI (New fields & File Uploads)
+- [x] Create Document Upload API
+- [x] Verify Implementation

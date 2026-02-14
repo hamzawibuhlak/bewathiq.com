@@ -39,3 +39,15 @@ Implemented a hierarchical entity code system across 9 backend services. Every e
 1. **Frontend**: Create `EntityCode` component and integrate into detail pages
 2. **Deploy**: Run migration on production, execute backfill script
 3. **Verify**: Confirm codes appear for new and existing entities
+
+## Phase 38: Enhanced Client Profile
+
+### Features Implemented
+- **Client Schema**: Added `brandName`, `unifiedNumber`, `commercialRegDoc`, `nationalAddressDoc` and Representative info (`repName`, `repPhone`, `repEmail`, `repIdentity`, `repDocType`, `repDoc`).
+- **Document Upload**: Created generic `POST /api/uploads/document` endpoint in `UploadsController`.
+- **Client Form**: Updated `ClientForm.tsx` to include file uploads and validation for new fields.
+- **API Integration**: Updated `clientsApi` and types to support the new data structure.
+
+### Verification
+- ✅ Frontend build passed (`tsc`).
+- ✅ Database schema updated locally (`prisma db push`).
