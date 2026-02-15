@@ -1,63 +1,53 @@
-# Phase 38: Dynamic Forms System — Walkthrough
+# Phase 39: وثيق AI — Legal AI Search Engine
 
-## Overview
+## Summary
 
-Implemented a complete Google Forms–style dynamic forms system. Users can create custom forms with a visual builder, share them via public links, and view/manage submissions.
+Implemented a full-stack Legal AI Search Engine for the Wathiq application, integrating Claude AI for intelligent legal question answering with graceful fallback to keyword search.
 
----
+## Changes Made
 
-## Backend Changes
+### Database Schema
+- Extended `LegalSearchLog` with AI tracking fields (`queryType`, `aiResponse`, `aiTokensUsed`, `responseTime`, [cached](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cache/cache.service.ts#151-164))
+- Added `LegalArticleNote` model for user notes/highlights on legal articles
+- Added `LegalAIUsage` model for monthly AI quota tracking per tenant/user
+- Extended `RegulationArticle` with `keywords`, `chapter`, `section`
+- Extended `CaseLegalReference` with `purpose`, `highlightedText`
 
-### Prisma Schema — 5 new models
+### Backend
 
-| Model | Purpose |
-|---|---|
-| [Form](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useForms.ts#15-22) | Form definition with title, slug, accent color, settings |
-| [FormField](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx#41-54) | Individual fields with type, label, options, validation |
-| [FormSubmission](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useForms.ts#23-30) | Each submission with submitter info and status |
-| `FormFieldAnswer` | Individual answers per field per submission |
-| `FormTemplate` | Pre-built form templates (future) |
+#### [legal-ai.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-ai.service.ts) [NEW]
+- Claude AI integration with Arabic legal expert system prompt
+- [askAI()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-ai.service.ts#50-177) — end-to-end AI Q&A with context building, caching, quota checks, usage tracking
+- Graceful fallback when `ANTHROPIC_API_KEY` is not configured
+- Article notes CRUD operations
 
-### NestJS Module
+#### [legal-library.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts)
+- `POST /ai-search` — AI-powered search endpoint
+- `GET /ai-usage` — Usage stats and quota info
+- `POST/GET/DELETE` article notes endpoints
 
-| File | Purpose |
-|---|---|
-| [forms.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.module.ts) | Module registration |
-| [forms.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.service.ts) | CRUD, public submit, slug generation |
-| [forms.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.controller.ts) | Protected + public endpoints |
+### Frontend
 
-**Endpoints:**
-- `GET/POST/PATCH/DELETE /forms` — protected CRUD
-- `GET /public/forms/:slug` — public form retrieval
-- `POST /public/forms/:slug/submit` — public form submission
+#### [LegalAISearchPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-library/LegalAISearchPage.tsx) [NEW]
+- Premium dark gradient theme with AI branding
+- AI search / keyword search mode toggle
+- AI answer display with confidence bar, citations, source counts
+- Example queries grid and feature cards
+- Copy-to-clipboard, response time, and cache status indicators
 
----
-
-## Frontend Changes
-
-### API + Hooks
-- [forms.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/forms.ts) — API client
-- [useForms.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useForms.ts) — React Query hooks
-
-### Pages
-
-| Page | Features |
-|---|---|
-| [FormsListPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormsListPage.tsx) | Card grid, search, status badges, action menus, copy link |
-| [FormBuilderPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx) | 3-tab builder (Build/Preview/Settings), drag-and-drop, field type picker, property editor |
-| [FormSubmissionsPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormSubmissionsPage.tsx) | Expandable cards, answer display, inline status change |
-| [PublicFormPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/public/PublicFormPage.tsx) | Public form (no auth), all field types, validation, success screen |
-
-### Supported Field Types
-Short text, Long text, Email, Phone, Number, Date, Dropdown, Radio, Checkbox, File upload, Rating, Section header, Paragraph
-
-### Integration
-- **Routes** added to [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx): `/:slug/forms/*` (protected) + `/f/:slug` (public)
-- **Sidebar** link added to [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) under "إدارة العمل"
-
----
+#### Integration
+- Route added: `legal-search` in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+- Sidebar link: "البحث الذكي" with Sparkles icon in [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+- API methods added to [legalLibrary.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalLibrary.ts)
 
 ## Verification
 
-- ✅ `prisma generate` — succeeded
-- ✅ `npm run build` (frontend) — clean, no errors
+| Check | Status |
+|-------|--------|
+| `prisma generate` | ✅ Passed |
+| TypeScript compilation (frontend) | ✅ Zero errors |
+
+## Next Steps
+- Deploy to production (`/deploy`)
+- Run `prisma db push` on production to apply schema changes
+- Set `ANTHROPIC_API_KEY` in production `.env` for full AI functionality

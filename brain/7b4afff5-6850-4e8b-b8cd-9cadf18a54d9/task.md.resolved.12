@@ -1,0 +1,40 @@
+# Phase 39: وثيق AI — Legal AI Search Engine
+
+## Part 1 — Database Schema Enhancements
+- [ ] Extend `LegalSearchLog` with AI-specific fields (queryType, aiResponse, aiTokensUsed, responseTime, cached)
+- [ ] Add `LegalArticleNote` model (private notes/highlights on articles)
+- [ ] Add `LegalAIUsage` model (monthly AI quota tracking per tenant/user)
+- [ ] Extend `LegalRegulation` with `officialUrl`, `pdfUrl` fields
+- [ ] Extend `RegulationArticle` with `keywords`, `chapter`, `section` fields
+- [ ] Extend `CaseLegalReference` with `purpose`, `highlightedText`, `usedInDocument` fields
+- [ ] Run prisma generate + verify
+
+## Part 2 — Backend: AI Search Service
+- [ ] Install `@anthropic-ai/sdk` + `openai` npm packages
+- [ ] Create `LegalAIService` with Claude integration
+  - [ ] `askAI()` — AI question answering with context from existing DB
+  - [ ] `buildContext()` — Build context from search results
+  - [ ] AI system prompt for Saudi legal expert
+  - [ ] Response caching via existing CacheService
+  - [ ] AI usage quota tracking
+- [ ] Enhance `LegalLibraryService.aiSearch()` with real AI
+- [ ] Add article notes CRUD to LegalLibraryService
+- [ ] Add AI usage stats endpoint
+- [ ] Update LegalLibraryController with new endpoints
+
+## Part 3 — Frontend: Legal AI Search Page
+- [ ] Create `frontend/src/pages/legal-library/LegalAISearchPage.tsx`
+  - [ ] Hero section with gradient + search bar
+  - [ ] Mode toggle: keyword search vs AI question
+  - [ ] AI answer display with citations
+  - [ ] Keyword results list
+  - [ ] Quick example queries
+  - [ ] Link-to-case action button
+- [ ] Create API methods + hooks for AI search
+- [ ] Add route in App.tsx
+- [ ] Add sidebar link or integrate into existing legal library
+
+## Part 4 — Verify + Build
+- [ ] Run prisma generate
+- [ ] Frontend build verification
+- [ ] Deploy to production

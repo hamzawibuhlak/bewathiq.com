@@ -1,39 +1,38 @@
-# Phase 38: Dynamic Forms System
+# Phase 39: وثيق AI — Legal AI Search Engine
 
-## Part 1 — Database + Backend Foundation
-- [x] Add Prisma models: `Form`, `FormField`, `FormSubmission`, `FormFieldAnswer`, `FormTemplate`
-- [x] Add `form` entity type to `EntityCodeService.generateFlatCode`
-- [x] Create `FormsModule` + `FormsService` + `FormsController`
-  - [x] CRUD endpoints for forms
-  - [x] Public endpoints: `GET /public/forms/:slug` + `POST /public/forms/:slug/submit`
-  - [x] Submissions endpoints: list, view, update status
-- [x] Register module in `AppModule`
+## Part 1 — Database Schema Enhancements
+- [x] Extend `LegalSearchLog` with AI-specific fields (queryType, aiResponse, aiTokensUsed, responseTime, cached)
+- [x] Add `LegalArticleNote` model (private notes/highlights on articles)
+- [x] Add `LegalAIUsage` model (monthly AI quota tracking per tenant/user)
+- [ ] Extend `LegalRegulation` with `officialUrl`, `pdfUrl` fields
+- [x] Extend `RegulationArticle` with `keywords`, `chapter`, `section` fields
+- [x] Extend `CaseLegalReference` with `purpose`, `highlightedText`, `usedInDocument` fields
+- [x] Run prisma generate + verify
 
-## Part 2 — Frontend: API + Hooks + Routes
-- [x] Create `frontend/src/api/forms.ts` with all API methods
-- [x] Create `frontend/src/hooks/useForms.ts` with React Query hooks
-- [x] Add routes in `App.tsx`: forms, forms/new, forms/:id, forms/:id/submissions
-- [x] Add public route: `/f/:slug` for form submission
-- [x] Add sidebar navigation link
+## Part 2 — Backend: AI Search Service
+- [x] Install `@anthropic-ai/sdk` npm package
+- [x] Create `LegalAIService` with Claude integration
+  - [x] `askAI()` — AI question answering with context from existing DB
+  - [x] `buildContext()` — Build context from search results
+  - [x] AI system prompt for Saudi legal expert
+  - [x] Response caching via existing CacheService
+  - [x] AI usage quota tracking
+- [x] Enhance `LegalLibraryService.aiSearch()` with real AI
+- [x] Add article notes CRUD to LegalAIService
+- [x] Add AI usage stats endpoint
+- [x] Update LegalLibraryController with new endpoints
 
-## Part 3 — Frontend: Forms List Page
-- [x] Create `FormsListPage.tsx` — list all forms with stats, search, filters
+## Part 3 — Frontend: Legal AI Search Page
+- [x] Create `frontend/src/pages/legal-library/LegalAISearchPage.tsx`
+- [x] Add AI search / keyword search toggle
+- [x] Display AI answer with confidence bar, citations, source counts
+- [x] Add example queries grid
+- [x] Add API methods (`aiSearch`, `getAIUsage`, `createArticleNote`, etc.)
+- [x] Add route in `App.tsx`
+- [x] Add sidebar link (البحث الذكي / Sparkles icon)to existing legal library
 
-## Part 4 — Frontend: Form Builder
-- [x] Create `FormBuilderPage.tsx` — main builder UI with tabs (Build/Preview/Settings)
-- [x] `FieldTypePicker` component — sidebar with draggable field types
-- [x] `SortableField` component — drag & drop field cards
-- [x] `FieldEditor` sidebar — edit selected field properties
-- [x] `FormPreview` component — live preview tab
-- [x] `FormSettings` component — settings tab
-
-## Part 5 — Frontend: Public Form + Submissions
-- [x] Create `PublicFormPage.tsx` — public form rendering + submission
-- [x] Create `FormSubmissionsPage.tsx` — view submissions for a form
-
-## Part 6 — Verify + Deploy
-- [x] Run `prisma generate` ✅
-- [x] Frontend build ✅
-- [ ] Deploy to production server
-- [ ] Run `prisma db push` / SQL migration
-- [ ] Test form creation, submission, and viewing
+## Part 4 — Verify + Build
+- [x] Run prisma generate
+- [x] TypeScript compile check (frontend)
+- [ ] Deploy to production
+- [ ] Run `prisma db push` on production

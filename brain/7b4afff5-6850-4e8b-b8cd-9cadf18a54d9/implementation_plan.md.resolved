@@ -1,6 +1,25 @@
-# Phase 38: Dynamic Forms System — نماذج تفاعلية للعملاء
+# Phase 39: وثيق AI — Legal AI Search Engine
 
-A Google Forms-like system for creating dynamic forms, sharing them publicly with clients, and collecting responses.
+## Overview
+
+Build a smart legal search engine within Wathiq that enables lawyers to search, analyze, and reference Saudi legal texts using AI — all without leaving the application.
+
+> [!IMPORTANT]
+> This plan builds on the **existing Phase 30 legal library** (`LegalRegulation`, `RegulationArticle`, `LegalPrecedent`, `LegalTerm`, etc.) rather than creating parallel models. The spec's proposed `LegalSystem` / `LegalArticle` map directly to existing `LegalRegulation` / `RegulationArticle`.
+
+## User Review Required
+
+> [!WARNING]
+> **External API Keys Required:** This phase requires API keys for:
+> - **Anthropic Claude** (`ANTHROPIC_API_KEY`) — for AI legal Q&A
+> - **OpenAI** (`OPENAI_API_KEY`) — optional, for embeddings in future phases
+>
+> The implementation will **gracefully degrade** if keys are missing — the system will fall back to keyword-only search with a "AI coming soon" message.
+
+> [!IMPORTANT]
+> **Typesense & pgvector deferred.** The spec proposes Typesense + pgvector for semantic search. For the MVP, we'll use **PostgreSQL full-text search** (already available) + **Claude AI** for intelligent answers. Typesense/pgvector can be added later as a performance optimization. This avoids adding new infrastructure dependencies.
+
+---
 
 ## Proposed Changes
 
@@ -8,101 +27,147 @@ A Google Forms-like system for creating dynamic forms, sharing them publicly wit
 
 #### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
 
-5 new models: [Form](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/clients/ClientForm.tsx#58-442), `FormField`, `FormSubmission`, `FormFieldAnswer`, `FormTemplate`. Relations to existing [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#41-52), [User](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#26-40), [Case](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/types/index.ts#145-177) models. Supports code generation (`test_FM00001`), slug-based public access, and conditional logic via JSON fields.
+**1. Extend `LegalSearchLog`** — add AI-specific tracking fields:
+```diff
+ model LegalSearchLog {
+   id        String   @id @default(uuid())
+   query     String
+   results   Json
+   helpful   Boolean?
+   tenantId  String
+   createdBy String
++  queryType String   @default("KEYWORD")  // KEYWORD, AI_QUESTION
++  aiResponse String? @db.Text
++  aiCitations Json?
++  aiTokensUsed Int?
++  responseTime Int?    // milliseconds
++  cached      Boolean @default(false)
+   ...
+ }
+```
+
+**2. Add `LegalArticleNote`** — private notes/highlights on articles:
+```prisma
+model LegalArticleNote {
+  id             String   @id @default(uuid())
+  articleId      String
+  noteText       String   @db.Text
+  highlightStart Int?
+  highlightEnd   Int?
+  isPrivate      Boolean  @default(true)
+  tenantId       String
+  createdBy      String
+  article        RegulationArticle @relation(...)
+  user           User     @relation(...)
+  tenant         Tenant   @relation(...)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@index([articleId])
+  @@index([tenantId, createdBy])
+  @@map("legal_article_notes")
+}
+```
+
+**3. Add `LegalAIUsage`** — monthly AI quota tracking:
+```prisma
+model LegalAIUsage {
+  id              String   @id @default(uuid())
+  tenantId        String
+  userId          String
+  month           DateTime
+  questionsCount  Int      @default(0)
+  tokensUsed      Int      @default(0)
+  cacheHits       Int      @default(0)
+  cacheMisses     Int      @default(0)
+  tenant          Tenant   @relation(...)
+  user            User     @relation(...)
+  @@unique([tenantId, userId, month])
+  @@map("legal_ai_usage")
+}
+```
+
+**4. Extend existing models** with additional useful fields:
+- `RegulationArticle` → add `keywords String[]`, `chapter String?`, `section String?`
+- `CaseLegalReference` → add `purpose String?`, `highlightedText String? @db.Text`
 
 ---
 
-### Backend — Forms Module
+### Backend: AI Service
 
-#### [MODIFY] [entity-code.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts)
-Add `'form'` to the entity type union and config map (`FM` prefix, 5 digits).
+#### [NEW] [legal-ai.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-ai.service.ts)
 
-#### [NEW] `backend/src/forms/forms.module.ts`
-NestJS module importing [EntityCodeModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.module.ts#4-10), registering controller + service.
+New service dedicated to AI-powered legal search:
 
-#### [NEW] `backend/src/forms/forms.service.ts`
-- [create()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts#351-416) — generate code, unique slug, create form with fields
-- [findAll()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tasks/tasks.service.ts#39-160) — list forms with submission counts, search/filter
-- `findById()` — get form with fields for editing
-- `findBySlug()` — public endpoint, strip sensitive data
-- [update()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.service.ts#475-517) — update form + replace fields
-- [delete()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/clients.api.ts#24-26) — only if no submissions
-- `submitForm()` — validate required fields, save answers, return success message
-- `getSubmissions()` — list submissions with answers and filters
-- `updateSubmissionStatus()` — mark as reviewed/processed
+- **`askAI(query, tenantId, userId)`** — Main entry point
+  1. Check cache (existing [CacheService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cache/cache.service.ts#9-192))
+  2. Check monthly quota (`LegalAIUsage`)
+  3. Search existing DB for relevant articles/precedents
+  4. Build context from top results
+  5. Call Claude API with Saudi legal system prompt
+  6. Parse citations from response
+  7. Cache result + track usage
+  8. Return answer + citations
 
-#### [NEW] `backend/src/forms/forms.controller.ts`
-Protected endpoints under `/forms` + public endpoints under `/public/forms`.
+- **[getUsageStats(tenantId, userId)](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts#431-462)** — Monthly usage dashboard
+- **`checkQuota(tenantId)`** — Verify AI quota not exceeded
 
-#### [MODIFY] [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
-Import `FormsModule`.
+Uses existing [CacheService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cache/cache.service.ts#9-192) for response caching (7-day TTL for keyword, 30-day for AI).
+
+#### [MODIFY] [legal-library.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.service.ts)
+
+- Replace stub [aiSearch()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts#29-36) with call to new `LegalAIService`
+- Add article notes CRUD: `createNote()`, `getNotes()`, `deleteNote()`
+
+#### [MODIFY] [legal-library.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts)
+
+New endpoints:
+- `POST /legal-library/ai-search` — enhanced with real AI
+- `GET /legal-library/ai-usage` — usage stats
+- `POST /legal-library/articles/:id/notes` — add note
+- `GET /legal-library/articles/:id/notes` — get notes
+- `DELETE /legal-library/notes/:id` — remove note
+
+#### [MODIFY] [legal-library.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.module.ts)
+
+Register `LegalAIService` as provider.
 
 ---
 
-### Frontend — API Layer
+### Frontend: Legal AI Search Page
 
-#### [NEW] `frontend/src/api/forms.ts`
-API client: [getAll](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/clients.api.ts#12-14), [getById](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/clients.api.ts#15-17), [create](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts#351-416), [update](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.service.ts#475-517), [delete](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/clients.api.ts#24-26), `getBySlug` (public), `submitPublic`, `getSubmissions`, `updateSubmissionStatus`.
+#### [NEW] [LegalAISearchPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-library/LegalAISearchPage.tsx)
 
-#### [NEW] `frontend/src/hooks/useForms.ts`
-React Query hooks: `useForms`, `useForm`, `useCreateForm`, `useUpdateForm`, `useDeleteForm`, `useFormSubmissions`, `useSubmitPublicForm`.
+Premium search page with:
+- **Hero section** — gradient background, prominent search bar
+- **Mode toggle** — "بحث بالكلمات" vs "اسأل الذكاء القانوني"
+- **AI answer panel** — formatted answer with citations
+- **Keyword results** — existing search enhanced with better UI
+- **Quick examples** — suggested queries for discovery
+- **Link-to-case** — one-click article linking
 
----
+#### [MODIFY] [legalLibrary.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalLibrary.ts)
 
-### Frontend — Pages
-
-#### [NEW] `frontend/src/pages/forms/FormsListPage.tsx`
-List all forms with submission count, status badge (active/inactive), search, and create button.
-
-#### [NEW] `frontend/src/pages/forms/FormBuilderPage.tsx`
-Main builder UI with 3 tabs:
-- **Build**: Left sidebar with field type picker, center canvas with drag & drop sortable fields, right sidebar with field property editor
-- **Preview**: Live preview of the form as clients would see it
-- **Settings**: Form title, description, notifications, success message, theme
-
-> [!NOTE]
-> We will **not** use `@dnd-kit` (requires npm install). Instead, we'll use a simpler manual drag approach with HTML5 drag-and-drop + `arrayMove` utility, keeping it dependency-free.
-
-#### [NEW] `frontend/src/pages/forms/FormSubmissionsPage.tsx`
-Table/card view of all submissions for a specific form, with status filter and detail modal.
-
-#### [NEW] `frontend/src/pages/public/PublicFormPage.tsx`
-Standalone public page (no auth, no sidebar) for clients to fill and submit forms. Responsive, styled with the form's accent color.
+Add API methods for AI search, usage stats, and notes.
 
 #### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
-Add routes:
-```
-/:slug/forms → FormsListPage
-/:slug/forms/new → FormBuilderPage
-/:slug/forms/:id → FormBuilderPage (edit mode)
-/:slug/forms/:id/submissions → FormSubmissionsPage
-/f/:slug → PublicFormPage (outside ProtectedRoute)
-```
 
-#### [MODIFY] Sidebar
-Add "النماذج" link to sidebar navigation.
+Add route: `/:slug/legal-search` for the AI search page.
+
+#### [MODIFY] [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+
+Add "البحث القانوني الذكي" link with `Sparkles` icon.
 
 ---
-
-## Scope Decisions
-
-> [!IMPORTANT]
-> To keep this manageable, the following are **deferred** to a future phase:
-> - Signature pad field (complex canvas)
-> - Email notifications on submission (no MailService exists)
-> - CSV/Excel export of submissions
-> - Form templates system
-> - Rate limiting on public submit
->
-> **Included in this phase**: 10 field types (shortText, longText, email, phone, number, date, dropdown, radio, checkbox, fileUpload), form builder with drag-and-drop, public form page, submissions viewer, conditional logic support (data saved but UI simplified).
 
 ## Verification Plan
 
 ### Automated Tests
-- Test backend endpoints via browser: create form, submit publicly, view submissions
-- Verify form builder drag & drop works in browser
+- `npx prisma generate` — schema validation
+- `npm run build` (frontend) — TypeScript compilation
+- Manual test: AI search with a sample legal question
 
 ### Manual Verification
-- Create a form with multiple field types
-- Open the public link and submit as a client
-- View the submission in the dashboard
+- Deploy to production
+- Run `prisma db push` for new tables
+- Test keyword search + AI question answering
+- Verify graceful degradation without API keys

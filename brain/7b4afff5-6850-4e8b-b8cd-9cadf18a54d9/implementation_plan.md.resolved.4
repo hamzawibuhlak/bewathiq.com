@@ -1,0 +1,173 @@
+# Phase 39: وثيق AI — Legal AI Search Engine
+
+## Overview
+
+Build a smart legal search engine within Wathiq that enables lawyers to search, analyze, and reference Saudi legal texts using AI — all without leaving the application.
+
+> [!IMPORTANT]
+> This plan builds on the **existing Phase 30 legal library** (`LegalRegulation`, `RegulationArticle`, `LegalPrecedent`, `LegalTerm`, etc.) rather than creating parallel models. The spec's proposed `LegalSystem` / `LegalArticle` map directly to existing `LegalRegulation` / `RegulationArticle`.
+
+## User Review Required
+
+> [!WARNING]
+> **External API Keys Required:** This phase requires API keys for:
+> - **Anthropic Claude** (`ANTHROPIC_API_KEY`) — for AI legal Q&A
+> - **OpenAI** (`OPENAI_API_KEY`) — optional, for embeddings in future phases
+>
+> The implementation will **gracefully degrade** if keys are missing — the system will fall back to keyword-only search with a "AI coming soon" message.
+
+> [!IMPORTANT]
+> **Typesense & pgvector deferred.** The spec proposes Typesense + pgvector for semantic search. For the MVP, we'll use **PostgreSQL full-text search** (already available) + **Claude AI** for intelligent answers. Typesense/pgvector can be added later as a performance optimization. This avoids adding new infrastructure dependencies.
+
+---
+
+## Proposed Changes
+
+### Database Schema
+
+#### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
+
+**1. Extend `LegalSearchLog`** — add AI-specific tracking fields:
+```diff
+ model LegalSearchLog {
+   id        String   @id @default(uuid())
+   query     String
+   results   Json
+   helpful   Boolean?
+   tenantId  String
+   createdBy String
++  queryType String   @default("KEYWORD")  // KEYWORD, AI_QUESTION
++  aiResponse String? @db.Text
++  aiCitations Json?
++  aiTokensUsed Int?
++  responseTime Int?    // milliseconds
++  cached      Boolean @default(false)
+   ...
+ }
+```
+
+**2. Add `LegalArticleNote`** — private notes/highlights on articles:
+```prisma
+model LegalArticleNote {
+  id             String   @id @default(uuid())
+  articleId      String
+  noteText       String   @db.Text
+  highlightStart Int?
+  highlightEnd   Int?
+  isPrivate      Boolean  @default(true)
+  tenantId       String
+  createdBy      String
+  article        RegulationArticle @relation(...)
+  user           User     @relation(...)
+  tenant         Tenant   @relation(...)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@index([articleId])
+  @@index([tenantId, createdBy])
+  @@map("legal_article_notes")
+}
+```
+
+**3. Add `LegalAIUsage`** — monthly AI quota tracking:
+```prisma
+model LegalAIUsage {
+  id              String   @id @default(uuid())
+  tenantId        String
+  userId          String
+  month           DateTime
+  questionsCount  Int      @default(0)
+  tokensUsed      Int      @default(0)
+  cacheHits       Int      @default(0)
+  cacheMisses     Int      @default(0)
+  tenant          Tenant   @relation(...)
+  user            User     @relation(...)
+  @@unique([tenantId, userId, month])
+  @@map("legal_ai_usage")
+}
+```
+
+**4. Extend existing models** with additional useful fields:
+- `RegulationArticle` → add `keywords String[]`, `chapter String?`, `section String?`
+- `CaseLegalReference` → add `purpose String?`, `highlightedText String? @db.Text`
+
+---
+
+### Backend: AI Service
+
+#### [NEW] [legal-ai.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-ai.service.ts)
+
+New service dedicated to AI-powered legal search:
+
+- **`askAI(query, tenantId, userId)`** — Main entry point
+  1. Check cache (existing [CacheService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cache/cache.service.ts#9-192))
+  2. Check monthly quota (`LegalAIUsage`)
+  3. Search existing DB for relevant articles/precedents
+  4. Build context from top results
+  5. Call Claude API with Saudi legal system prompt
+  6. Parse citations from response
+  7. Cache result + track usage
+  8. Return answer + citations
+
+- **[getUsageStats(tenantId, userId)](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts#431-462)** — Monthly usage dashboard
+- **`checkQuota(tenantId)`** — Verify AI quota not exceeded
+
+Uses existing [CacheService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cache/cache.service.ts#9-192) for response caching (7-day TTL for keyword, 30-day for AI).
+
+#### [MODIFY] [legal-library.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.service.ts)
+
+- Replace stub [aiSearch()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts#29-36) with call to new `LegalAIService`
+- Add article notes CRUD: `createNote()`, `getNotes()`, `deleteNote()`
+
+#### [MODIFY] [legal-library.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts)
+
+New endpoints:
+- `POST /legal-library/ai-search` — enhanced with real AI
+- `GET /legal-library/ai-usage` — usage stats
+- `POST /legal-library/articles/:id/notes` — add note
+- `GET /legal-library/articles/:id/notes` — get notes
+- `DELETE /legal-library/notes/:id` — remove note
+
+#### [MODIFY] [legal-library.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.module.ts)
+
+Register `LegalAIService` as provider.
+
+---
+
+### Frontend: Legal AI Search Page
+
+#### [NEW] [LegalAISearchPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-library/LegalAISearchPage.tsx)
+
+Premium search page with:
+- **Hero section** — gradient background, prominent search bar
+- **Mode toggle** — "بحث بالكلمات" vs "اسأل الذكاء القانوني"
+- **AI answer panel** — formatted answer with citations
+- **Keyword results** — existing search enhanced with better UI
+- **Quick examples** — suggested queries for discovery
+- **Link-to-case** — one-click article linking
+
+#### [MODIFY] [legalLibrary.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalLibrary.ts)
+
+Add API methods for AI search, usage stats, and notes.
+
+#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+
+Add route: `/:slug/legal-search` for the AI search page.
+
+#### [MODIFY] [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
+
+Add "البحث القانوني الذكي" link with `Sparkles` icon.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- `npx prisma generate` — schema validation
+- `npm run build` (frontend) — TypeScript compilation
+- Manual test: AI search with a sample legal question
+
+### Manual Verification
+- Deploy to production
+- Run `prisma db push` for new tables
+- Test keyword search + AI question answering
+- Verify graceful degradation without API keys
