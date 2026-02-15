@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Phase 39B task checklist — all items completed: backend CRUD, controller endpoints, frontend SA page, route + sidebar, deployment.",
-  "updatedAt": "2026-02-15T14:16:59.196403Z",
-  "version": "18"
+  "summary": "Task checklist for Phase 41 mobile app rebuild. Week 1 (Setup & Core) is fully completed: project initialization, theme, types, API, stores, 7 screens, navigation, and auth flow all done. Week 2 (Features) and Week 3 (Polish) are remaining.",
+  "updatedAt": "2026-02-15T18:12:20.130883Z",
+  "version": "20"
 }

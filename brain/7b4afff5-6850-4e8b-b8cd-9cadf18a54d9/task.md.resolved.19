@@ -1,0 +1,45 @@
+# Phase 41: Wathiq Mobile App — React Native 0.76.6
+
+## 🏗️ Week 1: Setup & Core
+
+### Project Setup
+- [ ] Initialize React Native 0.76.6 project (WathiqMobile)
+- [ ] Install core dependencies (navigation, paper, zustand, react-query, axios)
+- [ ] Configure TypeScript & folder structure
+- [ ] Setup theme (colors, typography, RTL)
+- [ ] Setup API service layer with axios interceptors
+
+### Auth & Navigation
+- [ ] Auth store (Zustand) + token persistence
+- [ ] Navigation structure (Auth → Main tabs)
+- [ ] Login screen
+- [ ] Auto-login flow
+
+### Core Screens
+- [ ] Home/Dashboard screen
+- [ ] Cases list + details screens
+- [ ] Clients list + details screens
+- [ ] Calendar/Hearings screen
+
+## 🔧 Week 2: Features
+
+### Communication
+- [ ] Call Center (WebRTC/JsSIP)
+- [ ] WhatsApp chat integration
+
+### Content
+- [ ] Documents list + viewer
+- [ ] Forms list + submission
+- [ ] Legal AI Search screen
+
+### System
+- [ ] Push notifications (FCM)
+- [ ] Profile & Settings screens
+
+## 💅 Week 3: Polish
+
+- [ ] Offline support
+- [ ] UI/UX polish & animations
+- [ ] iOS build & test
+- [ ] Android build & test
+- [ ] Bug fixes & QA

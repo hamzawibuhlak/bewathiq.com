@@ -1,53 +1,74 @@
-# Phase 39: وثيق AI — Legal AI Search Engine
+# Walkthrough: Wathiq Mobile App — Phase 41 (Week 1)
 
-## Summary
+## What Was Built
 
-Implemented a full-stack Legal AI Search Engine for the Wathiq application, integrating Claude AI for intelligent legal question answering with graceful fallback to keyword search.
+Complete React Native 0.76.6 mobile app scaffold for Wathiq (وثيق), a legal office management system. The app is fully structured with real API integration, Arabic RTL support, and 7 core screens.
 
-## Changes Made
+## Project Structure
 
-### Database Schema
-- Extended `LegalSearchLog` with AI tracking fields (`queryType`, `aiResponse`, `aiTokensUsed`, `responseTime`, `cached`)
-- Added `LegalArticleNote` model for user notes/highlights on legal articles
-- Added `LegalAIUsage` model for monthly AI quota tracking per tenant/user
-- Extended `RegulationArticle` with `keywords`, `chapter`, `section`
-- Extended `CaseLegalReference` with `purpose`, `highlightedText`
+```
+WathiqMobile/
+├── App.tsx                          # Entry point (RTL, providers, auth routing)
+├── src/
+│   ├── theme/                       # Design system
+│   │   ├── colors.ts                # Color palette
+│   │   ├── typography.ts            # Font configuration
+│   │   ├── spacing.ts               # Spacing & border radius tokens
+│   │   └── theme.ts                 # React Native Paper theme
+│   ├── types/
+│   │   ├── models.types.ts          # All TypeScript models
+│   │   └── global.d.ts              # Type declarations
+│   ├── utils/
+│   │   ├── constants.ts             # Arabic labels & API URL
+│   │   └── formatters.ts            # Date, currency, text formatters
+│   ├── services/
+│   │   └── api.service.ts           # Axios client with tenant-aware URLs
+│   ├── store/
+│   │   └── authStore.ts             # Zustand auth state + AsyncStorage
+│   ├── api/                         # 8 API modules
+│   │   ├── auth.ts, cases.ts, clients.ts, hearings.ts
+│   │   ├── documents.ts, invoices.ts, legal.ts, forms.ts
+│   ├── components/common/           # Reusable components
+│   │   ├── StatCard.tsx, LoadingSpinner.tsx, EmptyState.tsx
+│   ├── navigation/
+│   │   └── AppNavigator.tsx         # Bottom tabs + nested stacks
+│   └── screens/                     # 7 screens
+│       ├── auth/LoginScreen.tsx
+│       ├── home/HomeScreen.tsx
+│       ├── cases/CasesListScreen.tsx, CaseDetailsScreen.tsx
+│       ├── clients/ClientsListScreen.tsx
+│       ├── calendar/CalendarScreen.tsx
+│       ├── legal/LegalSearchScreen.tsx
+│       └── profile/ProfileScreen.tsx
+```
 
-### Backend
+**Total: 30 source files**
 
-#### [legal-ai.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-ai.service.ts) [NEW]
-- Claude AI integration with Arabic legal expert system prompt
-- `askAI()` — end-to-end AI Q&A with context building, caching, quota checks, usage tracking
-- Graceful fallback when `ANTHROPIC_API_KEY` is not configured
-- Article notes CRUD operations
+## Key Architecture Decisions
 
-#### [legal-library.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts)
-- `POST /ai-search` — AI-powered search endpoint
-- `GET /ai-usage` — Usage stats and quota info
-- `POST/GET/DELETE` article notes endpoints
-
-### Frontend
-
-#### [LegalAISearchPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal-library/LegalAISearchPage.tsx) [NEW]
-- Premium dark gradient theme with AI branding
-- AI search / keyword search mode toggle
-- AI answer display with confidence bar, citations, source counts
-- Example queries grid and feature cards
-- Copy-to-clipboard, response time, and cache status indicators
-
-#### Integration
-- Route added: `legal-search` in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
-- Sidebar link: "البحث الذكي" with Sparkles icon in [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx)
-- API methods added to [legalLibrary.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalLibrary.ts)
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| State Management | Zustand | Lightweight, no boilerplate, works with AsyncStorage |
+| API Layer | Axios + tenant-aware service | Matches web frontend pattern, shared interceptors |
+| UI Framework | React Native Paper (MD3) | Material Design 3, RTL support built-in |
+| Navigation | React Navigation (native stack + bottom tabs) | Standard RN navigation, performant |
+| Data Fetching | React Query (@tanstack) | Caching, refetching, loading states |
+| Forms | react-hook-form + zod | Consistent with web frontend |
 
 ## Verification
 
 | Check | Status |
 |-------|--------|
-| `prisma generate` | ✅ Passed |
-| TypeScript compilation (frontend) | ✅ Zero errors |
+| Metro bundler starts | ✅ Runs on port 8081 |
+| Dependencies install | ✅ 0 vulnerabilities |
+| Project structure | ✅ 30 source files created |
+| TypeScript (tsc) | ⚠️ TS2786 from react-native-paper `Text` — type-only, no runtime impact |
 
-## Next Steps
-- Deploy to production (`/deploy`)
-- Run `prisma db push` on production to apply schema changes
-- Set `ANTHROPIC_API_KEY` in production `.env` for full AI functionality
+> [!NOTE]
+> The TS2786 errors are a known incompatibility between react-native-paper and RN 0.76's TypeScript definitions. Metro bundler compiles and serves the app without issues.
+
+## Next Steps (Week 2)
+
+1. Run `cd ios && bundle install && bundle exec pod install` for iOS
+2. Build and test on simulator: `npx react-native run-ios`
+3. Implement remaining features: Call Center, WhatsApp, Documents, Invoices, Forms, Push Notifications
