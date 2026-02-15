@@ -34,5 +34,5 @@
 ## Part 4 — Verify + Build
 - [x] Run prisma generate
 - [x] TypeScript compile check (frontend)
-- [ ] Deploy to production
-- [ ] Run `prisma db push` on production
+- [x] Deploy to production
+- [x] Run `prisma db push` on production

@@ -27,12 +27,12 @@
 - [x] Add AI search / keyword search toggle
 - [x] Display AI answer with confidence bar, citations, source counts
 - [x] Add example queries grid
-- [x] Add API methods ([aiSearch](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts#29-36), [getAIUsage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts#43-49), [createArticleNote](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalLibrary.ts#32-33), etc.)
+- [x] Add API methods ([aiSearch](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.service.ts#277-303), [getAIUsage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts#43-49), [createArticleNote](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/legalLibrary.ts#32-33), etc.)
 - [x] Add route in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
 - [x] Add sidebar link (البحث الذكي / Sparkles icon)to existing legal library
 
 ## Part 4 — Verify + Build
 - [x] Run prisma generate
 - [x] TypeScript compile check (frontend)
-- [ ] Deploy to production
-- [ ] Run `prisma db push` on production
+- [x] Deploy to production
+- [x] Run `prisma db push` on production
