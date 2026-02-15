@@ -1,53 +1,63 @@
-# Phase 37: Entity Code System — Backend Integration Complete
+# Phase 38: Dynamic Forms System — Walkthrough
 
-## Summary
-Implemented a hierarchical entity code system across 9 backend services. Every entity now gets an auto-generated, non-editable code on creation.
+## Overview
 
-## Changes Made
+Implemented a complete Google Forms–style dynamic forms system. Users can create custom forms with a visual builder, share them via public links, and view/manage submissions.
 
-### Core Infrastructure
-| File | Change |
-|------|--------|
-| [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma) | Added `code`, `codeNumber`, `codePrefix` fields to 9 models |
-| [entity-code.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts) | Central service with methods: `generateTenantCode`, `generateUserCode`, `generateClientCode`, `generateCaseCode`, `generateHearingCode`, `generateFlatCode` |
-| [entity-code.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.module.ts) | Global NestJS module |
-| [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts) | Registered `EntityCodeModule` |
-| [migration.sql](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/migrations/20260213105110_phase37_entity_codes/migration.sql) | Migration adding columns + unique indexes |
+---
 
-### Service Integrations (9 services)
+## Backend Changes
 
-| Service | Method | Code Format |
-|---------|--------|-------------|
-| [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts) | `register()` | Tenant: `{slug}_law`, Owner: `{prefix}_US0001` |
-| [owner.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts) | `inviteUser()` | `{prefix}_US{NNNN}` |
-| [clients.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/clients/clients.service.ts) | `create()` | `{prefix}_CL{NNNN}` |
-| [cases.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts) | `create()` | Hierarchical: `{clientCode}_CA{NNNNN}` |
-| [hearings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts) | `create()` | Hierarchical: `{caseCode}_CS{NNNNN}` |
-| [documents.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.service.ts) | `upload()` | `{prefix}_DOC{NNNNN}` |
-| [invoices.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/invoices/invoices.service.ts) | `create()` | `{prefix}_INV{NNNNN}` |
-| [tasks.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tasks/tasks.service.ts) | `create()` | `{prefix}_TK{NNNNN}` |
-| [expense.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/accounting/expense.service.ts) | `submit()` | `{prefix}_EX{NNNNN}` |
+### Prisma Schema — 5 new models
 
-### Backfill Script
-- [backfill-entity-codes.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/scripts/backfill-entity-codes.ts) — Populates codes for all existing records
+| Model | Purpose |
+|---|---|
+| `Form` | Form definition with title, slug, accent color, settings |
+| `FormField` | Individual fields with type, label, options, validation |
+| `FormSubmission` | Each submission with submitter info and status |
+| `FormFieldAnswer` | Individual answers per field per submission |
+| `FormTemplate` | Pre-built form templates (future) |
+
+### NestJS Module
+
+| File | Purpose |
+|---|---|
+| [forms.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.module.ts) | Module registration |
+| [forms.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.service.ts) | CRUD, public submit, slug generation |
+| [forms.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.controller.ts) | Protected + public endpoints |
+
+**Endpoints:**
+- `GET/POST/PATCH/DELETE /forms` — protected CRUD
+- `GET /public/forms/:slug` — public form retrieval
+- `POST /public/forms/:slug/submit` — public form submission
+
+---
+
+## Frontend Changes
+
+### API + Hooks
+- [forms.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/forms.ts) — API client
+- [useForms.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useForms.ts) — React Query hooks
+
+### Pages
+
+| Page | Features |
+|---|---|
+| [FormsListPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormsListPage.tsx) | Card grid, search, status badges, action menus, copy link |
+| [FormBuilderPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx) | 3-tab builder (Build/Preview/Settings), drag-and-drop, field type picker, property editor |
+| [FormSubmissionsPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormSubmissionsPage.tsx) | Expandable cards, answer display, inline status change |
+| [PublicFormPage](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/public/PublicFormPage.tsx) | Public form (no auth), all field types, validation, success screen |
+
+### Supported Field Types
+Short text, Long text, Email, Phone, Number, Date, Dropdown, Radio, Checkbox, File upload, Rating, Section header, Paragraph
+
+### Integration
+- **Routes** added to [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx): `/:slug/forms/*` (protected) + `/f/:slug` (public)
+- **Sidebar** link added to [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) under "إدارة العمل"
+
+---
 
 ## Verification
-- ✅ Prisma client regenerated successfully (v5.22.0)
-- ✅ All type errors resolved after `prisma generate`
 
-## Remaining Steps
-1. **Frontend**: Create `EntityCode` component and integrate into detail pages
-2. **Deploy**: Run migration on production, execute backfill script
-3. **Verify**: Confirm codes appear for new and existing entities
-
-## Phase 38: Enhanced Client Profile
-
-### Features Implemented
-- **Client Schema**: Added `brandName`, `unifiedNumber`, `commercialRegDoc`, `nationalAddressDoc` and Representative info (`repName`, `repPhone`, `repEmail`, `repIdentity`, `repDocType`, `repDoc`).
-- **Document Upload**: Created generic `POST /api/uploads/document` endpoint in `UploadsController`.
-- **Client Form**: Updated `ClientForm.tsx` to include file uploads and validation for new fields.
-- **API Integration**: Updated `clientsApi` and types to support the new data structure.
-
-### Verification
-- ✅ Frontend build passed (`tsc`).
-- ✅ Database schema updated locally (`prisma db push`).
+- ✅ `prisma generate` — succeeded
+- ✅ `npm run build` (frontend) — clean, no errors

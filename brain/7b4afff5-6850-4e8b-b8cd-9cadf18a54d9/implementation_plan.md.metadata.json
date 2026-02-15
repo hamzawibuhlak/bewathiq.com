@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Implementation plan for Phase 37 Entity Code System. Covers database schema changes (adding code/codeNumber to 10 models), EntityCodeService creation, integration into 8 existing creation services, backfill script for existing data, frontend EntityCode display component, and deployment. Scoped to the entities that already exist in the system.",
-  "updatedAt": "2026-02-13T10:48:31.843858Z",
-  "version": "2"
+  "summary": "Implementation plan for Phase 38: Dynamic Forms System. Covers database schema (5 models), backend module (CRUD + public endpoints), frontend API/hooks, 4 new pages (list, builder, submissions, public form), and route/sidebar integration. Defers signature pad, email notifications, CSV export, and templates to future phases.",
+  "updatedAt": "2026-02-15T12:30:14.399981Z",
+  "version": "3"
 }

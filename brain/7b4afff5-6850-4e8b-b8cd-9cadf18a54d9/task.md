@@ -1,34 +1,39 @@
-# Phase 37: Entity Code System
+# Phase 38: Dynamic Forms System
 
-## Part 1: Database & Backend Core
-- [x] Research existing schema and services
-- [x] Create implementation plan
-- [x] Add code/codeNumber fields to Prisma schema
-- [x] Create migration file
-- [x] Run prisma generate
-- [x] Create EntityCodeService + EntityCodeModule
-- [ ] Create backfill script for existing data
-- [ ] Run backfill on production
+## Part 1 — Database + Backend Foundation
+- [x] Add Prisma models: `Form`, `FormField`, `FormSubmission`, `FormFieldAnswer`, `FormTemplate`
+- [x] Add `form` entity type to `EntityCodeService.generateFlatCode`
+- [x] Create `FormsModule` + `FormsService` + `FormsController`
+  - [x] CRUD endpoints for forms
+  - [x] Public endpoints: `GET /public/forms/:slug` + `POST /public/forms/:slug/submit`
+  - [x] Submissions endpoints: list, view, update status
+- [x] Register module in `AppModule`
 
-## Part 2: Integrate into Services
-- [x] AuthService.register() — tenant + owner code
-- [x] Owner invite user — user code
-- [x] ClientsService.create()
-- [x] CasesService.create()
-- [x] HearingsService.create()
-- [x] DocumentsService.upload()
-- [x] TasksService.create()
-- [x] InvoicesService.create()
-- [x] ExpenseService.submit()
+## Part 2 — Frontend: API + Hooks + Routes
+- [x] Create `frontend/src/api/forms.ts` with all API methods
+- [x] Create `frontend/src/hooks/useForms.ts` with React Query hooks
+- [x] Add routes in `App.tsx`: forms, forms/new, forms/:id, forms/:id/submissions
+- [x] Add public route: `/f/:slug` for form submission
+- [x] Add sidebar navigation link
 
-## Part 3: Frontend Display
-- [ ] EntityCode component
-- [ ] Display codes in detail pages & lists
-- [ ] Deploy and verify
-- [ ] Deploy and verify
+## Part 3 — Frontend: Forms List Page
+- [x] Create `FormsListPage.tsx` — list all forms with stats, search, filters
 
-## Phase 38: Enhanced Client Profile
-- [x] Modify Client Schema (Brand, Unified Number, Rep Info, Docs)
-- [x] Update ClientForm UI (New fields & File Uploads)
-- [x] Create Document Upload API
-- [x] Verify Implementation
+## Part 4 — Frontend: Form Builder
+- [x] Create `FormBuilderPage.tsx` — main builder UI with tabs (Build/Preview/Settings)
+- [x] `FieldTypePicker` component — sidebar with draggable field types
+- [x] `SortableField` component — drag & drop field cards
+- [x] `FieldEditor` sidebar — edit selected field properties
+- [x] `FormPreview` component — live preview tab
+- [x] `FormSettings` component — settings tab
+
+## Part 5 — Frontend: Public Form + Submissions
+- [x] Create `PublicFormPage.tsx` — public form rendering + submission
+- [x] Create `FormSubmissionsPage.tsx` — view submissions for a form
+
+## Part 6 — Verify + Deploy
+- [x] Run `prisma generate` ✅
+- [x] Frontend build ✅
+- [ ] Deploy to production server
+- [ ] Run `prisma db push` / SQL migration
+- [ ] Test form creation, submission, and viewing

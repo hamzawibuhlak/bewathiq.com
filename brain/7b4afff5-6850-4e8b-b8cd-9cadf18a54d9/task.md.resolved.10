@@ -1,0 +1,38 @@
+# Phase 38: Dynamic Forms System
+
+## Part 1 — Database + Backend Foundation
+- [x] Add Prisma models: [Form](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useForms.ts#15-22), [FormField](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx#41-54), [FormSubmission](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useForms.ts#23-30), `FormFieldAnswer`, `FormTemplate`
+- [x] Add [form](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/tasks/TaskCard.tsx#62-68) entity type to `EntityCodeService.generateFlatCode`
+- [x] Create [FormsModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.module.ts#5-11) + [FormsService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.service.ts#5-394) + [FormsController](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/forms/forms.controller.ts#17-109)
+  - [x] CRUD endpoints for forms
+  - [x] Public endpoints: `GET /public/forms/:slug` + `POST /public/forms/:slug/submit`
+  - [x] Submissions endpoints: list, view, update status
+- [x] Register module in [AppModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts#61-180)
+
+## Part 2 — Frontend: API + Hooks + Routes
+- [x] Create [frontend/src/api/forms.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/forms.ts) with all API methods
+- [x] Create [frontend/src/hooks/useForms.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useForms.ts) with React Query hooks
+- [x] Add routes in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx): forms, forms/new, forms/:id, forms/:id/submissions
+- [x] Add public route: `/f/:slug` for form submission
+- [x] Add sidebar navigation link
+
+## Part 3 — Frontend: Forms List Page
+- [x] Create [FormsListPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormsListPage.tsx) — list all forms with stats, search, filters
+
+## Part 4 — Frontend: Form Builder
+- [x] Create [FormBuilderPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx) — main builder UI with tabs (Build/Preview/Settings)
+- [x] `FieldTypePicker` component — sidebar with draggable field types
+- [x] `SortableField` component — drag & drop field cards
+- [x] [FieldEditor](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx#531-653) sidebar — edit selected field properties
+- [x] [FormPreview](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx#658-696) component — live preview tab
+- [x] [FormSettings](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormBuilderPage.tsx#775-893) component — settings tab
+
+## Part 5 — Frontend: Public Form + Submissions
+- [x] Create [PublicFormPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/public/PublicFormPage.tsx) — public form rendering + submission
+- [x] Create [FormSubmissionsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/forms/FormSubmissionsPage.tsx) — view submissions for a form
+
+## Part 6 — Verify
+- [/] Run prisma generate + frontend build to verify
+- [ ] Deploy to production server
+- [ ] Run `prisma db push` / SQL migration
+- [ ] Test form creation, submission, and viewing

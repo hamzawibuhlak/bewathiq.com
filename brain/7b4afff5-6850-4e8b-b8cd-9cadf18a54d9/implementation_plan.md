@@ -1,6 +1,6 @@
-# Phase 37: Entity Code System
+# Phase 38: Dynamic Forms System — نماذج تفاعلية للعملاء
 
-Auto-generated hierarchical codes for all entities to aid debugging and identification.
+A Google Forms-like system for creating dynamic forms, sharing them publicly with clients, and collecting responses.
 
 ## Proposed Changes
 
@@ -8,103 +8,101 @@ Auto-generated hierarchical codes for all entities to aid debugging and identifi
 
 #### [MODIFY] [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
 
-Add `code` (String, @unique) and `codeNumber` (Int) to these existing models:
+5 new models: `Form`, `FormField`, `FormSubmission`, `FormFieldAnswer`, `FormTemplate`. Relations to existing `Tenant`, `User`, `Case` models. Supports code generation (`test_FM00001`), slug-based public access, and conditional logic via JSON fields.
 
-| Model | Code Pattern | Example | Parent |
-|-------|-------------|---------|--------|
-| Tenant (L153) | `{slug}_law` + `codePrefix` | `test_law` | — |
-| User (L314) | `{prefix}_US{0001}` | `test_US0001` | Tenant |
-| Client (L429) | `{prefix}_CL{0001}` | `test_CL0001` | Tenant |
-| Case (L480) | `{clientCode}_CA{00001}` | `test_CL0001_CA00001` | Client |
-| Hearing (L539) | `{caseCode}_CS{00001}` | `test_CL0001_CA00001_CS00001` | Case |
-| Document (L587) | `{prefix}_DOC{00001}` | `test_DOC00001` | Tenant |
-| Invoice (L661) | `{prefix}_INV{00001}` | `test_INV00001` | Tenant |
-| Task (L975) | `{prefix}_TK{00001}` | `test_TK00001` | Tenant |
-| Expense (L1741) | `{prefix}_EX{00001}` | `test_EX00001` | Tenant |
+---
 
-> [!IMPORTANT]
-> All `code` fields are nullable initially, then populated via backfill, then made required. The unique constraint is added after backfill.
+### Backend — Forms Module
+
+#### [MODIFY] [entity-code.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts)
+Add `'form'` to the entity type union and config map (`FM` prefix, 5 digits).
+
+#### [NEW] `backend/src/forms/forms.module.ts`
+NestJS module importing `EntityCodeModule`, registering controller + service.
+
+#### [NEW] `backend/src/forms/forms.service.ts`
+- `create()` — generate code, unique slug, create form with fields
+- `findAll()` — list forms with submission counts, search/filter
+- `findById()` — get form with fields for editing
+- `findBySlug()` — public endpoint, strip sensitive data
+- `update()` — update form + replace fields
+- `delete()` — only if no submissions
+- `submitForm()` — validate required fields, save answers, return success message
+- `getSubmissions()` — list submissions with answers and filters
+- `updateSubmissionStatus()` — mark as reviewed/processed
+
+#### [NEW] `backend/src/forms/forms.controller.ts`
+Protected endpoints under `/forms` + public endpoints under `/public/forms`.
+
+#### [MODIFY] [app.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/app.module.ts)
+Import `FormsModule`.
+
+---
+
+### Frontend — API Layer
+
+#### [NEW] `frontend/src/api/forms.ts`
+API client: `getAll`, `getById`, `create`, `update`, `delete`, `getBySlug` (public), `submitPublic`, `getSubmissions`, `updateSubmissionStatus`.
+
+#### [NEW] `frontend/src/hooks/useForms.ts`
+React Query hooks: `useForms`, `useForm`, `useCreateForm`, `useUpdateForm`, `useDeleteForm`, `useFormSubmissions`, `useSubmitPublicForm`.
+
+---
+
+### Frontend — Pages
+
+#### [NEW] `frontend/src/pages/forms/FormsListPage.tsx`
+List all forms with submission count, status badge (active/inactive), search, and create button.
+
+#### [NEW] `frontend/src/pages/forms/FormBuilderPage.tsx`
+Main builder UI with 3 tabs:
+- **Build**: Left sidebar with field type picker, center canvas with drag & drop sortable fields, right sidebar with field property editor
+- **Preview**: Live preview of the form as clients would see it
+- **Settings**: Form title, description, notifications, success message, theme
 
 > [!NOTE]
-> Documents and Invoices use flat tenant-level codes (`test_DOC00001`, `test_INV00001`) instead of deeply nested hierarchical codes. This keeps codes shorter and simpler while still being globally unique. The hierarchical relationship is still queryable via the existing `caseId`/`clientId` fields.
+> We will **not** use `@dnd-kit` (requires npm install). Instead, we'll use a simpler manual drag approach with HTML5 drag-and-drop + `arrayMove` utility, keeping it dependency-free.
+
+#### [NEW] `frontend/src/pages/forms/FormSubmissionsPage.tsx`
+Table/card view of all submissions for a specific form, with status filter and detail modal.
+
+#### [NEW] `frontend/src/pages/public/PublicFormPage.tsx`
+Standalone public page (no auth, no sidebar) for clients to fill and submit forms. Responsive, styled with the form's accent color.
+
+#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
+Add routes:
+```
+/:slug/forms → FormsListPage
+/:slug/forms/new → FormBuilderPage
+/:slug/forms/:id → FormBuilderPage (edit mode)
+/:slug/forms/:id/submissions → FormSubmissionsPage
+/f/:slug → PublicFormPage (outside ProtectedRoute)
+```
+
+#### [MODIFY] Sidebar
+Add "النماذج" link to sidebar navigation.
 
 ---
 
-### Backend Core Service
+## Scope Decisions
 
-#### [NEW] [entity-code.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.service.ts)
-
-Injectable NestJS service with methods:
-- `generateTenantCode(slug)` → `{slug}_law`
-- `generateUserCode(tenantId, isOwner?)` → `{prefix}_US{NNNN}`
-- `generateClientCode(tenantId)` → `{prefix}_CL{NNNN}`
-- `generateCaseCode(clientId)` → `{clientCode}_CA{NNNNN}`
-- `generateHearingCode(caseId)` → `{caseCode}_CS{NNNNN}`
-- `generateFlatCode(tenantId, type)` → `{prefix}_{TYPE}{NNNNN}` for DOC/INV/TK/EX
-
-Each method queries the max `codeNumber` for the scope and increments.
-
-#### [NEW] [entity-code.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/services/entity-code.module.ts)
-
-Exports `EntityCodeService` for injection into other modules.
-
----
-
-### Service Integration
-
-#### [MODIFY] [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts)
-- `register()`: Add `code`/`codePrefix` to tenant creation, add `code`/`codeNumber` to owner user creation
-
-#### [MODIFY] [owner.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/owner/owner.service.ts)
-- `inviteUser()`: Generate user code before creating
-
-#### [MODIFY] [clients.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/clients/clients.service.ts)
-- `create()`: Generate client code
-
-#### [MODIFY] [cases.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/cases/cases.service.ts)
-- `create()`: Generate case code (hierarchical from clientId)
-
-#### [MODIFY] [hearings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/hearings/hearings.service.ts)
-- `create()`: Generate hearing code (hierarchical from caseId)
-
-#### [MODIFY] [documents.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/documents/documents.service.ts)
-- `upload()`: Generate document code
-
-#### [MODIFY] [invoices.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/invoices/invoices.service.ts)
-- `create()`: Generate invoice code
-
-#### [MODIFY] [tasks.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/tasks/tasks.service.ts)
-- `create()`: Generate task code
-
----
-
-### Backfill & Migration
-
-#### [NEW] [backfill-entity-codes.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/backfill-entity-codes.ts)
-
-Script to populate codes for all existing records, ordered by `createdAt`. Run after migration.
-
----
-
-### Frontend
-
-#### [NEW] [EntityCode.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/common/EntityCode.tsx)
-
-Reusable component displaying entity code with copy-to-clipboard button.
-
-#### Modify detail pages to show `EntityCode` component:
-- `ClientDetailsPage.tsx`, `CaseDetailsPage.tsx`, `UsersManagementPage.tsx`
-
----
+> [!IMPORTANT]
+> To keep this manageable, the following are **deferred** to a future phase:
+> - Signature pad field (complex canvas)
+> - Email notifications on submission (no MailService exists)
+> - CSV/Excel export of submissions
+> - Form templates system
+> - Rate limiting on public submit
+>
+> **Included in this phase**: 10 field types (shortText, longText, email, phone, number, date, dropdown, radio, checkbox, fileUpload), form builder with drag-and-drop, public form page, submissions viewer, conditional logic support (data saved but UI simplified).
 
 ## Verification Plan
 
 ### Automated Tests
-1. Run `npx prisma migrate deploy` on production
-2. Run backfill script
-3. Verify codes generated correctly via DB query
+- Test backend endpoints via browser: create form, submit publicly, view submissions
+- Verify form builder drag & drop works in browser
 
 ### Manual Verification
-1. Create new client → verify code `{slug}_CL{NNNN}` generated
-2. Create new case under client → verify hierarchical code
-3. Check codes display in frontend detail pages
+- Create a form with multiple field types
+- Open the public link and submit as a client
+- View the submission in the dashboard
