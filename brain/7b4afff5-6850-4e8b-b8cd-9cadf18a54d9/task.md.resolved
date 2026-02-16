@@ -1,10 +1,25 @@
-# Mobile App — Drawer Navigation + Missing Screens
+# Add Remaining Sections to Wathiq Mobile App
 
-- [x] Install `@react-navigation/drawer` dependency
-- [x] Create new screens (DocumentsScreen, TasksScreen, InvoicesScreen, FormsScreen, LegalLibraryScreen, SettingsScreen)
-- [x] Create custom DrawerContent component
-- [x] Modify AppNavigator to wrap tabs in drawer
-- [x] Add `react-native-reanimated/plugin` to babel.config.js
-- [x] Sync files to ~/WathiqMobile
-- [x] Rebuild and test on simulator — ✅ Working!
-- [x] Fix login slug validation error
+## Phase 1 — Detail Screens
+- [x] ClientDetailsScreen
+- [x] CreateClientScreen
+- [x] HearingDetailsScreen
+- [x] CreateHearingScreen
+
+## Phase 2 — New Sections (Batch 1)
+- [x] NotificationsScreen
+- [x] AccountingScreen
+- [x] ReportsScreen
+- [x] LegalDocumentsScreen
+
+## Phase 3 — New Sections (Batch 2)
+- [x] ChatScreen (التواصل)
+- [x] MarketingScreen (التسويق)
+- [x] AnalyticsScreen (التحليلات)
+- [x] HRScreen (الموارد البشرية)
+- [x] CompanyScreen (صفحة الشركة)
+
+## Navigation Integration
+- [x] Register all screens in AppNavigator.tsx
+- [x] Add all sections to DrawerContent.tsx sidebar
+- [x] Verify Metro compiles and app loads

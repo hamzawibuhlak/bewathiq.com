@@ -1,0 +1,22 @@
+# Add Remaining Sections to Wathiq Mobile App
+
+## Phase 1 — Detail Screens (Missing from existing list screens)
+- [/] **ClientDetailsScreen** — View client info, cases, invoices, contact info
+- [/] **HearingDetailsScreen** — View hearing details, case link, notes
+- [/] **CreateClientScreen** — Form to add new client
+- [/] **CreateHearingScreen** — Form to add new hearing
+
+## Phase 2 — New Sections (Not yet in app)
+- [ ] **NotificationsScreen** — List notifications with mark-as-read
+- [ ] **AccountingScreen** — Financial overview: expenses, revenue summary
+- [ ] **ReportsScreen** — Reports overview with stats & charts
+- [ ] **LegalDocumentsScreen** — Draft/manage legal documents
+
+## Phase 3 — Navigation Integration
+- [ ] Register new screens in [AppNavigator.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/AppNavigator.tsx)
+- [ ] Add new sections to [DrawerContent.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/DrawerContent.tsx) sidebar
+- [ ] Test all navigation flows
+
+## Phase 4 — Verification
+- [ ] Test on simulator
+- [ ] Update walkthrough

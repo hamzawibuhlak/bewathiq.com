@@ -1,0 +1,49 @@
+# Wathiq Mobile — New Sections Walkthrough
+
+## Summary
+
+Added **8 new screens** to the Wathiq mobile app, bringing the total from 12 to 20 functional screens. Updated navigation to organize sidebar into 4 logical groups.
+
+## New Screens
+
+### Phase 1 — Detail Screens
+
+| Screen | File | Features |
+|--------|------|----------|
+| تفاصيل العميل | [ClientDetailsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/clients/ClientDetailsScreen.tsx) | Profile card, contact actions (call/email/whatsapp), stats, linked cases |
+| إضافة عميل | [CreateClientScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/clients/CreateClientScreen.tsx) | Client type selector, full form with validation, edit mode |
+| تفاصيل الجلسة | [HearingDetailsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/calendar/HearingDetailsScreen.tsx) | Status header, info section, notes, result, status change actions |
+| إضافة جلسة | [CreateHearingScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/calendar/CreateHearingScreen.tsx) | Hearing form: title, date, time, court, case link |
+
+### Phase 2 — New Sections
+
+| Screen | File | Features |
+|--------|------|----------|
+| الإشعارات | [NotificationsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/notifications/NotificationsScreen.tsx) | Read/unread, mark-as-read, mark-all, time-ago, type icons |
+| المحاسبة | [AccountingScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/accounting/AccountingScreen.tsx) | Revenue/expenses/profit cards, quick stats, transactions |
+| التقارير | [ReportsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/reports/ReportsScreen.tsx) | 6-stat grid, cases/tasks by status bars, monthly summary |
+| المستندات القانونية | [LegalDocumentsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/legal-documents/LegalDocumentsScreen.tsx) | Search, type/status chips, case links |
+
+## Navigation Changes
+
+### [AppNavigator.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/AppNavigator.tsx)
+- Added imports for all 8 new screens
+- Registered all screens in `ScreenStack.Navigator`
+
+### [DrawerContent.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/DrawerContent.tsx)
+Reorganized sidebar into 4 groups:
+
+| Group | Items |
+|-------|-------|
+| إدارة العمل | الرئيسية, العملاء, القضايا, الجلسات, المستندات, المهام, النماذج |
+| القانون | المكتبة القانونية, **المستندات القانونية** ⭐, البحث الذكي |
+| المالية | الفواتير, **المحاسبة** ⭐, **التقارير** ⭐ |
+| أخرى | **الإشعارات** ⭐, الملف الشخصي, الإعدادات |
+
+## Verification
+
+- ✅ Metro compiled successfully (no errors)
+- ✅ App loads on iOS simulator
+- ✅ Home screen renders correctly
+
+![Home Screen](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/new_sections_home.png)

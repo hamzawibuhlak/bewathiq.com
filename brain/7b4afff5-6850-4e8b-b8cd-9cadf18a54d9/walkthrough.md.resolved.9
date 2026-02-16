@@ -1,0 +1,57 @@
+# Wathiq Mobile — New Sections Walkthrough
+
+## Summary
+
+Added **13 new screens** to the Wathiq mobile app. Updated drawer navigation to **6 groups** with full coverage of all app sections.
+
+## Screens Added
+
+### Phase 1 — Detail Screens
+
+| Screen | File | Features |
+|--------|------|----------|
+| تفاصيل العميل | [ClientDetailsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/clients/ClientDetailsScreen.tsx) | Profile, contact actions, stats, linked cases |
+| إضافة عميل | [CreateClientScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/clients/CreateClientScreen.tsx) | Form with validation, edit mode |
+| تفاصيل الجلسة | [HearingDetailsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/calendar/HearingDetailsScreen.tsx) | Status, info, notes, actions |
+| إضافة جلسة | [CreateHearingScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/calendar/CreateHearingScreen.tsx) | Hearing form |
+
+### Phase 2 — New Sections (Batch 1)
+
+| Screen | File | Features |
+|--------|------|----------|
+| الإشعارات | [NotificationsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/notifications/NotificationsScreen.tsx) | Read/unread, mark-as-read |
+| المحاسبة | [AccountingScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/accounting/AccountingScreen.tsx) | Revenue/expenses cards, transactions |
+| التقارير | [ReportsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/reports/ReportsScreen.tsx) | Stats grid, status bars |
+| المستندات القانونية | [LegalDocumentsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/legal-documents/LegalDocumentsScreen.tsx) | Search, type/status chips |
+
+### Phase 3 — New Sections (Batch 2)
+
+| Screen | File | Features |
+|--------|------|----------|
+| التواصل | [ChatScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/chat/ChatScreen.tsx) | Conversations list, online status, unread badges, search |
+| التسويق | [MarketingScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/marketing/MarketingScreen.tsx) | Leads/Campaigns tabs, stats cards, search, status chips |
+| التحليلات | [AnalyticsScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/analytics/AnalyticsScreen.tsx) | KPI summary, period selector, cases/hearings/financial/clients stats |
+| الموارد البشرية | [HRScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/hr/HRScreen.tsx) | Employees/Leave/Payroll tabs, department chips |
+| صفحة الشركة | [CompanyScreen.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/screens/company/CompanyScreen.tsx) | Company info, stats, subscription details |
+
+## Navigation Structure
+
+### [AppNavigator.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/AppNavigator.tsx) — 18 screens registered
+
+### [DrawerContent.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/DrawerContent.tsx) — 6 nav groups:
+
+| Group | Items |
+|-------|-------|
+| إدارة العمل | الرئيسية, العملاء, القضايا, الجلسات, **التواصل**, المستندات, المهام, النماذج |
+| القانون | المكتبة القانونية, المستندات القانونية, البحث الذكي |
+| المالية | الفواتير, المحاسبة, التقارير |
+| التسويق والتحليلات | **التسويق**, **التحليلات** |
+| الموارد البشرية | **إدارة الموظفين** |
+| أخرى | الإشعارات, **الشركة**, الملف الشخصي, الإعدادات |
+
+## Verification
+
+- ✅ Metro compiled successfully — no errors
+- ✅ App reloaded and renders home screen
+
+![App Running](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/phase2_home.png)

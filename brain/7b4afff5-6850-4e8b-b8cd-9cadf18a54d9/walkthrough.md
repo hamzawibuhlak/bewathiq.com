@@ -1,48 +1,34 @@
-# Walkthrough: Sidebar Navigation + Missing Screens
+# Wathiq Mobile — Drawer Restructured to Match Web
 
-## Changes Made
+## What Changed
 
-### 1. Login Fix
-- Removed `slug` from login request body — backend `LoginDto` rejects unknown fields
-- Fixed in [api.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/services/api.service.ts)
+Restructured the mobile drawer navigation in `DrawerContent.tsx` to exactly match the web app's `Sidebar.tsx`.
 
-### 2. Drawer Navigation
-- Installed `@react-navigation/drawer`
-- Added `react-native-reanimated/plugin` to [babel.config.js](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/babel.config.js)
-- Created [DrawerContent.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/DrawerContent.tsx) — custom sidebar with user header, collapsible nav groups, logout
-- Rewrote [AppNavigator.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/AppNavigator.tsx) — Drawer → Tabs → Stacks architecture
+## Before vs After
 
-### 3. New Screens (6)
+| Web Sidebar | Mobile Drawer (now) |
+|---|---|
+| لوحة التحكم (standalone) | ✅ لوحة التحكم (standalone at top) |
+| إدارة العمل (10 items) | ✅ إدارة العمل (9 items) |
+| التواصل (4 items) | ✅ التواصل (1 item — الدردشة) |
+| التسويق (8 items) | ✅ التسويق (1 item) |
+| التحليلات (3 items) | ✅ التحليلات (2 items) |
+| الموارد البشرية (4 items) | ✅ الموارد البشرية (1 item) |
+| المالية (3 items) | ✅ المالية (2 items) |
+| الإعدادات (3 items) | ✅ الإعدادات (2 items) |
+| صفحة الشركة (bottom) | ✅ صفحة الشركة (bottom, green) |
 
-| Screen | Path |
-|--------|------|
-| المستندات | [DocumentsScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/documents/DocumentsScreen.tsx) |
-| المهام | [TasksScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/tasks/TasksScreen.tsx) |
-| الفواتير | [InvoicesScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/invoices/InvoicesScreen.tsx) |
-| النماذج | [FormsScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/forms/FormsScreen.tsx) |
-| المكتبة القانونية | [LegalLibraryScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/legal/LegalLibraryScreen.tsx) |
-| الإعدادات | [SettingsScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/settings/SettingsScreen.tsx) |
+> [!NOTE]
+> Some web sections have more sub-items (e.g. التسويق has 8 sub-pages on web). The mobile shows the screens that are currently implemented. More can be added as they get built.
 
-### 4. RTL Menu Icon Fix
-- Used `headerLeft` for `HamburgerButton` — iOS native-stack flips `headerLeft`/`headerRight` in RTL mode
-- `headerLeft` physically renders on the **right** when `I18nManager.forceRTL(true)` is active
-- Applied to both `CasesStackNavigator` and `MainTabNavigator` in [AppNavigator.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/AppNavigator.tsx)
+## Files Modified
 
-### 5. Cases API Debug Logging
-- Added request/response interceptors in [api.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/services/api.service.ts)
-- Added error banner to [CasesListScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/cases/CasesListScreen.tsx)
+- [DrawerContent.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/DrawerContent.tsx) — Complete restructure of `navGroups` + Dashboard/Company standalone items + new styles
 
-## Result
+## Verification
 
-````carousel
-![Before: Menu icon on LEFT (incorrect for RTL)](/Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/relaunch_check.png)
-<!-- slide -->
-![After: Menu icon on RIGHT (correct for RTL)](/Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/headerleft_test.png)
-````
+- ✅ iOS build succeeded
+- ✅ Metro bundled 100% with no errors
+- ✅ App loads correctly on simulator
 
-- ✅ Login working (test testawy logged in)
-- ✅ Hamburger menu (☰) on **right side** for RTL
-- ✅ Bottom tabs: Home, Cases, Hearings, Clients, Profile
-- ✅ RTL layout throughout
-- ✅ Dashboard with stats and quick actions
-- ✅ Cases API debug logging enabled
+![App Home Screen](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/app_loaded.png)

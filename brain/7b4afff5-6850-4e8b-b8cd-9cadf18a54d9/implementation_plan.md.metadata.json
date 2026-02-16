@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Plan to add drawer/sidebar navigation to WathiqMobile, replacing bottom-tab-only navigation with a Drawer + Tabs pattern. Includes creating 6 new screens (Documents, Tasks, Invoices, Forms, LegalLibrary, Settings) and a custom DrawerContent component matching the web sidebar structure.",
-  "updatedAt": "2026-02-16T14:09:56.741505Z",
-  "version": "6"
+  "summary": "Plan to add 8 new screens to Wathiq Mobile: ClientDetails, CreateClient, HearingDetails, CreateHearing, Notifications, Accounting, Reports, LegalDocuments. Also updating AppNavigator.tsx and DrawerContent.tsx for navigation integration.",
+  "updatedAt": "2026-02-16T18:31:12.376405Z",
+  "version": "7"
 }

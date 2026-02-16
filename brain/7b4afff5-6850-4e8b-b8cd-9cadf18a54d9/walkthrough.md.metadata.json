@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough documenting the addition of drawer/sidebar navigation and 6 new screens to the Wathiq mobile app, plus the login slug fix. Includes before/after screenshots showing the working dashboard with hamburger menu.",
-  "updatedAt": "2026-02-16T14:41:04.238762Z",
-  "version": "6"
+  "summary": "Walkthrough of drawer restructuring to match web Sidebar.tsx, showing the exact group mapping and screenshot of working app.",
+  "updatedAt": "2026-02-16T20:02:31.668131Z",
+  "version": "10"
 }

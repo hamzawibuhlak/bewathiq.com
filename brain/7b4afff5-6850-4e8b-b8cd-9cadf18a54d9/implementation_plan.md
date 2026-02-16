@@ -1,61 +1,95 @@
-# Drawer Navigation + Missing Screens for WathiqMobile
+# Add Remaining Sections to Wathiq Mobile
 
-## Goal
-Replace the current bottom-tab-only navigation with a **Drawer (sidebar) + Bottom Tabs** pattern, matching the web frontend's sidebar structure. Add missing screens for key sections.
+The mobile app has 12 functional screens already. This plan adds missing detail screens and new sections to match the web app.
+
+## Current State
+
+| Screen | Status | Has API |
+|--------|--------|---------|
+| Home/Dashboard | ✅ Complete | ✅ |
+| Cases List + Details | ✅ Complete | ✅ |
+| Calendar/Hearings List | ✅ Complete | ✅ |
+| Clients List | ✅ Complete | ✅ |
+| Profile | ✅ Complete | ✅ |
+| Documents | ✅ Complete | ✅ |
+| Tasks | ✅ Complete | ✅ |
+| Invoices | ✅ Complete | ✅ |
+| Forms | ✅ Complete | ✅ |
+| Legal Library | ✅ Complete | ✅ |
+| Legal Search | ✅ Complete | ✅ |
+| Settings | ✅ Complete | Local |
 
 ## Proposed Changes
 
-### Navigation Architecture
+### Phase 1 — Detail Screens
 
-```
-Drawer (sidebar) ← NEW
-├── الرئيسية (Dashboard) — existing HomeScreen
-├── إدارة العمل (Work Management)
-│   ├── العملاء — existing ClientsListScreen
-│   ├── القضايا — existing CasesListScreen → CaseDetailsScreen
-│   ├── الجلسات — existing CalendarScreen
-│   ├── المستندات — NEW DocumentsScreen
-│   ├── المهام — NEW TasksScreen
-│   ├── المكتبة القانونية — NEW LegalLibraryScreen
-│   ├── البحث الذكي — existing LegalSearchScreen
-│   └── النماذج — NEW FormsScreen
-├── التواصل (Communication)
-│   └── الرسائل — NEW placeholder
-├── المالية (Finance)
-│   ├── الفواتير — NEW InvoicesScreen
-│   └── المصروفات — NEW placeholder
-├── الإعدادات (Settings)
-│   └── الملف الشخصي — existing ProfileScreen
-└── تسجيل الخروج (Logout)
-```
+#### [NEW] ClientDetailsScreen.tsx
+`WathiqMobile/src/screens/clients/ClientDetailsScreen.tsx`
+- Client info card (name, phone, email, type, nationalId)
+- Tab-like sections: Cases, Invoices, Documents
+- Edit button → CreateClientScreen
+- Uses `clientsApi.getById(id)`
 
-### Component Changes
+#### [NEW] CreateClientScreen.tsx
+`WathiqMobile/src/screens/clients/CreateClientScreen.tsx`
+- Form: name, email, phone, clientType, nationalId, address
+- Uses `clientsApi.create()` / `clientsApi.update()`
+
+#### [NEW] HearingDetailsScreen.tsx
+`WathiqMobile/src/screens/calendar/HearingDetailsScreen.tsx`
+- Hearing info: title, date, time, court, case, status, notes
+- Status change button
+- Uses `hearingsApi.getById(id)`
+
+#### [NEW] CreateHearingScreen.tsx
+`WathiqMobile/src/screens/calendar/CreateHearingScreen.tsx`
+- Form: title, date, time, court, courtRoom, caseId, notes
+- Uses `hearingsApi.create()`
 
 ---
 
-#### [NEW] [DrawerContent.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/DrawerContent.tsx)
-- Custom drawer content with user info header, collapsible nav groups, and logout
-- Styled to match the web sidebar (Arabic RTL, purple primary color)
+### Phase 2 — New Sections
 
-#### [MODIFY] [AppNavigator.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/AppNavigator.tsx)
-- Wrap the existing MainTabNavigator inside a Drawer Navigator
-- The bottom tabs keep: Home, Cases, Hearings, Clients, Profile (5 core tabs)
-- The drawer adds access to everything else: Documents, Tasks, Invoices, Forms, Legal Library, Settings, Logout
+#### [NEW] NotificationsScreen.tsx
+`WathiqMobile/src/screens/notifications/NotificationsScreen.tsx`
+- List notifications with read/unread status
+- Mark as read, mark all as read
+- Uses `GET /notifications`
 
-#### New Screens (placeholder with title + "coming soon" for now):
+#### [NEW] AccountingScreen.tsx
+`WathiqMobile/src/screens/accounting/AccountingScreen.tsx`
+- Financial summary cards: revenue, expenses, outstanding
+- Recent transactions list
+- Uses `GET /accounting/dashboard`
 
-| Screen | File | API Module |
-|--------|------|------------|
-| DocumentsScreen | `screens/documents/DocumentsScreen.tsx` | `api/documents.ts` ✅ |
-| TasksScreen | `screens/tasks/TasksScreen.tsx` | needs new |
-| InvoicesScreen | `screens/invoices/InvoicesScreen.tsx` | `api/invoices.ts` ✅ |
-| FormsScreen | `screens/forms/FormsScreen.tsx` | `api/forms.ts` ✅ |
-| LegalLibraryScreen | `screens/legal/LegalLibraryScreen.tsx` | `api/legal.ts` ✅ |
-| SettingsScreen | `screens/settings/SettingsScreen.tsx` | N/A |
+#### [NEW] ReportsScreen.tsx
+`WathiqMobile/src/screens/reports/ReportsScreen.tsx`
+- Statistics overview cards
+- Cases by status, revenue chart
+- Uses `GET /reports/summary`
+
+#### [NEW] LegalDocumentsScreen.tsx
+`WathiqMobile/src/screens/legal-documents/LegalDocumentsScreen.tsx`
+- List legal document drafts
+- Uses `GET /legal-documents`
+
+---
+
+### Phase 3 — Navigation Integration
+
+#### [MODIFY] AppNavigator.tsx
+- Add imports for all new screens
+- Add `ClientDetails`, `CreateClient`, `HearingDetails`, `CreateHearing` to `ScreenStack`
+- Add `Notifications`, `Accounting`, `Reports`, `LegalDocuments` to `ScreenStack`
+
+#### [MODIFY] DrawerContent.tsx
+- Add new items: الإشعارات, المحاسبة, التقارير, المستندات القانونية
+- Add notification badge count
 
 ## Verification Plan
-- Build the app (`react-native run-ios`)
-- Verify drawer opens with hamburger menu icon
-- Verify all drawer items navigate correctly
-- Verify bottom tabs still work
-- Take screenshots to confirm
+
+### Automated Tests
+- Metro bundler compiles without errors
+- All screens render without crashes
+- API calls connect to correct endpoints
+- Navigation between screens works
