@@ -23,12 +23,26 @@
 | المكتبة القانونية | [LegalLibraryScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/legal/LegalLibraryScreen.tsx) |
 | الإعدادات | [SettingsScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/settings/SettingsScreen.tsx) |
 
+### 4. RTL Menu Icon Fix
+- Used [headerLeft](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/AppNavigator.tsx#61-62) for [HamburgerButton](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/AppNavigator.tsx#28-40) — iOS native-stack flips [headerLeft](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/AppNavigator.tsx#61-62)/`headerRight` in RTL mode
+- [headerLeft](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/AppNavigator.tsx#61-62) physically renders on the **right** when `I18nManager.forceRTL(true)` is active
+- Applied to both [CasesStackNavigator](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/AppNavigator.tsx#46-72) and [MainTabNavigator](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/AppNavigator.tsx#78-116) in [AppNavigator.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/AppNavigator.tsx)
+
+### 5. Cases API Debug Logging
+- Added request/response interceptors in [api.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/services/api.service.ts)
+- Added error banner to [CasesListScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/cases/CasesListScreen.tsx)
+
 ## Result
 
-![Dashboard with hamburger menu and bottom tabs](/Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/drawer_test4.png)
+````carousel
+![Before: Menu icon on LEFT (incorrect for RTL)](/Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/relaunch_check.png)
+<!-- slide -->
+![After: Menu icon on RIGHT (correct for RTL)](/Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/headerleft_test.png)
+````
 
 - ✅ Login working (test testawy logged in)
-- ✅ Hamburger menu (☰) for drawer
+- ✅ Hamburger menu (☰) on **right side** for RTL
 - ✅ Bottom tabs: Home, Cases, Hearings, Clients, Profile
-- ✅ RTL layout
+- ✅ RTL layout throughout
 - ✅ Dashboard with stats and quick actions
+- ✅ Cases API debug logging enabled
