@@ -1,72 +1,61 @@
-# Phase 39B: Super Admin — Legal Content Management & AI Configuration
+# Drawer Navigation + Missing Screens for WathiqMobile
 
-The Legal AI Search page is deployed but empty — no legal content exists in the database yet, and the Anthropic API key is not configured. This phase adds a Super Admin management page to populate and manage legal content (regulations, precedents, terms), and configures the AI connection.
+## Goal
+Replace the current bottom-tab-only navigation with a **Drawer (sidebar) + Bottom Tabs** pattern, matching the web frontend's sidebar structure. Add missing screens for key sections.
 
 ## Proposed Changes
 
-### 1. Server Configuration (Manual Step)
+### Navigation Architecture
 
-Add `ANTHROPIC_API_KEY` to the production `.env` file. This enables Claude AI responses in the Legal Search.
+```
+Drawer (sidebar) ← NEW
+├── الرئيسية (Dashboard) — existing HomeScreen
+├── إدارة العمل (Work Management)
+│   ├── العملاء — existing ClientsListScreen
+│   ├── القضايا — existing CasesListScreen → CaseDetailsScreen
+│   ├── الجلسات — existing CalendarScreen
+│   ├── المستندات — NEW DocumentsScreen
+│   ├── المهام — NEW TasksScreen
+│   ├── المكتبة القانونية — NEW LegalLibraryScreen
+│   ├── البحث الذكي — existing LegalSearchScreen
+│   └── النماذج — NEW FormsScreen
+├── التواصل (Communication)
+│   └── الرسائل — NEW placeholder
+├── المالية (Finance)
+│   ├── الفواتير — NEW InvoicesScreen
+│   └── المصروفات — NEW placeholder
+├── الإعدادات (Settings)
+│   └── الملف الشخصي — existing ProfileScreen
+└── تسجيل الخروج (Logout)
+```
 
----
-
-### 2. Backend — CRUD Endpoints for Precedents & Terms
-
-#### [MODIFY] [legal-library.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.service.ts)
-
-Add missing CRUD methods:
-- `createPrecedent(data)` — Create a legal precedent (court decision)
-- `updatePrecedent(id, data)` — Update existing precedent
-- `deletePrecedent(id)` — Delete a precedent
-- `createTerm(data)` — Create a legal glossary term
-- `updateTerm(id, data)` — Update existing term
-- `deleteTerm(id)` — Delete a term
-- `updateRegulation(id, data)` — Update existing regulation (create already exists)
-
-#### [MODIFY] [legal-library.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts)
-
-Add corresponding REST endpoints:
-- `POST /precedents`, `PATCH /precedents/:id`, `DELETE /precedents/:id`
-- `POST /terms`, `PATCH /terms/:id`, `DELETE /terms/:id`
-- `PATCH /regulations/:id`
-
----
-
-### 3. Frontend — Super Admin Legal Content Page
-
-#### [NEW] [SALegalContentPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SALegalContentPage.tsx)
-
-A full-featured management page with 3 tabs:
-
-| Tab | Content | Actions |
-|-----|---------|---------|
-| الأنظمة واللوائح | Regulations list with articles | Add / Edit / Delete |
-| السوابق القضائية | Precedents (court decisions) | Add / Edit / Delete |
-| المصطلحات القانونية | Legal terms/glossary | Add / Edit / Delete |
-
-Each tab has:
-- Search and filter capabilities
-- Modal forms for Add/Edit
-- Bulk content stats at top
-- Inline delete with confirmation
-
-#### [MODIFY] [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx)
-
-Add route: `<Route path="legal-content" element={<SALegalContentPage />} />`
-
-#### [MODIFY] [SALayout](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin)
-
-Add "المحتوى القانوني" nav item with BookOpen icon to the Super Admin sidebar.
+### Component Changes
 
 ---
+
+#### [NEW] [DrawerContent.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/DrawerContent.tsx)
+- Custom drawer content with user info header, collapsible nav groups, and logout
+- Styled to match the web sidebar (Arabic RTL, purple primary color)
+
+#### [MODIFY] [AppNavigator.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/navigation/AppNavigator.tsx)
+- Wrap the existing MainTabNavigator inside a Drawer Navigator
+- The bottom tabs keep: Home, Cases, Hearings, Clients, Profile (5 core tabs)
+- The drawer adds access to everything else: Documents, Tasks, Invoices, Forms, Legal Library, Settings, Logout
+
+#### New Screens (placeholder with title + "coming soon" for now):
+
+| Screen | File | API Module |
+|--------|------|------------|
+| DocumentsScreen | `screens/documents/DocumentsScreen.tsx` | `api/documents.ts` ✅ |
+| TasksScreen | `screens/tasks/TasksScreen.tsx` | needs new |
+| InvoicesScreen | `screens/invoices/InvoicesScreen.tsx` | `api/invoices.ts` ✅ |
+| FormsScreen | `screens/forms/FormsScreen.tsx` | `api/forms.ts` ✅ |
+| LegalLibraryScreen | `screens/legal/LegalLibraryScreen.tsx` | `api/legal.ts` ✅ |
+| SettingsScreen | `screens/settings/SettingsScreen.tsx` | N/A |
 
 ## Verification Plan
-
-### Automated
-- TypeScript compilation (frontend + backend)
-- Deploy to production and verify
-
-### Manual
-- Open Super Admin panel → navigate to Legal Content page
-- Add regulation with articles, precedent, and term
-- Navigate to Legal AI Search page and verify content appears in search results
+- Build the app (`react-native run-ios`)
+- Verify drawer opens with hamburger menu icon
+- Verify all drawer items navigate correctly
+- Verify bottom tabs still work
+- Take screenshots to confirm

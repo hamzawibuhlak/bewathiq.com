@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Task checklist for Phase 41 mobile app rebuild. Week 1 (Setup & Core) is fully completed: project initialization, theme, types, API, stores, 7 screens, navigation, and auth flow all done. Week 2 (Features) and Week 3 (Polish) are remaining.",
-  "updatedAt": "2026-02-15T18:12:20.130883Z",
-  "version": "20"
+  "summary": "Checklist for adding drawer navigation and missing screens to WathiqMobile. Tracks installing drawer package, creating new screens, building DrawerContent, modifying AppNavigator, syncing and testing.",
+  "updatedAt": "2026-02-16T14:10:33.888786Z",
+  "version": "21"
 }
