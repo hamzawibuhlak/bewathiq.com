@@ -1,8 +1,10 @@
 # Mobile App — Drawer Navigation + Missing Screens
 
-- [/] Install `@react-navigation/drawer` dependency
-- [ ] Create new screens (DocumentsScreen, TasksScreen, InvoicesScreen, FormsScreen, LegalLibraryScreen, SettingsScreen)
-- [ ] Create custom DrawerContent component
-- [ ] Modify AppNavigator to wrap tabs in drawer
-- [ ] Sync files to ~/WathiqMobile
-- [ ] Rebuild and test on simulator
+- [x] Install `@react-navigation/drawer` dependency
+- [x] Create new screens (DocumentsScreen, TasksScreen, InvoicesScreen, FormsScreen, LegalLibraryScreen, SettingsScreen)
+- [x] Create custom DrawerContent component
+- [x] Modify AppNavigator to wrap tabs in drawer
+- [x] Add `react-native-reanimated/plugin` to babel.config.js
+- [x] Sync files to ~/WathiqMobile
+- [x] Rebuild and test on simulator — ✅ Working!
+- [x] Fix login slug validation error

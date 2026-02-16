@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough documenting the complete Phase 41 Week 1 mobile app setup: 30 source files created across theme, types, API, stores, components, navigation, and 7 screens. Metro bundler verified working. Architecture decisions and next steps documented.",
-  "updatedAt": "2026-02-15T18:12:20.143739Z",
-  "version": "5"
+  "summary": "Walkthrough documenting the addition of drawer/sidebar navigation and 6 new screens to the Wathiq mobile app, plus the login slug fix. Includes before/after screenshots showing the working dashboard with hamburger menu.",
+  "updatedAt": "2026-02-16T14:41:04.238762Z",
+  "version": "6"
 }
