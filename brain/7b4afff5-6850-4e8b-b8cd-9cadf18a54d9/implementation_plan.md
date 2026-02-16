@@ -1,95 +1,69 @@
-# Add Remaining Sections to Wathiq Mobile
+# توسيع صفحة التكاملات والربط في السوبر أدمن
 
-The mobile app has 12 functional screens already. This plan adds missing detail screens and new sections to match the web app.
+## الهدف
+1. إضافة 5 أقسام تكامل جديدة في صفحة السوبر أدمن: **SMTP** | **WhatsApp Business** | **Call Center** | **Google Calendar** | **SendGrid**
+2. فصل إعدادات SMTP من env vars المُبرمجة في الكود وربطها بجدول `SystemConfig` ليتم التحكم بها من الصفحة
 
-## Current State
+## الوضع الحالي
 
-| Screen | Status | Has API |
-|--------|--------|---------|
-| Home/Dashboard | ✅ Complete | ✅ |
-| Cases List + Details | ✅ Complete | ✅ |
-| Calendar/Hearings List | ✅ Complete | ✅ |
-| Clients List | ✅ Complete | ✅ |
-| Profile | ✅ Complete | ✅ |
-| Documents | ✅ Complete | ✅ |
-| Tasks | ✅ Complete | ✅ |
-| Invoices | ✅ Complete | ✅ |
-| Forms | ✅ Complete | ✅ |
-| Legal Library | ✅ Complete | ✅ |
-| Legal Search | ✅ Complete | ✅ |
-| Settings | ✅ Complete | Local |
-
-## Proposed Changes
-
-### Phase 1 — Detail Screens
-
-#### [NEW] ClientDetailsScreen.tsx
-`WathiqMobile/src/screens/clients/ClientDetailsScreen.tsx`
-- Client info card (name, phone, email, type, nationalId)
-- Tab-like sections: Cases, Invoices, Documents
-- Edit button → CreateClientScreen
-- Uses `clientsApi.getById(id)`
-
-#### [NEW] CreateClientScreen.tsx
-`WathiqMobile/src/screens/clients/CreateClientScreen.tsx`
-- Form: name, email, phone, clientType, nationalId, address
-- Uses `clientsApi.create()` / `clientsApi.update()`
-
-#### [NEW] HearingDetailsScreen.tsx
-`WathiqMobile/src/screens/calendar/HearingDetailsScreen.tsx`
-- Hearing info: title, date, time, court, case, status, notes
-- Status change button
-- Uses `hearingsApi.getById(id)`
-
-#### [NEW] CreateHearingScreen.tsx
-`WathiqMobile/src/screens/calendar/CreateHearingScreen.tsx`
-- Form: title, date, time, court, courtRoom, caseId, notes
-- Uses `hearingsApi.create()`
+| المكوّن | الحالة |
+|---|---|
+| `SAIntegrationsPage.tsx` | يحتوي فقط على قسم AI + بطاقات "قريبًا" |
+| `email.service.ts` | يرجع لـ env vars (`SMTP_HOST/USER/PASS`) كـ fallback |
+| Backend `super-admin/config` API | جاهز — `GET/POST/DELETE` على `SystemConfig` |
+| Backend `tenants/smtp-settings` API | جاهز — للمكاتب الفردية |
 
 ---
 
-### Phase 2 — New Sections
+## التغييرات المطلوبة
 
-#### [NEW] NotificationsScreen.tsx
-`WathiqMobile/src/screens/notifications/NotificationsScreen.tsx`
-- List notifications with read/unread status
-- Mark as read, mark all as read
-- Uses `GET /notifications`
+### Backend
 
-#### [NEW] AccountingScreen.tsx
-`WathiqMobile/src/screens/accounting/AccountingScreen.tsx`
-- Financial summary cards: revenue, expenses, outstanding
-- Recent transactions list
-- Uses `GET /accounting/dashboard`
+#### [MODIFY] [email.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq system projec/watheeq-mvp/backend/src/email/email.service.ts)
+- تعديل `getTransporter()` — بدلاً من `configService.get('SMTP_HOST')` يقرأ أولاً من `SystemConfig` (category: `smtp`)
+- تعديل `getFromAddress()` — نفس الشيء
+- ترتيب الأولوية: **Tenant SMTP → SystemConfig SMTP → env vars**
 
-#### [NEW] ReportsScreen.tsx
-`WathiqMobile/src/screens/reports/ReportsScreen.tsx`
-- Statistics overview cards
-- Cases by status, revenue chart
-- Uses `GET /reports/summary`
+#### [MODIFY] [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq system projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts)
+- إضافة endpoint لاختبار SMTP: `POST config/test-smtp`
 
-#### [NEW] LegalDocumentsScreen.tsx
-`WathiqMobile/src/screens/legal-documents/LegalDocumentsScreen.tsx`
-- List legal document drafts
-- Uses `GET /legal-documents`
+#### [MODIFY] [super-admin.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq system projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts)
+- إضافة method `testSmtpConnection()` — يقرأ إعدادات SMTP من SystemConfig ويرسل بريد اختبار
 
 ---
 
-### Phase 3 — Navigation Integration
+### Frontend
 
-#### [MODIFY] AppNavigator.tsx
-- Add imports for all new screens
-- Add `ClientDetails`, `CreateClient`, `HearingDetails`, `CreateHearing` to `ScreenStack`
-- Add `Notifications`, `Accounting`, `Reports`, `LegalDocuments` to `ScreenStack`
+#### [MODIFY] [SAIntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq system projec/watheeq-mvp/frontend/src/pages/super-admin/SAIntegrationsPage.tsx)
 
-#### [MODIFY] DrawerContent.tsx
-- Add new items: الإشعارات, المحاسبة, التقارير, المستندات القانونية
-- Add notification badge count
+إعادة بناء الصفحة لتشمل **6 أقسام**:
 
-## Verification Plan
+| القسم | الحقول | الحالة |
+|---|---|---|
+| 🧠 الذكاء الاصطناعي | ✅ موجود | كما هو |
+| 📧 SMTP البريد | Host, Port, User, Pass, From, FromName, Secure | **فعّال** |
+| 📱 WhatsApp Business | API Token, Phone Number ID, Business Account ID | **إعداد** |
+| 📞 مركز الاتصال | Provider, API Key, Account SID | **إعداد** |
+| 📅 Google Calendar | Client ID, Client Secret, Redirect URI | **إعداد** |
+| ✉️ SendGrid | API Key, From Email, From Name | **إعداد** |
 
-### Automated Tests
-- Metro bundler compiles without errors
-- All screens render without crashes
-- API calls connect to correct endpoints
-- Navigation between screens works
+- كل قسم يستخدم نفس pattern الـ `super-admin/config` API مع category مختلفة
+- SMTP: أزرار **حفظ** + **اختبار الاتصال** (يرسل بريد اختبار)
+- باقي الأقسام: حفظ فقط (الاختبار لاحقاً عند بناء التكاملات)
+
+> [!IMPORTANT]
+> الـ SMTP سيكون فعّال بالكامل مع إمكانية الاختبار.
+> باقي التكاملات (WhatsApp, Call Center, Google Calendar, SendGrid) — حفظ الإعدادات فقط (UI + استدعاء config API). التكامل الفعلي يُبنى لاحقاً.
+
+---
+
+## خطة التحقق
+
+### اختبار تلقائي
+- حفظ إعدادات SMTP من الصفحة → التحقق من ظهورها في `SystemConfig`
+- اختبار اتصال SMTP → إرسال بريد اختبار
+- التحقق من أن `email.service.ts` يقرأ من `SystemConfig` عند عدم وجود tenant SMTP
+
+### اختبار يدوي  
+- فتح صفحة التكاملات في السوبر أدمن والتحقق من ظهور جميع الأقسام
+- حفظ وتعديل إعدادات كل قسم

@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Updated task with Phase 2 sections complete (Chat, Marketing, Analytics, HR, Company).",
-  "updatedAt": "2026-02-16T18:59:53.639763Z",
-  "version": "26"
+  "summary": "Task checklist for expanding Super Admin integrations page with SMTP, WhatsApp, Call Center, Google Calendar, SendGrid sections and decoupling hardcoded SMTP.",
+  "updatedAt": "2026-02-16T20:56:26.032555Z",
+  "version": "27"
 }

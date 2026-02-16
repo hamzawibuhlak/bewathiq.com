@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Plan to add 8 new screens to Wathiq Mobile: ClientDetails, CreateClient, HearingDetails, CreateHearing, Notifications, Accounting, Reports, LegalDocuments. Also updating AppNavigator.tsx and DrawerContent.tsx for navigation integration.",
-  "updatedAt": "2026-02-16T18:31:12.376405Z",
-  "version": "7"
+  "summary": "Plan to expand the Super Admin Integrations page with 5 new integration sections (SMTP Email, WhatsApp Business, Call Center, Google Calendar, SendGrid) and decouple the hardcoded SMTP fallback in email.service.ts to read from the SystemConfig table instead of .env variables.",
+  "updatedAt": "2026-02-16T20:55:43.708414Z",
+  "version": "8"
 }

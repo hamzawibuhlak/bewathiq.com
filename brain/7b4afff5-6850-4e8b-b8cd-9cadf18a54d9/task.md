@@ -1,25 +1,20 @@
-# Add Remaining Sections to Wathiq Mobile App
+# توسيع صفحة التكاملات والربط — السوبر أدمن
 
-## Phase 1 — Detail Screens
-- [x] ClientDetailsScreen
-- [x] CreateClientScreen
-- [x] HearingDetailsScreen
-- [x] CreateHearingScreen
+## Backend
+- [ ] تعديل `email.service.ts` — قراءة SMTP من SystemConfig بدل env vars
+- [ ] إضافة `testSmtpConnection()` في `super-admin.service.ts`
+- [ ] إضافة endpoint `POST config/test-smtp` في `super-admin.controller.ts`
 
-## Phase 2 — New Sections (Batch 1)
-- [x] NotificationsScreen
-- [x] AccountingScreen
-- [x] ReportsScreen
-- [x] LegalDocumentsScreen
+## Frontend
+- [ ] إعادة بناء `SAIntegrationsPage.tsx` بـ 6 أقسام:
+  - [ ] 🧠 الذكاء الاصطناعي (موجود)
+  - [ ] 📧 SMTP البريد الإلكتروني
+  - [ ] 📱 WhatsApp Business
+  - [ ] 📞 مركز الاتصال
+  - [ ] 📅 Google Calendar
+  - [ ] ✉️ SendGrid
 
-## Phase 3 — New Sections (Batch 2)
-- [x] ChatScreen (التواصل)
-- [x] MarketingScreen (التسويق)
-- [x] AnalyticsScreen (التحليلات)
-- [x] HRScreen (الموارد البشرية)
-- [x] CompanyScreen (صفحة الشركة)
-
-## Navigation Integration
-- [x] Register all screens in AppNavigator.tsx
-- [x] Add all sections to DrawerContent.tsx sidebar
-- [x] Verify Metro compiles and app loads
+## التحقق
+- [ ] فتح الصفحة والتحقق من ظهور جميع الأقسام
+- [ ] حفظ إعدادات SMTP واختبار الاتصال
+- [ ] نشر التغييرات على السيرفر
