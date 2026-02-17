@@ -1,66 +1,59 @@
-# Email OTP Verification — Walkthrough
+# WathiqApp — App Store Preparation Walkthrough
 
-## What Changed
+## Changes Made
 
-New law firm registrations now require email verification via a 6-digit OTP code before accessing the platform.
+### 1. Client Form Redesign (Mobile)
+Completely rewrote [CreateClientScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/clients/CreateClientScreen.tsx) and [ClientDetailsScreen.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/screens/clients/ClientDetailsScreen.tsx) with Company/Individual differentiation:
 
-### Registration Flow (Before → After)
+| Feature | Individual | Company |
+|---|---|---|
+| Name field | ✅ Full name | ✅ Company name |
+| Identity doc | ✅ National ID + upload | ❌ |
+| Commercial Reg | ❌ | ✅ Number + upload |
+| National Address | ❌ | ✅ Required upload |
+| Representative | ❌ | ✅ Full section |
+| Doc type chips | ❌ | ✅ 4 types |
+| Document upload | ✅ react-native-document-picker | ✅ |
 
-```mermaid
-graph LR
-    A[Register] -->|Before| B[Auto-login + Dashboard]
-    A -->|After| C[Verify Email Page]
-    C -->|Enter OTP| D[Auto-login + Dashboard]
-```
+### 2. App Renamed
+Display name changed from **WathiqMobile** → **WathiqApp** in:
+- [Info.plist](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/ios/WathiqMobile/Info.plist) (iOS)
+- [strings.xml](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/android/app/src/main/res/values/strings.xml) (Android)
+- [app.json](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/app.json)
 
----
-
-## Backend Changes
-
-### New: [email-verification.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/email-verification.service.ts)
-- [generateAndSendOTP()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/email-verification.service.ts#96-135) — creates 6-digit code, bcrypt-hashes it, stores in DB, sends via [EmailService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#6-467)
-- [verifyOTP()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/email-verification.service.ts#136-205) — validates code, enforces 5-attempt limit, activates tenant on success
-- [resendOTP()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/email-verification.service.ts#206-238) — 60-second cooldown, deletes old token, sends new one
-- Professional HTML email template with Wathiq branding
-
-### Modified: [auth.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts)
-- [register()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.service.ts#71-156) — creates tenant/user as **inactive** (`PENDING_EMAIL`), sends OTP, returns `{ requiresVerification: true }` instead of JWT
-- [verifyEmail()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.controller.ts#200-206) — **new method** that activates tenant+user and returns JWT for auto-login
-- [login()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#24-27) — detects `PENDING_EMAIL` tenants and redirects to verification
-
-### Modified: [auth.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/auth/auth.controller.ts)
-- `POST /auth/verify-email` — `{ email, code }`
-- `POST /auth/resend-otp` — `{ email }`
-
-### Database: [schema.prisma](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/prisma/schema.prisma)
-- Added `registrationStatus` and `emailVerifiedAt` to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#91-94)
-- Added `EmailVerificationToken` model
+### 3. Types Updated
+Added 15+ new fields to [Client](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/types/models.types.ts#77-110) interface in [models.types.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/src/types/models.types.ts).
 
 ---
 
-## Frontend Changes
+## App Store Screenshots
 
-### New: [VerifyEmailPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/auth/VerifyEmailPage.tsx)
-- 6 individual OTP input boxes with auto-advance, backspace navigation, and paste support
-- Auto-submit on 6th digit
-- 60-second countdown timer for resend
-- Shake animation on wrong code
-- Auto-login on successful verification
-
-### Modified: [use-auth.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-auth.ts)
-- [useRegister](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-auth.ts#44-66) redirects to `/verify-email` on success
-- [useLogin](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/use-auth.ts#8-43) detects `requiresVerification` and redirects
+````carousel
+![Login Screen](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/screenshot_login_1771361634972.png)
+<!-- slide -->
+![Dashboard](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/screenshot_dashboard_1771361657350.png)
+<!-- slide -->
+![Cases List](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/screenshot_cases_1771361690967.png)
+<!-- slide -->
+![Clients List](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/screenshot_clients_1771361711857.png)
+````
 
 ---
 
-## Verification
+## iOS Build Configuration
 
-Tested the full registration flow on production:
+| Setting | Value |
+|---|---|
+| Bundle ID | `com.bewathiq.mobile` |
+| Version | `1.0` |
+| Build | `1` |
+| Display Name | `WathiqApp` |
+| Privacy Manifest | ✅ Configured |
+| ATS | ✅ Secure (no arbitrary loads) |
 
-1. Fill registration form (3 steps) ✅
-2. Submit → redirected to `/verify-email` ✅
-3. OTP input page displays correctly with email and countdown ✅
+## Next Steps for App Store Submission
 
-![Verify Email Page](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/verify_email_page_final_1771336026167.png)
-
-![Registration Flow Recording](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/otp_registration_test_1771335530506.webp)
+1. **Add App Icon** — Place your 1024×1024 icon in [ios/WathiqMobile/Images.xcassets/AppIcon.appiconset/](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/ios/WathiqMobile/Images.xcassets/AppIcon.appiconset)
+2. **Build in Xcode** — Open `.xcworkspace`, select signing team, archive
+3. **Upload to App Store Connect** — Use Xcode Organizer or Transporter
+4. **Fill App Store Listing** — Description, keywords, screenshots, privacy policy URL

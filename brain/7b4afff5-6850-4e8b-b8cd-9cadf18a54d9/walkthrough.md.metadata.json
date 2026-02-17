@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough documenting the email OTP verification implementation, covering all backend/frontend changes, deployment, and verification with screenshots.",
-  "updatedAt": "2026-02-17T13:48:07.666734Z",
-  "version": "15"
+  "summary": "Walkthrough documenting the WathiqApp mobile client form update, App Store screenshots generation, and app rename from WathiqMobile to WathiqApp.",
+  "updatedAt": "2026-02-17T20:55:47.907231Z",
+  "version": "16"
 }
