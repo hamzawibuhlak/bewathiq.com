@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Plan for converting the module control system from module-level only to feature-level granular toggles. Covers data structure changes, backend service/controller updates, frontend constants/hook/SA page modifications.",
-  "updatedAt": "2026-02-17T12:16:51.416355Z",
-  "version": "11"
+  "summary": "Detailed implementation plan for adding email OTP verification during new law firm registration. Covers database schema changes (EmailVerificationToken model, Tenant fields), backend services (EmailVerificationService, auth flow modifications), frontend pages (VerifyEmailPage with 6-digit OTP, RegisterPage redirect), and route protection. Reuses existing SMTP infrastructure and SMTPIntegrationPage.",
+  "updatedAt": "2026-02-17T13:10:15.014837Z",
+  "version": "12"
 }

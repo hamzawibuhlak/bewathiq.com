@@ -1,0 +1,29 @@
+# Email OTP Verification for New Registration
+
+## Planning
+- [/] Research existing auth flow, Prisma schema, SMTP setup
+- [ ] Create implementation plan
+
+## Database
+- [ ] Add SmtpSettings model + migration
+- [ ] Add EmailVerificationToken model + migration
+- [ ] Add registrationStatus + emailVerifiedAt to Tenant
+
+## Backend
+- [ ] SmtpService (send, test, encrypt/decrypt)
+- [ ] EmailVerificationService (generate, verify, resend)
+- [ ] Modify register() → returns { email } only
+- [ ] Add verifyEmail() → returns tokens
+- [ ] Add resendOTP() with 60s cooldown
+- [ ] SmtpController (SA endpoints)
+- [ ] HTML email template
+
+## Frontend
+- [ ] SmtpSettingsPage (Super Admin)
+- [ ] VerifyEmailPage (6-box OTP input)
+- [ ] Modify RegisterPage (redirect after success)
+- [ ] Route protection for PENDING accounts
+
+## Deploy & Verify
+- [ ] Deploy to production
+- [ ] Test full registration + OTP flow

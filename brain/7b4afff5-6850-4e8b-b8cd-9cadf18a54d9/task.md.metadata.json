@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Completed task checklist for implementing feature-level toggle control across frontend constants, backend service/controller, frontend hook/API, SA UI page, and production deployment.",
-  "updatedAt": "2026-02-17T13:01:29.699507Z",
-  "version": "34"
+  "summary": "Task checklist for email OTP verification, tracking progress through database, backend, frontend, and deployment phases.",
+  "updatedAt": "2026-02-17T13:10:51.954076Z",
+  "version": "36"
 }
