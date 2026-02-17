@@ -1,0 +1,43 @@
+# توسيع صفحة التكاملات والربط — السوبر أدمن
+
+## ملخص
+تم توسيع صفحة التكاملات في السوبر أدمن من قسم AI واحد + بطاقات "قريبًا" إلى **6 أقسام فعّالة** مع فصل SMTP من env vars.
+
+## التغييرات
+
+### Backend
+| الملف | التغيير |
+|---|---|
+| [email.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts) | فصل SMTP: الأولوية الآن Tenant → SystemConfig → env vars |
+| [super-admin.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts) | إضافة [testSmtpConnection()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts#339-400) — إرسال بريد اختبار |
+| [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) | إضافة `POST config/test-smtp` endpoint |
+
+### Frontend
+| الملف | التغيير |
+|---|---|
+| [SAIntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAIntegrationsPage.tsx) | إعادة بناء كاملة بـ 6 تبويبات |
+
+## الأقسام الجديدة
+
+````carousel
+![صفحة التكاملات - نظرة عامة](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/integrations_tabs_overview_1771315144314.png)
+<!-- slide -->
+![قسم SMTP البريد](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/smtp_tab_settings_1771315156901.png)
+<!-- slide -->
+![قسم واتساب Business API](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/whatsapp_tab_settings_1771315169381.png)
+````
+
+| القسم | الحقول | الحالة |
+|---|---|---|
+| 🧠 الذكاء الاصطناعي | Provider, API Keys, Models | ✅ فعّال |
+| 📧 SMTP البريد | Host, Port, User, Pass, From, SSL + اختبار | ✅ فعّال |
+| 📱 واتساب | Access Token, Phone ID, Business ID | ✅ حفظ |
+| 📞 مركز الاتصال | Provider (Twilio/Vonage/Unifonic), API Key, SID | ✅ حفظ |
+| 📅 Google Calendar | Client ID, Secret, Redirect URI | ✅ حفظ |
+| ✉️ SendGrid | API Key, From Email, From Name | ✅ حفظ |
+
+## النشر
+تم النشر بنجاح — جميع الحاويات **healthy** ✅
+
+## التسجيل المرئي
+![تسجيل فحص الصفحة](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/integrations_final_verify_1771315112962.webp)

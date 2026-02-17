@@ -1,0 +1,19 @@
+# توسيع صفحة التكاملات والربط — السوبر أدمن
+
+## Backend
+- [x] تعديل [email.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts) — قراءة SMTP من SystemConfig بدل env vars
+- [x] إضافة [testSmtpConnection()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts#339-400) في [super-admin.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.service.ts)
+- [x] إضافة endpoint `POST config/test-smtp` في [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts)
+
+## Frontend
+- [x] إعادة بناء [SAIntegrationsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAIntegrationsPage.tsx) بـ 6 أقسام:
+  - [x] 🧠 الذكاء الاصطناعي
+  - [x] 📧 SMTP البريد الإلكتروني
+  - [x] 📱 WhatsApp Business
+  - [x] 📞 مركز الاتصال
+  - [x] 📅 Google Calendar
+  - [x] ✉️ SendGrid
+
+## التحقق
+- [x] نشر التغييرات على السيرفر
+- [x] فتح الصفحة والتحقق من ظهور جميع الأقسام
