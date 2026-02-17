@@ -1,31 +1,18 @@
-# Phase 42: Super Admin Module Control
+# Feature-Level Toggle Control
 
-## Database
-- [x] Add `TenantModuleSettings` model to Prisma schema
-- [x] Add `ModuleChangeLog` model to Prisma schema
-- [x] Add relations to `Tenant` and `SuperAdminUser`
-- [ ] Run migration (on deploy)
+## Constants
+- [ ] Update frontend `modules.constants.ts` — features as objects with keys
+- [ ] Update backend `modules.constants.ts` — features as objects + `getDefaultModulesByPlan` with features
 
 ## Backend
-- [x] Create `modules.constants.ts` with module registry + plan defaults
-- [x] Create `module-settings.service.ts` with CRUD methods
-- [x] Add module management endpoints to `super-admin.controller.ts`
-- [x] Register service in `super-admin.module.ts`
-- [x] Add tenant-side `GET /users/my-modules` endpoint
+- [ ] Update `module-settings.service.ts` — add `updateFeature()`, merge feature defaults
+- [ ] Update `super-admin.controller.ts` — add feature toggle endpoint
 
-## Frontend — Core
-- [x] Create `modules.constants.ts` (frontend mirror)
-- [x] Create `useModules.ts` hook (fetch + zustand cache)
-- [x] Add `moduleKey` to sidebar nav items
-- [x] Integrate module check in `Sidebar.tsx` `filterItems()`
+## Frontend
+- [ ] Update `useModules.ts` — add `isFeatureEnabled(moduleKey, featureKey)`
+- [ ] Update `superAdmin.ts` — add `updateTenantFeature()` API method
+- [ ] Update `SAModuleControlPage.tsx` — feature toggles in expanded cards
 
-## Frontend — Super Admin UI
-- [x] Create `SAModuleControlPage.tsx`
-- [x] Add module management API methods to `superAdmin.ts`
-- [x] Add route in `App.tsx`
-- [x] Add "إدارة الأقسام" button in `SATenantDetailsPage.tsx`
-
-## Deployment & Verification
+## Deploy & Verify
 - [ ] Deploy to production
-- [ ] Verify SA can toggle modules
-- [ ] Verify tenant sidebar reflects changes
+- [ ] Verify feature toggle works from SA page

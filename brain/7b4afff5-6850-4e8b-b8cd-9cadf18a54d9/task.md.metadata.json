@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Task checklist for Phase 42: Super Admin Module Control. All items completed except deployment and verification.",
-  "updatedAt": "2026-02-17T11:42:03.547484Z",
-  "version": "32"
+  "summary": "Task checklist for feature-level toggle control implementation. Covers constants, backend service/controller, frontend hook/SA page/API changes.",
+  "updatedAt": "2026-02-17T12:17:23.686621Z",
+  "version": "33"
 }
