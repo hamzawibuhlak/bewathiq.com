@@ -1,0 +1,34 @@
+# Phase 42: Super Admin Module Control
+
+## Database
+- [ ] Add `TenantModuleSettings` model to Prisma schema
+- [ ] Add `ModuleChangeLog` model to Prisma schema
+- [ ] Add relations to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#91-94) and `SuperAdminUser`
+- [ ] Run migration
+
+## Backend
+- [ ] Create `modules.constants.ts` with module registry + plan defaults
+- [ ] Create `module-settings.service.ts` with CRUD methods
+- [ ] Add module management endpoints to [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts)
+- [ ] Register service in [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts)
+- [ ] Add tenant-side `GET /api/my-modules` endpoint
+
+## Frontend — Core
+- [ ] Create `modules.constants.ts` (frontend mirror)
+- [ ] Create `useModules.ts` hook (fetch + zustand cache)
+- [ ] Add `moduleKey` to sidebar nav items
+- [ ] Integrate module check in [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) [filterItems()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx#222-232)
+
+## Frontend — Super Admin UI
+- [ ] Create `SAModuleControlPage.tsx`
+- [ ] Add module management API methods to [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts)
+- [ ] Add route in [App.tsx](file:///Users/hamzabuhlakq/WathiqMobile/App.tsx)
+- [ ] Add "إدارة الأقسام" button in [SATenantDetailsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SATenantDetailsPage.tsx)
+
+## Frontend — Disabled Module Page
+- [ ] Create `ModuleDisabledPage.tsx`
+
+## Deployment & Verification
+- [ ] Deploy to production
+- [ ] Verify SA can toggle modules
+- [ ] Verify tenant sidebar reflects changes

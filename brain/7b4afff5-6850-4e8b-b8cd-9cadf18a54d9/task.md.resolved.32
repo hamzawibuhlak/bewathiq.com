@@ -1,0 +1,31 @@
+# Phase 42: Super Admin Module Control
+
+## Database
+- [x] Add `TenantModuleSettings` model to Prisma schema
+- [x] Add `ModuleChangeLog` model to Prisma schema
+- [x] Add relations to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#91-94) and `SuperAdminUser`
+- [ ] Run migration (on deploy)
+
+## Backend
+- [x] Create [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) with module registry + plan defaults
+- [x] Create [module-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts) with CRUD methods
+- [x] Add module management endpoints to [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts)
+- [x] Register service in [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts)
+- [x] Add tenant-side `GET /users/my-modules` endpoint
+
+## Frontend — Core
+- [x] Create [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) (frontend mirror)
+- [x] Create [useModules.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts) hook (fetch + zustand cache)
+- [x] Add `moduleKey` to sidebar nav items
+- [x] Integrate module check in [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) [filterItems()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx#232-244)
+
+## Frontend — Super Admin UI
+- [x] Create [SAModuleControlPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAModuleControlPage.tsx)
+- [x] Add module management API methods to [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts)
+- [x] Add route in [App.tsx](file:///Users/hamzabuhlakq/WathiqMobile/App.tsx)
+- [x] Add "إدارة الأقسام" button in [SATenantDetailsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SATenantDetailsPage.tsx)
+
+## Deployment & Verification
+- [ ] Deploy to production
+- [ ] Verify SA can toggle modules
+- [ ] Verify tenant sidebar reflects changes

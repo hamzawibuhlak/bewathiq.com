@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "Plan to expand the Super Admin Integrations page with 5 new integration sections (SMTP Email, WhatsApp Business, Call Center, Google Calendar, SendGrid) and decouple the hardcoded SMTP fallback in email.service.ts to read from the SystemConfig table instead of .env variables.",
-  "updatedAt": "2026-02-16T20:55:43.708414Z",
-  "version": "8"
+  "summary": "Implementation plan for Phase 42: Super Admin Module Control. Covers database schema (TenantModuleSettings + ModuleChangeLog), backend service/controller, frontend module constants/store, sidebar integration, SA management UI, and disabled module page. Key decision: module-level toggles only in V1, no page-level; zustand store; PROFESSIONAL plan name matching existing enum.",
+  "updatedAt": "2026-02-17T11:30:31.946392Z",
+  "version": "10"
 }

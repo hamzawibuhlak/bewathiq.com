@@ -1,34 +1,63 @@
-# Wathiq Mobile — Drawer Restructured to Match Web
+# Phase 42: Super Admin Module Control — Walkthrough
 
-## What Changed
+## Summary
 
-Restructured the mobile drawer navigation in [DrawerContent.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/DrawerContent.tsx) to exactly match the web app's [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx).
+Implemented a complete module control system that lets Super Admin toggle visibility of sections/pages per tenant. Changes span database, backend, and frontend.
 
-## Before vs After
+## Changes Made
 
-| Web Sidebar | Mobile Drawer (now) |
-|---|---|
-| لوحة التحكم (standalone) | ✅ لوحة التحكم (standalone at top) |
-| إدارة العمل (10 items) | ✅ إدارة العمل (9 items) |
-| التواصل (4 items) | ✅ التواصل (1 item — الدردشة) |
-| التسويق (8 items) | ✅ التسويق (1 item) |
-| التحليلات (3 items) | ✅ التحليلات (2 items) |
-| الموارد البشرية (4 items) | ✅ الموارد البشرية (1 item) |
-| المالية (3 items) | ✅ المالية (2 items) |
-| الإعدادات (3 items) | ✅ الإعدادات (2 items) |
-| صفحة الشركة (bottom) | ✅ صفحة الشركة (bottom, green) |
+### Database (Prisma Schema)
 
-> [!NOTE]
-> Some web sections have more sub-items (e.g. التسويق has 8 sub-pages on web). The mobile shows the screens that are currently implemented. More can be added as they get built.
+- **`TenantModuleSettings`** — 1:1 with Tenant, stores JSON `modules` field
+- **`ModuleChangeLog`** — audit trail for every toggle action
+- Relations added to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#91-94) and `SuperAdminUser`
 
-## Files Modified
+### Backend
 
-- [DrawerContent.tsx](file:///Users/hamzabuhlakq/WathiqMobile/src/navigation/DrawerContent.tsx) — Complete restructure of `navGroups` + Dashboard/Company standalone items + new styles
+| File | Change |
+|------|--------|
+| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/constants/modules.constants.ts) | 19-module registry + plan defaults (BASIC/PROFESSIONAL/ENTERPRISE) |
+| [module-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts) | CRUD: get, update, bulk, apply-plan, changelog |
+| [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) | 5 new endpoints under `/super-admin/tenants/:id/modules*` |
+| [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts) | Registered [ModuleSettingsService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts#5-212) |
+| [users.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.controller.ts) | `GET /users/my-modules` — tenant-side endpoint |
 
-## Verification
+### Frontend
 
-- ✅ iOS build succeeded
-- ✅ Metro bundled 100% with no errors
-- ✅ App loads correctly on simulator
+| File | Change |
+|------|--------|
+| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) | Frontend module registry mirror |
+| [useModules.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts) | Zustand store with 5-min cache + [isModuleEnabled()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts#49-55) |
+| [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) | `moduleKey` on all items + module check in [filterItems()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx#222-232) |
+| [SAModuleControlPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAModuleControlPage.tsx) | SA management page with toggles, plan apply, changelog |
+| [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts) | 5 module API methods |
+| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | Route `/super-admin/tenants/:id/modules` |
+| [SATenantDetailsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SATenantDetailsPage.tsx) | "إدارة الأقسام" navigation button |
 
-![App Home Screen](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/app_loaded.png)
+## Deployment Required
+
+> [!IMPORTANT]
+> A Prisma migration must run on deploy to create `tenant_module_settings` and `module_change_logs` tables. The lint errors in the service file will resolve after migration.
+
+## How It Works
+
+```mermaid
+sequenceDiagram
+    participant SA as Super Admin
+    participant API as Backend API
+    participant DB as Database
+    participant Tenant as Tenant User
+    participant Sidebar as Sidebar Component
+
+    SA->>API: PATCH /tenants/:id/modules/:key {enabled: false}
+    API->>DB: Upsert TenantModuleSettings
+    API->>DB: Create ModuleChangeLog
+    API-->>SA: Success
+
+    Tenant->>API: GET /users/my-modules
+    API->>DB: Fetch TenantModuleSettings
+    API-->>Tenant: {cases: {enabled: true}, marketing: {enabled: false}, ...}
+
+    Tenant->>Sidebar: isModuleEnabled('marketing')
+    Sidebar-->>Tenant: false → hide marketing items
+```

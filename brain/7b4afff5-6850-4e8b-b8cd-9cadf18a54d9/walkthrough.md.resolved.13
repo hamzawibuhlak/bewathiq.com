@@ -1,0 +1,63 @@
+# Phase 42: Super Admin Module Control — Walkthrough
+
+## Summary
+
+Implemented a complete module control system that lets Super Admin toggle visibility of sections/pages per tenant. Changes span database, backend, and frontend.
+
+## Changes Made
+
+### Database (Prisma Schema)
+
+- **`TenantModuleSettings`** — 1:1 with Tenant, stores JSON `modules` field
+- **`ModuleChangeLog`** — audit trail for every toggle action
+- Relations added to [Tenant](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#91-94) and `SuperAdminUser`
+
+### Backend
+
+| File | Change |
+|------|--------|
+| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/constants/modules.constants.ts) | 19-module registry + plan defaults (BASIC/PROFESSIONAL/ENTERPRISE) |
+| [module-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts) | CRUD: get, update, bulk, apply-plan, changelog |
+| [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) | 5 new endpoints under `/super-admin/tenants/:id/modules*` |
+| [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts) | Registered [ModuleSettingsService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts#5-212) |
+| [users.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.controller.ts) | `GET /users/my-modules` — tenant-side endpoint |
+
+### Frontend
+
+| File | Change |
+|------|--------|
+| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) | Frontend module registry mirror |
+| [useModules.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts) | Zustand store with 5-min cache + [isModuleEnabled()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts#49-55) |
+| [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) | `moduleKey` on all items + module check in [filterItems()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx#222-232) |
+| [SAModuleControlPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAModuleControlPage.tsx) | SA management page with toggles, plan apply, changelog |
+| [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts) | 5 module API methods |
+| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | Route `/super-admin/tenants/:id/modules` |
+| [SATenantDetailsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SATenantDetailsPage.tsx) | "إدارة الأقسام" navigation button |
+
+## Deployment Required
+
+> [!IMPORTANT]
+> A Prisma migration must run on deploy to create `tenant_module_settings` and `module_change_logs` tables. The lint errors in the service file will resolve after migration.
+
+## How It Works
+
+```mermaid
+sequenceDiagram
+    participant SA as Super Admin
+    participant API as Backend API
+    participant DB as Database
+    participant Tenant as Tenant User
+    participant Sidebar as Sidebar Component
+
+    SA->>API: PATCH /tenants/:id/modules/:key {enabled: false}
+    API->>DB: Upsert TenantModuleSettings
+    API->>DB: Create ModuleChangeLog
+    API-->>SA: Success
+
+    Tenant->>API: GET /users/my-modules
+    API->>DB: Fetch TenantModuleSettings
+    API-->>Tenant: {cases: {enabled: true}, marketing: {enabled: false}, ...}
+
+    Tenant->>Sidebar: isModuleEnabled('marketing')
+    Sidebar-->>Tenant: false → hide marketing items
+```
