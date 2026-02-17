@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Task checklist for feature-level toggle control implementation. Covers constants, backend service/controller, frontend hook/SA page/API changes.",
-  "updatedAt": "2026-02-17T12:17:23.686621Z",
-  "version": "33"
+  "summary": "Completed task checklist for implementing feature-level toggle control across frontend constants, backend service/controller, frontend hook/API, SA UI page, and production deployment.",
+  "updatedAt": "2026-02-17T13:01:29.699507Z",
+  "version": "34"
 }

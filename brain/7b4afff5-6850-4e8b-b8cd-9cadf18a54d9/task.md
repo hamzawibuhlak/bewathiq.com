@@ -1,18 +1,12 @@
 # Feature-Level Toggle Control
 
-## Constants
-- [ ] Update frontend `modules.constants.ts` — features as objects with keys
-- [ ] Update backend `modules.constants.ts` — features as objects + `getDefaultModulesByPlan` with features
-
-## Backend
-- [ ] Update `module-settings.service.ts` — add `updateFeature()`, merge feature defaults
-- [ ] Update `super-admin.controller.ts` — add feature toggle endpoint
-
-## Frontend
-- [ ] Update `useModules.ts` — add `isFeatureEnabled(moduleKey, featureKey)`
-- [ ] Update `superAdmin.ts` — add `updateTenantFeature()` API method
-- [ ] Update `SAModuleControlPage.tsx` — feature toggles in expanded cards
-
-## Deploy & Verify
-- [ ] Deploy to production
-- [ ] Verify feature toggle works from SA page
+- [x] Update frontend constants (`modules.constants.ts`) — `FeatureDefinition` objects with key/labelAr/isCore
+- [x] Update backend constants (`modules.constants.ts`) — add features array, update `getDefaultModulesByPlan`
+- [x] Backend service (`module-settings.service.ts`) — add `updateFeature()`, deep merge, cascade logic
+- [x] Backend controller (`super-admin.controller.ts`) — add `PATCH .../features/:featureKey` endpoint
+- [x] Frontend API (`superAdmin.ts`) — add `updateTenantFeature()` method
+- [x] Frontend hook (`useModules.ts`) — add `isFeatureEnabled(moduleKey, featureKey)`
+- [x] SA Module Control Page — feature toggle UI with expand/collapse, lock for core features
+- [x] Fix TS build error (Lock icon `title` prop)
+- [x] Deploy to production
+- [x] Verify on production — feature toggles visible and functional

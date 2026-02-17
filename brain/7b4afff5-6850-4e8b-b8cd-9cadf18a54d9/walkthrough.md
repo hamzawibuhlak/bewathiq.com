@@ -1,63 +1,41 @@
-# Phase 42: Super Admin Module Control — Walkthrough
+# Feature-Level Toggle Control — Walkthrough
 
 ## Summary
-
-Implemented a complete module control system that lets Super Admin toggle visibility of sections/pages per tenant. Changes span database, backend, and frontend.
+Implemented granular feature-level toggles within the existing module control system. Super Admins can now enable/disable individual features within each module, not just entire modules.
 
 ## Changes Made
 
-### Database (Prisma Schema)
-
-- **`TenantModuleSettings`** — 1:1 with Tenant, stores JSON `modules` field
-- **`ModuleChangeLog`** — audit trail for every toggle action
-- Relations added to `Tenant` and `SuperAdminUser`
+### Data Structure
+- **`FeatureDefinition`** interface: `{ key: string, labelAr: string, isCore?: boolean }`
+- Module state now stores `{ enabled: boolean, features: Record<string, boolean> }` per module
+- `getDefaultModulesByPlan()` returns feature-level defaults (all features enabled when module is enabled)
 
 ### Backend
-
 | File | Change |
 |------|--------|
-| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/constants/modules.constants.ts) | 19-module registry + plan defaults (BASIC/PROFESSIONAL/ENTERPRISE) |
-| [module-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts) | CRUD: get, update, bulk, apply-plan, changelog |
-| [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) | 5 new endpoints under `/super-admin/tenants/:id/modules*` |
-| [super-admin.module.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.module.ts) | Registered `ModuleSettingsService` |
-| [users.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.controller.ts) | `GET /users/my-modules` — tenant-side endpoint |
+| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/constants/modules.constants.ts) | Added `features: FeatureDefinition[]` to each module, updated `getDefaultModulesByPlan` |
+| [module-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts) | Added `updateFeature()`, deep merge logic, cascade enable/disable |
+| [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) | Added `PATCH tenants/:id/modules/:moduleKey/features/:featureKey` |
 
 ### Frontend
-
 | File | Change |
 |------|--------|
-| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) | Frontend module registry mirror |
-| [useModules.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts) | Zustand store with 5-min cache + `isModuleEnabled()` |
-| [Sidebar.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/components/layout/Sidebar.tsx) | `moduleKey` on all items + module check in `filterItems()` |
-| [SAModuleControlPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAModuleControlPage.tsx) | SA management page with toggles, plan apply, changelog |
-| [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts) | 5 module API methods |
-| [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) | Route `/super-admin/tenants/:id/modules` |
-| [SATenantDetailsPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SATenantDetailsPage.tsx) | "إدارة الأقسام" navigation button |
+| [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) | Converted `features` from `string[]` to `FeatureDefinition[]` with keys |
+| [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts) | Added `updateTenantFeature()` API method |
+| [useModules.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts) | Added `isFeatureEnabled(moduleKey, featureKey)` |
+| [SAModuleControlPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAModuleControlPage.tsx) | Full UI with expandable feature toggles per module |
 
-## Deployment Required
+## Key Design Decisions
+- **Cascade**: Disabling a module disables all its features; enabling re-enables all
+- **Core features**: Marked with `isCore: true` and locked (cannot be disabled)
+- **Graceful fallback**: `isFeatureEnabled()` returns `true` if no modules fetched yet
+- **Changelog**: Feature-level changes logged as `moduleKey.featureKey` with `ENABLE_FEATURE`/`DISABLE_FEATURE` actions
 
-> [!IMPORTANT]
-> A Prisma migration must run on deploy to create `tenant_module_settings` and `module_change_logs` tables. The lint errors in the service file will resolve after migration.
+## Verification
+- ✅ Deployed to production (76.13.254.7)
+- ✅ Logged into SA panel, navigated to module control
+- ✅ Modules display with descriptions and feature counts
+- ✅ Expanded Cases module — individual feature toggles visible
+- ✅ Toggled a feature — loading state and successful update confirmed
 
-## How It Works
-
-```mermaid
-sequenceDiagram
-    participant SA as Super Admin
-    participant API as Backend API
-    participant DB as Database
-    participant Tenant as Tenant User
-    participant Sidebar as Sidebar Component
-
-    SA->>API: PATCH /tenants/:id/modules/:key {enabled: false}
-    API->>DB: Upsert TenantModuleSettings
-    API->>DB: Create ModuleChangeLog
-    API-->>SA: Success
-
-    Tenant->>API: GET /users/my-modules
-    API->>DB: Fetch TenantModuleSettings
-    API-->>Tenant: {cases: {enabled: true}, marketing: {enabled: false}, ...}
-
-    Tenant->>Sidebar: isModuleEnabled('marketing')
-    Sidebar-->>Tenant: false → hide marketing items
-```
+![Feature toggles verification](file:///Users/hamzabuhlakq/.gemini/antigravity/brain/7b4afff5-6850-4e8b-b8cd-9cadf18a54d9/feature_toggles_final_1771333042508.webp)

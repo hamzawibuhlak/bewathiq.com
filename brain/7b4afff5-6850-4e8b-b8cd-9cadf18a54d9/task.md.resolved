@@ -1,18 +1,12 @@
 # Feature-Level Toggle Control
 
-## Constants
-- [ ] Update frontend [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) — features as objects with keys
-- [ ] Update backend [modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts) — features as objects + [getDefaultModulesByPlan](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/constants/modules.constants.ts#334-344) with features
-
-## Backend
-- [ ] Update [module-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts) — add `updateFeature()`, merge feature defaults
-- [ ] Update [super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts) — add feature toggle endpoint
-
-## Frontend
-- [ ] Update [useModules.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts) — add `isFeatureEnabled(moduleKey, featureKey)`
-- [ ] Update [superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts) — add `updateTenantFeature()` API method
-- [ ] Update [SAModuleControlPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SAModuleControlPage.tsx) — feature toggles in expanded cards
-
-## Deploy & Verify
-- [ ] Deploy to production
-- [ ] Verify feature toggle works from SA page
+- [x] Update frontend constants ([modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts)) — [FeatureDefinition](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/constants/modules.constants.ts#5-10) objects with key/labelAr/isCore
+- [x] Update backend constants ([modules.constants.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/constants/modules.constants.ts)) — add features array, update [getDefaultModulesByPlan](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/common/constants/modules.constants.ts#516-535)
+- [x] Backend service ([module-settings.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts)) — add [updateFeature()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/module-settings.service.ts#139-211), deep merge, cascade logic
+- [x] Backend controller ([super-admin.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts)) — add `PATCH .../features/:featureKey` endpoint
+- [x] Frontend API ([superAdmin.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/api/superAdmin.ts)) — add [updateTenantFeature()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/super-admin/super-admin.controller.ts#310-321) method
+- [x] Frontend hook ([useModules.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts)) — add [isFeatureEnabled(moduleKey, featureKey)](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/hooks/useModules.ts#57-68)
+- [x] SA Module Control Page — feature toggle UI with expand/collapse, lock for core features
+- [x] Fix TS build error (Lock icon `title` prop)
+- [x] Deploy to production
+- [x] Verify on production — feature toggles visible and functional
