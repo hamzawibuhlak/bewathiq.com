@@ -1,0 +1,8 @@
+# Legal Content PDF Upload
+
+- [ ] Install `pdf-parse` in backend
+- [ ] Add `createRegulationFromPdf()` to [legal-library.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.service.ts)
+- [ ] Add `POST /regulations/upload-pdf` endpoint to controller
+- [ ] Update frontend RegulationsTab with text/PDF toggle
+- [ ] Deploy backend + frontend
+- [ ] Test with PDF upload

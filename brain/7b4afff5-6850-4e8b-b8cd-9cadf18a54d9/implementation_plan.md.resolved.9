@@ -1,0 +1,40 @@
+# Legal Content — PDF Upload with Text Extraction
+
+Add ability to upload PDF files in the Super Admin Legal Content page, automatically extract text, and save as a regulation in the legal library.
+
+## Proposed Changes
+
+### Backend — PDF Upload Endpoint
+
+#### [MODIFY] [legal-library.controller.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.controller.ts)
+- Add `POST /legal-library/regulations/upload-pdf` endpoint
+- Uses `FileInterceptor` (multer) to accept PDF upload (max 20MB)
+- Calls service to parse PDF and create regulation
+
+#### [MODIFY] [legal-library.service.ts](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/legal-library/legal-library.service.ts)
+- Add `createRegulationFromPdf()` method
+- Uses `pdf-parse` npm package to extract text from PDF buffer
+- Creates the regulation with extracted text as content
+- Returns the created regulation
+
+#### npm dependency
+- Install `pdf-parse` package for PDF text extraction
+
+---
+
+### Frontend — Add Input Mode Toggle
+
+#### [MODIFY] [SALegalContentPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/super-admin/SALegalContentPage.tsx)
+- Add "نص" / "PDF" toggle buttons in the RegulationsTab form
+- **Text mode**: current behavior (textarea for content)
+- **PDF mode**: file input for `.pdf`, drag-and-drop zone
+- On PDF upload → send as `FormData` to backend → extract text → auto-fill content field
+- Show extracted text preview before final save
+- Loading state during PDF extraction
+
+## Verification Plan
+
+### Manual Verification
+- Upload a PDF file and verify text extraction
+- Confirm the regulation is saved with the extracted text
+- Test with Arabic PDF documents
