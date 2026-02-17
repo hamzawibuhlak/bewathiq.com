@@ -5,19 +5,19 @@
 - [x] Create implementation plan (approved)
 
 ## Database
-- [/] Add EmailVerificationToken model + Tenant fields + migration
+- [x] Add EmailVerificationToken model + Tenant fields + migration
 
 ## Backend
-- [ ] Create EmailVerificationService (generate, verify, resend)
-- [ ] Modify auth.service.ts (register + verifyEmail + login)
-- [ ] Modify auth.controller.ts (new endpoints)
-- [ ] Update auth.module.ts
+- [x] Create EmailVerificationService (generate, verify, resend)
+- [x] Modify auth.service.ts (register + verifyEmail + login)
+- [x] Modify auth.controller.ts (new endpoints)
+- [x] Update auth.module.ts
 
 ## Frontend
-- [ ] Create VerifyEmailPage (6-box OTP input)
-- [ ] Modify use-auth.ts (register/login redirect)
-- [ ] Add route in App.tsx
+- [x] Create VerifyEmailPage (6-box OTP input)
+- [x] Modify use-auth.ts (register/login redirect)
+- [x] Add route in App.tsx
 
 ## Deploy & Verify
-- [ ] Deploy to production
-- [ ] Test full registration + OTP flow
+- [x] Deploy to production
+- [x] Test full registration + OTP flow ✅

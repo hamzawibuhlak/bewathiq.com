@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Walkthrough documenting the feature-level toggle control implementation, covering all changed files across frontend and backend, key design decisions (cascade, core features, graceful fallback), and production verification results.",
-  "updatedAt": "2026-02-17T13:01:29.702404Z",
-  "version": "14"
+  "summary": "Walkthrough documenting the email OTP verification implementation, covering all backend/frontend changes, deployment, and verification with screenshots.",
+  "updatedAt": "2026-02-17T13:48:07.666734Z",
+  "version": "15"
 }
