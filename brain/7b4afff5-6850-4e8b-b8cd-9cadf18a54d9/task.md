@@ -1,15 +1,15 @@
-# App Store Preparation
+# Tasks
 
-## iOS Build & Configuration
-- [/] Review iOS project configuration (Bundle ID, version, signing)
-- [ ] Verify build compiles successfully
-- [ ] Configure App Store metadata in Info.plist
+## Invitation Email Feature
+- [x] Add `sendInvitation()` to `EmailService`
+- [x] Inject `EmailService` into `UserInvitationsService`
+- [x] Import `EmailModule` in `UsersModule`
+- [/] Call `sendInvitation()` from `create()` method
+- [ ] Also call from `resend()` method
+- [ ] Deploy to production
 
-## App Store Screenshots
-- [ ] Generate screenshots for App Store listing
-- [ ] Cover key screens: Login, Dashboard, Cases, Clients, Create Client
-
-## App Store Readiness
-- [ ] Ensure privacy policy and permissions are configured
-- [ ] Review PrivacyInfo.xcprivacy
-- [ ] Verify NSAppTransportSecurity settings
+## User Edit Feature
+- [ ] Add edit user dialog/button to users list page
+- [ ] Support editing: photo, name, email, permissions, role
+- [ ] Wire up to backend update endpoint
+- [ ] Deploy to production

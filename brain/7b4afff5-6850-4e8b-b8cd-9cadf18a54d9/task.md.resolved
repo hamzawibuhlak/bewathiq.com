@@ -1,15 +1,15 @@
-# App Store Preparation
+# Tasks
 
-## iOS Build & Configuration
-- [/] Review iOS project configuration (Bundle ID, version, signing)
-- [ ] Verify build compiles successfully
-- [ ] Configure App Store metadata in Info.plist
+## Invitation Email Feature
+- [x] Add [sendInvitation()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#467-557) to [EmailService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#6-558)
+- [x] Inject [EmailService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#6-558) into [UserInvitationsService](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/user-invitations.service.ts#25-376)
+- [x] Import `EmailModule` in [UsersModule](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/users.module.ts#10-29)
+- [/] Call [sendInvitation()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/email/email.service.ts#467-557) from [create()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/clients/clients.service.ts#218-248) method
+- [ ] Also call from [resend()](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/backend/src/users/user-invitations.service.ts#293-345) method
+- [ ] Deploy to production
 
-## App Store Screenshots
-- [ ] Generate screenshots for App Store listing
-- [ ] Cover key screens: Login, Dashboard, Cases, Clients, Create Client
-
-## App Store Readiness
-- [ ] Ensure privacy policy and permissions are configured
-- [ ] Review PrivacyInfo.xcprivacy
-- [ ] Verify NSAppTransportSecurity settings
+## User Edit Feature
+- [ ] Add edit user dialog/button to users list page
+- [ ] Support editing: photo, name, email, permissions, role
+- [ ] Wire up to backend update endpoint
+- [ ] Deploy to production

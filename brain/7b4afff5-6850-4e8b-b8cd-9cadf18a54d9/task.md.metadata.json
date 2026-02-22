@@ -1,6 +1,6 @@
 {
-  "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Task checklist for preparing WathiqApp for App Store submission, covering iOS build config, screenshots, and App Store readiness.",
-  "updatedAt": "2026-02-17T20:52:37.055637Z",
-  "version": "38"
+  "artifactType":  "ARTIFACT_TYPE_TASK",
+  "summary":  "Checklist tracking invitation email and user edit features",
+  "updatedAt":  "2026-02-22T21:02:41.145657Z",
+  "version":  "39"
 }
