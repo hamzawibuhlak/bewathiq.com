@@ -1,15 +1,7 @@
-# Tasks
+# Phase 44: Privacy Policy & Terms Pages
 
-## Invitation Email Feature
-- [x] Add `sendInvitation()` to `EmailService`
-- [x] Inject `EmailService` into `UserInvitationsService`
-- [x] Import `EmailModule` in `UsersModule`
-- [/] Call `sendInvitation()` from `create()` method
-- [ ] Also call from `resend()` method
+- [ ] Create `PrivacyPolicyPage.tsx` with full content (privacy + terms tabs)
+- [ ] Add route in `App.tsx` (public, no auth)
+- [ ] Add footer link in Sidebar/Layout
 - [ ] Deploy to production
-
-## User Edit Feature
-- [ ] Add edit user dialog/button to users list page
-- [ ] Support editing: photo, name, email, permissions, role
-- [ ] Wire up to backend update endpoint
-- [ ] Deploy to production
+- [ ] Commit changes
