@@ -1,7 +1,7 @@
 # Phase 44: Privacy Policy & Terms Pages
 
-- [ ] Create `PrivacyPolicyPage.tsx` with full content (privacy + terms tabs)
-- [ ] Add route in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/WathiqMobile/App.tsx) (public, no auth)
+- [x] Create [PrivacyPolicyPage.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/pages/legal/PrivacyPolicyPage.tsx) with full content (privacy + terms tabs)
+- [x] Add route in [App.tsx](file:///Users/hamzabuhlakq/Downloads/succes-mark/projects-2026/wathiq%20system%20projec/watheeq-mvp/frontend/src/App.tsx) (public, no auth)
 - [ ] Add footer link in Sidebar/Layout
-- [ ] Deploy to production
+- [x] Deploy to production
 - [ ] Commit changes
